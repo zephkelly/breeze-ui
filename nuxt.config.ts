@@ -1,5 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
-  devtools: { enabled: true }
+    compatibilityDate: '2024-04-03',
+    devtools: { enabled: true },
+    components: [
+        {
+          path: '~/components/ui',
+          pathPrefix: false,
+          prefix: 'Breeze'
+        }
+    ],
+    modules: ['~/modules/breeze'],
+    breeze: {
+        theme: 'default'
+    }, 
 })

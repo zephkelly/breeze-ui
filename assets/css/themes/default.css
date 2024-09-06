@@ -1,0 +1,16 @@
+/* Dark Scheme */
+:root {
+    --font-family-main: 'Inter', sans-serif;
+    --color-foreground-dark: #007bff;
+    --color-background-dark: #1a1a1a;
+
+    --color-text-foreground-dark: #ffffff;
+}
+
+/* Light Scheme */
+:root {
+    --color-foreground-light: #007bff;
+    --color-background-light: #ffffff;
+
+    --color-text-foreground-light: #000000;
+}
