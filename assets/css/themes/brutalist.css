@@ -1,0 +1,24 @@
+/* Dark Scheme */
+:root {
+    --font-family-main: 'Arial', sans-serif;
+    --color-foreground-dark: #007bff;
+    --color-background-dark: #1a1a1a;
+
+    /* --color-text-foreground-dark: #ffffff;
+    --color-accent-dark: #09090b; */
+
+    --border-radius-4: 0px;
+    --border-radius-6: 0px;
+    --border-radius-8: 0px;
+    --border-radius-16: 0px;
+    --border-radius-full: 0px;
+}
+
+/* Light Scheme */
+:root {
+    --color-foreground-light: #007bff;
+    --color-background-light: #ffffff;
+
+    /* --color-text-foreground-light: #09090b;
+    --color-accent-light: #ffffff; */
+}

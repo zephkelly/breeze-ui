@@ -25,8 +25,8 @@
     const props = defineProps({
         variant: {
             type: String,
-            default: 'primary',
-            validator: (value: string) => ['primary', 'secondary', 'text'].includes(value)
+            default: 'solid',
+            validator: (value: string) => ['solid', 'outline', 'ghost', ].includes(value)
         },
         loading: Boolean,
         unstyled: Boolean
@@ -42,13 +42,14 @@
         justify-content: center;
         padding: 0.5rem 1rem;
         border: none;
-        border-radius: 0.25rem;
+        border-radius: var(--border-radius-6);
         font-weight: 500;
+        color: var(--color-accent);
         cursor: pointer;
-        transition: all 0.2s ease;
     }
+</style>
 
-    .icon > svg {
-        fill: black;
-    }
+<!-- Variants -->
+<style scoped>
+
 </style>

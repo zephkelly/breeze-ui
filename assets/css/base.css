@@ -5,7 +5,7 @@
     --color-text-foreground: var(--color-text-foreground-light);
     --color-text-background: var(--color-text-background-light);
 
-    --font-family-main: 'Inter', sans-serif;
+    --color-accent: var(--color-accent-light);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,6 +15,8 @@
 
         --color-text-foreground: var(--color-text-foreground-dark);
         --color-text-background: var(--color-text-background-dark);
+
+        --color-accent: var(--color-accent-dark);
     }
 }
 
@@ -24,6 +26,8 @@
 
     --color-text-foreground: var(--color-text-foreground-dark);
     --color-text-background: var(--color-text-background-dark);
+
+    --color-accent: var(--color-accent-dark);
 }
 
 :root[data-color-scheme="light"] {
@@ -32,21 +36,12 @@
 
     --color-text-foreground: var(--color-text-foreground-light);
     --color-text-background: var(--color-text-background-light);
+
+    --color-accent: var(--color-accent-light);
 }
 
 body {
-    font-family: var(--font-family-main, sans-serif);
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: var(--color-text-foreground);
-    background-color: var(--color-background);
-}
-
-button {
-    color: var(--color-text-foreground);
-}
-
-svg {
-    fill: currentColor;
 }
