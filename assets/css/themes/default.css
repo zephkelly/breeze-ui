@@ -18,14 +18,17 @@
 
 /* Common */
 :root {
-    --font-family-main: 'Times New Roman', sans-serif;
-
     --font-family-main: 'Inter', sans-serif;
+    
     --border-radius-4: 4px;
     --border-radius-6: 6px;
     --border-radius-8: 8px;
     --border-radius-16: 16px;
     --border-radius-full: 50%;
+
+    --padding-4: 0.25rem;
+    --padding-8: 0.5rem;
+    --padding-16: 1rem;
 }
 
 body {

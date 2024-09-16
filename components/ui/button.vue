@@ -53,15 +53,16 @@ const ariaLabel = computed(() => {
 });
 </script>
 
-<!-- Default Styled -->
+<!-- Default Styles -->
 <style scoped>
 .breeze-button {
-    padding: 0.5rem 1rem;
+    padding: var(--padding-4) var(--padding-16);
     border: none;
     border-radius: var(--border-radius-6);
     font-weight: 500;
     color: var(--color-accent);
     cursor: pointer;
+    transition: background-color 0.1s ease, color 0.1s ease;
 }
 
 .button-content {
@@ -84,5 +85,23 @@ const ariaLabel = computed(() => {
 
 <!-- Variants -->
 <style scoped>
+.breeze-button--solid {
+    background-color: var(--color-foreground);
+    color: var(--color-accent);
+}
 
+.breeze-button--outline {
+    background-color: transparent;
+    color: var(--color-foreground);
+    border: 1px solid var(--color-foreground);
+}
+
+.breeze-button--ghost {
+    background-color: transparent;
+    color: var(--color-foreground);
+}
+.breeze-button--ghost:hover {
+    background-color: var(--color-foreground);
+    color: var(--color-accent);
+}
 </style>
