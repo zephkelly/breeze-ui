@@ -4,7 +4,7 @@ import { dirname, join } from 'path'
 const currentDir = dirname(fileURLToPath(import.meta.url))
 
 export default defineNuxtConfig({
-    compatibilityDate: '2024-04-03',
+    compatibilityDate: '2024-09-15',
     devtools: { enabled: true },
     components: [
         {
@@ -20,4 +20,15 @@ export default defineNuxtConfig({
     typescript: {
         typeCheck: true,
     },
+    dir: {
+        assets: 'assets',
+        modules: 'modules',
+        plugins: 'plugins',
+    },
+    imports: {
+        dirs: [
+            'types/**',
+            'themes/**',
+        ]
+    }
 })

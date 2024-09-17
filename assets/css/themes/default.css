@@ -1,30 +1,36 @@
 /* Dark Scheme */
 :root {
     --color-foreground-dark: #fafafa;
+    --color-foreground-hover-dark: #d9d9d9;
     --color-background-dark: #09090b;
     --color-accent-dark: #09090b;
     
     --color-text-foreground-dark: #fafafa;
+    --color-text-background-dark: #09090b;
 }
 
 /* Light Scheme */
 :root {
     --color-foreground-light: #09090b;
+    --color-foreground-hover-light: #202025;
     --color-background-light: #fafafa;
     --color-accent-light: #fafafa;
     
     --color-text-foreground-light: #09090b;
+    --color-text-background-light: #fafafa;
 }
 
 /* Common */
 :root {
-    --font-family-main: 'Inter', sans-serif;
+    --font-family-main: 'Times New Roman';
     
     --border-radius-4: 4px;
     --border-radius-6: 6px;
     --border-radius-8: 8px;
     --border-radius-16: 16px;
     --border-radius-full: 50%;
+
+    --font-size-small: clamp(0.75rem, 1.5vw, 1rem);
 
     --padding-4: 0.25rem;
     --padding-8: 0.5rem;

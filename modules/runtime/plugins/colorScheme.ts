@@ -1,4 +1,4 @@
-import { useColorScheme } from '~/composables/useColorScheme'
+import { useColorScheme } from './../../../composables/useColorScheme'
 
 export default defineNuxtPlugin((nuxtApp) => {
     const { colorScheme, isSystemColorScheme, currentTheme, toggleColorScheme, resetToSystem, systemPreference } = useColorScheme()

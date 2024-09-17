@@ -1,8 +1,10 @@
 <template>
-    <button
+    <component
+        v-if="!to"
+        :is="tag"
         :class="[
                 { 'breeze-button': !unstyled },
-                { [`breeze-button--${variant}`]: !unstyled },
+                { [`breeze-button--${validatedVariant}`]: !unstyled },
                 { 'breeze-button--loading': loading },
             ]"
             v-bind="$attrs"
@@ -10,6 +12,7 @@
             :aria-disabled="disabled || loading"
             :aria-busy="loading"
             :aria-label="ariaLabel"
+            :href="href"
             @click="handleClick"
         >
         <div class="button-content" v-if="!loading">
@@ -26,13 +29,64 @@
         <span v-else class="button-loader" aria-hidden="true">
             <slot name="loader">Loading...</slot>
         </span>
-    </button>
+    </component>
+    <NuxtLink
+        v-else
+        :to="to"
+        :class="[
+                { 'breeze-button': !unstyled },
+                { [`breeze-button--${validatedVariant}`]: !unstyled },
+                { 'breeze-button--loading': loading },
+            ]"
+            v-bind="$attrs"
+            :disabled="disabled || loading"
+            :aria-disabled="disabled || loading"
+            :aria-busy="loading"
+            :aria-label="ariaLabel"
+            :href="href"
+            @click="handleClick"
+    >
+        <div class="button-content" v-if="!loading">
+            <span v-if="$slots['icon-left']" class="icon left" aria-hidden="true"> 
+                <slot name="icon-left"></slot>
+            </span>
+            <span class="content-main">
+                <slot></slot>
+            </span>
+            <span v-if="$slots['icon-right']" class="icon right" aria-hidden="true">
+                <slot name="icon-right"></slot>
+            </span>
+        </div>
+        <span v-else class="button-loader" aria-hidden="true">
+            <slot name="loader">Loading...</slot>
+        </span>
+    </NuxtLink>
 </template>
 
 <script setup lang="ts">
-import { type ButtonProps } from './../../types/button';
+import { type ButtonProps, ButtonVariants } from './../../types/button';
 
 const props = defineProps<ButtonProps>();
+
+const tag = computed(() => {
+    if (props.href) return 'a';
+    return 'button';
+});
+
+const validatedVariant = computed(() => {
+    if (props.variant !== undefined && Object.values(ButtonVariants).includes(props.variant)) {
+        return props.variant;
+    }
+
+    if (props.variant as string === '') {
+        console.warn(`breeze-ui: Empty button variant. Defaulting to '${ButtonVariants[0]}'`);
+    }
+    else if (props.variant !== undefined) {
+        console.warn(`breeze-ui: Invalid button variant: '${props.variant}'. Defaulting to '${ButtonVariants[0]}'`);
+    }
+
+    return ButtonVariants[0];
+});
 
 const emit = defineEmits<{
     (e: 'click', event: MouseEvent): void
@@ -56,13 +110,16 @@ const ariaLabel = computed(() => {
 <!-- Default Styles -->
 <style scoped>
 .breeze-button {
-    padding: var(--padding-4) var(--padding-16);
+    padding: var(--padding-8) var(--padding-16);
     border: none;
     border-radius: var(--border-radius-6);
     font-weight: 500;
-    color: var(--color-accent);
+    font-size: var(--font-size-small);
+    color: var(--text-color);
     cursor: pointer;
-    transition: background-color 0.1s ease, color 0.1s ease;
+    box-sizing: border-box;
+    font-family: var(--font-family-main);
+    display: inline-block;
 }
 
 .button-content {
@@ -87,21 +144,59 @@ const ariaLabel = computed(() => {
 <style scoped>
 .breeze-button--solid {
     background-color: var(--color-foreground);
-    color: var(--color-accent);
+    color: var(--color-text-background);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+.breeze-button--solid:hover {
+    background-color: var(--color-foreground-hover);
 }
 
-.breeze-button--outline {
+/* Ghost Styles */
+.breeze-button--ghost, .breeze-button--ghost-solid {
     background-color: transparent;
-    color: var(--color-foreground);
+    color: var(--color-text-foreground);
     border: 1px solid var(--color-foreground);
 }
-
-.breeze-button--ghost {
+.breeze-button--ghost, .breeze-button--ghost-solid {
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+.breeze-button--ghost:hover, .breeze-button--ghost-solid:hover {
+    background-color: var(--color-foreground);
+    color: var(--color-accent);
+}
+.breeze-button--ghost-flat {
     background-color: transparent;
+    border: 1px solid var(--color-foreground);
     color: var(--color-foreground);
+    height: calc(auto - 1px);
+}
+.breeze-button--ghost-flat:hover{
+    border-color: var(--color-foreground-hover);
+}
+.breeze-button--ghost-flat .button-content {
+    border-bottom: 1px solid transparent;
+    transition: border-bottom 0.15s ease;
+}
+.breeze-button--ghost-flat:hover .button-content {
+    border-bottom: 1px solid var(--color-foreground);
 }
 .breeze-button--ghost:hover {
     background-color: var(--color-foreground);
     color: var(--color-accent);
 }
+
+/* Flat Styles */
+.breeze-button--flat {
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: var(--color-foreground);
+}
+.breeze-button--flat .button-content {
+    border-bottom: 1px solid transparent;
+    transition: border-bottom 0.15s ease;
+}
+.breeze-button--flat:hover .button-content {
+    border-bottom: 1px solid var(--color-foreground);
+}
+
 </style>
