@@ -9,6 +9,7 @@
                 { 'breeze-button--disabled': disabled },
                 { 'breeze-button--active': isActive },
                 { 'breeze-button--holdable': holdable },
+                { 'breeze-button--bounce': bounce },
             ]"
             v-bind="$attrs"
             :disabled="disabled || loading"
@@ -177,15 +178,17 @@ const ariaLabel = computed(() => {
     border-radius: var(--border-radius-6);
     font-weight: 500;
     font-size: var(--font-size-small);
+    height: 32px;
     color: var(--text-color);
     cursor: pointer;
     box-sizing: border-box;
     font-family: var(--font-family-main);
-    display: inline-block;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    text-decoration: none;
 }
 
 .breeze-button:focus-visible {
@@ -193,13 +196,13 @@ const ariaLabel = computed(() => {
     outline-offset: 2px;
 }
 
-.breeze-button--active,
-.breeze-button:active {
+.breeze-button--bounce.breeze-button--active,
+.breeze-button--bounce.breeze-button:active {
     transform: translateY(1px);
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .breeze-button.breeze-button--holdable:active:not(.breeze-button--active) {
+    .breeze-button.breeze-button--bounce.breeze-button--holdable:active:not(.breeze-button--active) {
         transform: translate(0px);
     }
 }
@@ -235,12 +238,6 @@ const ariaLabel = computed(() => {
     background-color: var(--foreground-hover);
 }
 
-/* @media (hover: hover) and (pointer: fine) {
-    .breeze-button--solid:active:not(.breeze-button--active) {
-        background-color: var(--foreground);
-    }
-} */
-
 /* Ghost Styles */
 .breeze-button--ghost{
     background-color: transparent;
@@ -251,10 +248,13 @@ const ariaLabel = computed(() => {
     transition: color 0.15s ease, background-color 0.15s ease;
 }
 .breeze-button--ghost:hover,
-.breeze-button--ghost:focus-visible,
-.breeze-button--ghost:active {
+.breeze-button--ghost:focus-visible
+{
     background-color: var(--foreground);
     color: var(--text-background);
+}
+.breeze-button--ghost:active {
+    background-color: var(--foreground-hover);
 }
 .breeze-button--ghost-flat {
     background-color: transparent;

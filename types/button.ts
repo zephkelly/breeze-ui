@@ -11,4 +11,5 @@ export interface ButtonProps {
     href?: string;
     to?: string;
     holdable?: boolean;
+    bounce?: boolean;
 }
