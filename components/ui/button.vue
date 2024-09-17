@@ -147,59 +147,58 @@ const ariaLabel = computed(() => {
 <!-- Variants -->
 <style scoped>
 .breeze-button--solid {
-    background-color: var(--color-foreground);
-    color: var(--color-text-background);
+    background-color: var(--foreground);
+    color: var(--text-background);
     transition: background-color 0.15s ease, color 0.15s ease;
 }
 .breeze-button--solid:hover {
-    background-color: var(--color-foreground-hover);
+    background-color: var(--foreground-hover);
 }
 
 /* Ghost Styles */
 .breeze-button--ghost{
     background-color: transparent;
-    color: var(--color-text-foreground);
-    border: 1px solid var(--color-foreground);
+    color: var(--text-foreground);
+    border: 1px solid var(--foreground);
 }
 .breeze-button--ghost {
     transition: color 0.15s ease, background-color 0.15s ease;
 }
 .breeze-button--ghost:hover {
-    background-color: var(--color-foreground);
-    color: var(--color-accent);
+    background-color: var(--foreground);
+    color: var(--accent);
 }
 .breeze-button--ghost-flat {
     background-color: transparent;
-    border: 1px solid var(--color-foreground);
-    color: var(--color-foreground);
+    border: 1px solid var(--foreground);
+    color: var(--foreground);
 }
 .breeze-button--ghost-flat:hover{
-    border-color: var(--color-foreground-hover);
+    border-color: var(--foreground-hover);
 }
 .breeze-button--ghost-flat .button-content {
     border-bottom: 1px solid transparent;
     transition: border-bottom 0.15s ease;
 }
 .breeze-button--ghost-flat:hover .button-content {
-    border-bottom: 1px solid var(--color-foreground);
+    border-bottom: 1px solid var(--foreground);
 }
 .breeze-button--ghost:hover {
-    background-color: var(--color-foreground);
-    color: var(--color-accent);
+    background-color: var(--foreground);
+    color: var(--accent);
 }
 
 /* Flat Styles */
 .breeze-button--flat {
     background-color: transparent;
     border: 1px solid transparent;
-    color: var(--color-foreground);
+    color: var(--foreground);
 }
 .breeze-button--flat .button-content {
     border-bottom: 1px solid transparent;
     transition: border-bottom 0.15s ease;
 }
 .breeze-button--flat:hover .button-content {
-    border-bottom: 1px solid var(--color-foreground);
+    border-bottom: 1px solid var(--foreground);
 }
-
 </style>

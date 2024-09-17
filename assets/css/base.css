@@ -1,47 +1,47 @@
 :root {
-    --color-foreground: var(--color-foreground-light);
-    --color-foreground-hover: var(--color-foreground-hover-light);
-    --color-background: var(--color-background-light);
+    --foreground: var(--foreground-light);
+    --foreground-hover: var(--foreground-hover-light);
+    --background: var(--background-light);
 
-    --color-text-foreground: var(--color-text-foreground-light);
-    --color-text-background: var(--color-text-background-light);
+    --text-foreground: var(--text-foreground-light);
+    --text-background: var(--text-background-light);
 
-    --color-accent: var(--color-accent-light);
+    --accent: var(--accent-light);
 }
 
 @media (prefers-color-scheme: dark) {
     :root:not([data-color-scheme]) {
-        --color-foreground: var(--color-foreground-dark);
-        --color-foreground-hover: var(--color-foreground-hover-dark);
-        --color-background: var(--color-background-dark);
+        --foreground: var(--foreground-dark);
+        --foreground-hover: var(--foreground-hover-dark);
+        --background: var(--background-dark);
 
-        --color-text-foreground: var(--color-text-foreground-dark);
-        --color-text-background: var(--color-text-background-dark);
+        --text-foreground: var(--text-foreground-dark);
+        --text-background: var(--text-background-dark);
 
-        --color-accent: var(--color-accent-dark);
+        --accent: var(--accent-dark);
     }
 }
 
 :root[data-color-scheme="dark"] {
-    --color-foreground: var(--color-foreground-dark);
-    --color-foreground-hover: var(--color-foreground-hover-dark);
-    --color-background: var(--color-background-dark);
+    --foreground: var(--foreground-dark);
+    --foreground-hover: var(--foreground-hover-dark);
+    --background: var(--background-dark);
 
-    --color-text-foreground: var(--color-text-foreground-dark);
-    --color-text-background: var(--color-text-background-dark);
+    --text-foreground: var(--text-foreground-dark);
+    --text-background: var(--text-background-dark);
 
-    --color-accent: var(--color-accent-dark);
+    --accent: var(--accent-dark);
 }
 
 :root[data-color-scheme="light"] {
-    --color-foreground: var(--color-foreground-light);
-    --color-foreground-hover: var(--color-foreground-hover-light);
-    --color-background: var(--color-background-light);
+    --foreground: var(--foreground-light);
+    --foreground-hover: var(--foreground-hover-light);
+    --background: var(--background-light);
 
-    --color-text-foreground: var(--color-text-foreground-light);
-    --color-text-background: var(--color-text-background-light);
+    --text-foreground: var(--text-foreground-light);
+    --text-background: var(--text-background-light);
 
-    --color-accent: var(--color-accent-light);
+    --accent: var(--accent-light);
 }
 
 body {
