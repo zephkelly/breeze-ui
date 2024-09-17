@@ -10,4 +10,5 @@ export interface ButtonProps {
     ariaLabel?: string;
     href?: string;
     to?: string;
+    holdable?: boolean;
 }

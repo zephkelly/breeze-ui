@@ -6,14 +6,25 @@
                 { 'breeze-button': !unstyled },
                 { [`breeze-button--${validatedVariant}`]: !unstyled },
                 { 'breeze-button--loading': loading },
+                { 'breeze-button--disabled': disabled },
+                { 'breeze-button--active': isActive },
+                { 'breeze-button--holdable': holdable },
             ]"
             v-bind="$attrs"
             :disabled="disabled || loading"
             :aria-disabled="disabled || loading"
             :aria-busy="loading"
             :aria-label="ariaLabel"
+            :aria-pressed="holdable ? isActive : undefined"
+            tabindex="0"
             :href="href"
+            role="button"
             @click="handleClick"
+            @mousedown="handleDown"
+            @mouseup="handleUp"
+            @mouseleave="handleLeave"
+            @keydown.space.prevent="handleKeyDown"
+            @keyup.space.prevent="handleUp(); handleClick($event, true);"
         >
         <div class="button-content" v-if="!loading">
             <span v-if="$slots['icon-left']" class="icon left" aria-hidden="true"> 
@@ -37,15 +48,25 @@
                 { 'breeze-button': !unstyled },
                 { [`breeze-button--${validatedVariant}`]: !unstyled },
                 { 'breeze-button--loading': loading },
+                { 'breeze-button--disabled': disabled },
+                { 'breeze-button--active': isActive },
+                { 'breeze-button--holdable': holdable },
             ]"
             v-bind="$attrs"
             :disabled="disabled || loading"
             :aria-disabled="disabled || loading"
             :aria-busy="loading"
             :aria-label="ariaLabel"
+            :aria-pressed="holdable ? isActive : undefined"
             :href="href"
+            role="external-link"
             @click="handleClick"
-    >
+            @mousedown="handleDown"
+            @mouseup="handleUp"
+            @mouseleave="handleLeave"
+            @keydown.space.prevent="handleDown"
+            @keyup.space.prevent="handleUp(); handleClick($event, true);"
+        >
         <div class="button-content" v-if="!loading">
             <span v-if="$slots['icon-left']" class="icon left" aria-hidden="true"> 
                 <slot name="icon-left"></slot>
@@ -65,6 +86,7 @@
 
 <script setup lang="ts">
 import { type ButtonProps, ButtonVariants } from './../../types/button';
+import { debounceLeading, debounce } from './../../utils/debounce';
 
 const props = defineProps<ButtonProps>();
 
@@ -94,11 +116,47 @@ const validatedVariant = computed(() => {
 
 const emit = defineEmits<{
     (e: 'click', event: MouseEvent): void
+    (e: 'pressstart'): void
+    (e: 'pressend'): void
 }>();
 
-const handleClick = (event: MouseEvent) => {
-    if (!props.disabled && !props.loading) {
+const isTouch = ref(false);
+const isActive = ref(false);
+
+const handleClick = debounce((event: MouseEvent, keyboard: boolean) => {
+    if (!props.disabled && !props.loading && (props.holdable !== undefined || keyboard)) {
         emit('click', event);
+        console.log('click');
+    }
+
+    isTouch.value = false;
+}, 100);
+
+const handleDown = (event: MouseEvent) => {
+    if (props.holdable && !props.disabled && !props.loading) {
+        isActive.value = true;
+        emit('pressstart');
+    }
+};
+
+const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === ' ' && !props.disabled && !props.loading) {
+        isActive.value = true;
+        emit('pressstart');
+    }
+};
+
+const handleUp = () => {
+    if (props.holdable && !props.disabled && !props.loading) {
+        isActive.value = false;
+        emit('pressend');
+    }
+};
+
+const handleLeave = () => {
+    if (props.holdable && !props.disabled && !props.loading && isActive.value) {
+        isActive.value = false;
+        emit('pressend');
     }
 };
 
@@ -124,6 +182,26 @@ const ariaLabel = computed(() => {
     box-sizing: border-box;
     font-family: var(--font-family-main);
     display: inline-block;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.breeze-button:focus-visible {
+    outline: 2px solid var(--focus-color);
+    outline-offset: 2px;
+}
+
+.breeze-button--active,
+.breeze-button:active {
+    transform: translateY(1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .breeze-button.breeze-button--holdable:active:not(.breeze-button--active) {
+        transform: translate(0px);
+    }
 }
 
 .button-content {
@@ -151,9 +229,17 @@ const ariaLabel = computed(() => {
     color: var(--text-background);
     transition: background-color 0.15s ease, color 0.15s ease;
 }
-.breeze-button--solid:hover {
+.breeze-button--solid:hover,
+.breeze-button--solid:focus-visible,
+.breeze-button--solid:active {
     background-color: var(--foreground-hover);
 }
+
+/* @media (hover: hover) and (pointer: fine) {
+    .breeze-button--solid:active:not(.breeze-button--active) {
+        background-color: var(--foreground);
+    }
+} */
 
 /* Ghost Styles */
 .breeze-button--ghost{
@@ -164,9 +250,11 @@ const ariaLabel = computed(() => {
 .breeze-button--ghost {
     transition: color 0.15s ease, background-color 0.15s ease;
 }
-.breeze-button--ghost:hover {
+.breeze-button--ghost:hover,
+.breeze-button--ghost:focus-visible,
+.breeze-button--ghost:active {
     background-color: var(--foreground);
-    color: var(--accent);
+    color: var(--text-background);
 }
 .breeze-button--ghost-flat {
     background-color: transparent;
@@ -183,9 +271,12 @@ const ariaLabel = computed(() => {
 .breeze-button--ghost-flat:hover .button-content {
     border-bottom: 1px solid var(--foreground);
 }
-.breeze-button--ghost:hover {
-    background-color: var(--foreground);
-    color: var(--accent);
+
+@media (hover: hover) and (pointer: fine) {
+    .breeze-button--ghost:active:not(.breeze-button--active) {
+        background-color: transparent;
+        color: var(--text-foreground);
+    }
 }
 
 /* Flat Styles */
@@ -198,7 +289,15 @@ const ariaLabel = computed(() => {
     border-bottom: 1px solid transparent;
     transition: border-bottom 0.15s ease;
 }
-.breeze-button--flat:hover .button-content {
+.breeze-button--flat:hover .button-content,
+.breeze-button--flat:focus-visible .button-content,
+.breeze-button--flat:active .button-content {
     border-bottom: 1px solid var(--foreground);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .breeze-button--flat:active:not(.breeze-button--active) {
+        border-bottom: 1px solid transparent;
+    }
 }
 </style>
