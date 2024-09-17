@@ -1,23 +1,23 @@
 /* Dark Scheme */
 :root {
-    --color-foreground-dark: #fafafa;
-    --color-foreground-hover-dark: #d9d9d9;
-    --color-background-dark: #09090b;
-    --color-accent-dark: #09090b;
+    --foreground-dark: #fafafa;
+    --foreground-hover-dark: #d9d9d9;
+    --background-dark: #09090b;
+    --accent-dark: #09090b;
     
-    --color-text-foreground-dark: #fafafa;
-    --color-text-background-dark: #09090b;
+    --text-foreground-dark: #fafafa;
+    --text-background-dark: #09090b;
 }
 
 /* Light Scheme */
 :root {
-    --color-foreground-light: #09090b;
-    --color-foreground-hover-light: #202025;
-    --color-background-light: #fafafa;
-    --color-accent-light: #fafafa;
+    --foreground-light: #09090b;
+    --foreground-hover-light: #202025;
+    --background-light: #fafafa;
+    --accent-light: #fafafa;
     
-    --color-text-foreground-light: #09090b;
-    --color-text-background-light: #fafafa;
+    --text-foreground-light: #09090b;
+    --text-background-light: #fafafa;
 }
 
 /* Common */
@@ -39,8 +39,8 @@
 
 body {
     font-family: var(--font-family-main, sans-serif);
-    color: var(--color-text-foreground);
-    background-color: var(--color-background);
+    color: var(--text-foreground);
+    background-color: var(--background);
 }
 
 svg {
