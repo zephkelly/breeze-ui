@@ -78,11 +78,15 @@ const validatedVariant = computed(() => {
         return props.variant;
     }
 
-    if (props.variant as string === '') {
-        console.warn(`breeze-ui: Empty button variant. Defaulting to '${ButtonVariants[0]}'`);
-    }
-    else if (props.variant !== undefined) {
-        console.warn(`breeze-ui: Invalid button variant: '${props.variant}'. Defaulting to '${ButtonVariants[0]}'`);
+    if (import.meta.dev) {   
+        if (props.variant as string === '') {
+            console.warn(`breeze-ui: Empty button variant. Defaulting to '${ButtonVariants[0]}'`);
+            console.warn(`breeze-ui: Valid button variants are: ${Object.values(ButtonVariants).join(', ')}`);
+        }
+        else if (props.variant !== undefined) {
+            console.warn(`breeze-ui: Invalid button variant: '${props.variant}'. Defaulting to '${ButtonVariants[0]}'`);
+            console.warn(`breeze-ui: Valid button variants are: ${Object.values(ButtonVariants).join(', ')}`);
+        }
     }
 
     return ButtonVariants[0];
@@ -152,15 +156,15 @@ const ariaLabel = computed(() => {
 }
 
 /* Ghost Styles */
-.breeze-button--ghost, .breeze-button--ghost-solid {
+.breeze-button--ghost{
     background-color: transparent;
     color: var(--color-text-foreground);
     border: 1px solid var(--color-foreground);
 }
-.breeze-button--ghost, .breeze-button--ghost-solid {
+.breeze-button--ghost {
     transition: color 0.15s ease, background-color 0.15s ease;
 }
-.breeze-button--ghost:hover, .breeze-button--ghost-solid:hover {
+.breeze-button--ghost:hover {
     background-color: var(--color-foreground);
     color: var(--color-accent);
 }
@@ -168,7 +172,6 @@ const ariaLabel = computed(() => {
     background-color: transparent;
     border: 1px solid var(--color-foreground);
     color: var(--color-foreground);
-    height: calc(auto - 1px);
 }
 .breeze-button--ghost-flat:hover{
     border-color: var(--color-foreground-hover);
