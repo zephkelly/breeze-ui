@@ -17,15 +17,17 @@
             :aria-disabled="disabled || loading"
             :aria-busy="loading"
             :aria-label="ariaLabel"
-            :aria-pressed="holdable ? isActive : undefined"
             tabindex="0"
             :href="href"
             role="button"
             @mousedown="handleDown"
             @mouseup="handleUp"
             @mouseleave="handleLeave"
+            @touchstart.prevent="handleTouchStart"
+            @touchend.prevent="handleTouchEnd"
+            @touchcancel.prevent="handleTouchCancel"
             @keydown.space.prevent="handleKeyDown"
-            @keyup.space.prevent="handleUp();"
+            @keyup.space.prevent="handleUp"
         >
         <div class="button-content" v-if="!loading">
             <span v-if="$slots['icon-left']" class="icon left" aria-hidden="true"> 
@@ -48,24 +50,28 @@
         :class="[
                 { 'breeze-button': !unstyled },
                 { [`breeze-button--${validatedVariant}`]: !unstyled },
+                { [`breeze-button--${validatedColor}`]: !unstyled },
                 { 'breeze-button--loading': loading },
                 { 'breeze-button--disabled': disabled },
                 { 'breeze-button--active': isActive },
                 { 'breeze-button--holdable': holdable },
+                { 'breeze-button--bounce': bounce },
             ]"
             v-bind="$attrs"
             :disabled="disabled || loading"
             :aria-disabled="disabled || loading"
             :aria-busy="loading"
             :aria-label="ariaLabel"
-            :aria-pressed="holdable ? isActive : undefined"
             :href="href"
-            role="external-link"
+            role="internal-link"
             @mousedown="handleDown"
             @mouseup="handleUp"
             @mouseleave="handleLeave"
+            @touchstart.prevent="handleTouchStart"
+            @touchend.prevent="handleTouchEnd"
+            @touchcancel.prevent="handleTouchCancel"
             @keydown.space.prevent="handleDown"
-            @keyup.space.prevent="handleUp();"
+            @keyup.space.prevent="handleUp"
         >
         <div class="button-content" v-if="!loading">
             <span v-if="$slots['icon-left']" class="icon left" aria-hidden="true"> 
@@ -86,7 +92,7 @@
 
 <script setup lang="ts">
 import { type ButtonProps, ButtonVariants, ButtonColors } from './../../types/button';
-import { debounceLeading, debounce } from './../../utils/debounce';
+import { debounce } from './../../utils/debounce';
 
 const props = defineProps<ButtonProps>();
 
@@ -143,6 +149,9 @@ const emit = defineEmits<{
 const isActive = ref(false);
 const isActiveTimeout = ref<number | null>(null);
 
+const touchStartTime = ref<number>(0);
+const isTouchDevice = ref(false);
+
 const click = debounce((event: MouseEvent) => {
     emit('click', event);
 }, 100);
@@ -174,7 +183,6 @@ const handleKeyDown = (event: KeyboardEvent) => {
     
     if (!props.holdable && !isKeyDownEnterOrSpace.value) {   
         setActiveFlash();
-
         click(event as unknown as MouseEvent);
     }
 
@@ -188,7 +196,44 @@ const handleKeyDown = (event: KeyboardEvent) => {
     emit('pressstart');
 };
 
-const handleUp = () => { 
+const handleTouchStart = (event: TouchEvent) => {
+    isTouchDevice.value = true;
+    if (props.disabled || props.loading) return;
+
+    touchStartTime.value = Date.now();
+    if (!props.holdable) {
+        setActiveFlash();
+        click(event as unknown as MouseEvent);
+    }
+    else {
+        isActive.value = true;
+    }
+
+    emit('pressstart');
+};
+
+const handleTouchEnd = (event: TouchEvent) => {
+    if (props.disabled || props.loading) return;
+
+    if (props.holdable) {
+        click(event);
+        isActive.value = false;
+    }
+
+    emit('pressend');
+};
+
+const handleTouchCancel = () => {
+    if (props.disabled || props.loading) return;
+    
+    isActive.value = false;
+
+    if (props.holdable) {
+        emit('pressend');
+    }
+};
+
+const handleUp = (event: KeyboardEvent) => {
     if (props.disabled || props.loading) return;
     isKeyDownEnterOrSpace.value = false;
     

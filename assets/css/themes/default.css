@@ -1,8 +1,8 @@
 /* Dark Scheme */
 :root {
     --foreground-dark: #fafafa;
-    --foreground-hover-dark: #efeded;
-    --foreground-active-dark: #dfdddd;
+    --foreground-hover-dark: #e6e6e6;
+    --foreground-active-dark: #c6c6c6;
 
     --background-dark: #09090b;
     --background-hover-dark: #2a2a2e;
