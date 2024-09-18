@@ -1,28 +1,33 @@
 /* Dark Scheme */
 :root {
     --foreground-dark: #fafafa;
-    --foreground-hover-dark: #d9d9d9;
-    --foreground-active-dark: #bfbfbf;
+    --foreground-hover-dark: #efeded;
+    --foreground-active-dark: #dfdddd;
 
     --background-dark: #09090b;
-    --background-hover-dark: #202025;
-    --background-active-dark: #2e2e31;
+    --background-hover-dark: #2a2a2e;
+    --background-active-dark: #37373b;
     
     --accent-dark: #09090b;
     
     --text-foreground-dark: #fafafa;
     --text-background-dark: #09090b;
+
+    --danger-dark: #d83338;
+    --danger-hover-dark: #ff0000;
+    --danger-active-dark: #ff0000;
+    --danger-border-dark: #ff0000;
 }
 
 /* Light Scheme */
 :root {
     --foreground-light: #09090b;
-    --foreground-hover-light: #202025;
-    --foreground-active-light: #2d2d30;
+    --foreground-hover-light: #242428;
+    --foreground-active-light: #343437;
 
     --background-light: #fafafa;
-    --background-hover-light: #f0f0f5;
-    --background-active-light: #dfdfe7;
+    --background-hover-light: #e9e9eb;
+    --background-active-light: #e5e5e7;
 
     --accent-light: #fafafa;
     
@@ -32,7 +37,7 @@
 
 /* Common */
 :root {
-    --font-family-main: 'Times New Roman';
+    --font-family-main: 'Arial';
     
     --border-radius-4: 4px;
     --border-radius-6: 6px;

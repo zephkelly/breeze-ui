@@ -11,6 +11,10 @@
     --text-background: var(--text-background-light);
 
     --accent: var(--accent-light);
+
+    --danger: var(--danger-light);
+    --danger-hover: var(--danger-hover-light);
+    --danger-active: var(--danger-active-light);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,6 +31,10 @@
         --text-background: var(--text-background-dark);
 
         --accent: var(--accent-dark);
+
+        --danger: var(--danger-dark);
+        --danger-hover: var(--danger-hover-dark);
+        --danger-active: var(--danger-active-dark);
     }
 }
 
@@ -43,6 +51,10 @@
     --text-background: var(--text-background-dark);
 
     --accent: var(--accent-dark);
+
+    --danger: var(--danger-dark);
+    --danger-hover: var(--danger-hover-dark);
+    --danger-active: var(--danger-active-dark);
 }
 
 :root[data-color-scheme="light"] {
@@ -58,6 +70,10 @@
     --text-background: var(--text-background-light);
 
     --accent: var(--accent-light);
+
+    --danger: var(--danger-light);
+    --danger-hover: var(--danger-hover-light);
+    --danger-active: var(--danger-active-light);
 }
 
 body {

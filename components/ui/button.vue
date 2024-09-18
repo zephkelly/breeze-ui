@@ -5,6 +5,7 @@
         :class="[
                 { 'breeze-button': !unstyled },
                 { [`breeze-button--${validatedVariant}`]: !unstyled },
+                { [`breeze-button--${validatedColor}`]: !unstyled },
                 { 'breeze-button--loading': loading },
                 { 'breeze-button--disabled': disabled },
                 { 'breeze-button--active': isActive },
@@ -86,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { type ButtonProps, ButtonVariants } from './../../types/button';
+import { type ButtonProps, ButtonVariants, ButtonColors } from './../../types/button';
 import { debounceLeading, debounce } from './../../utils/debounce';
 
 const props = defineProps<ButtonProps>();
@@ -113,6 +114,25 @@ const validatedVariant = computed(() => {
     }
 
     return ButtonVariants[0];
+});
+
+const validatedColor = computed(() => {
+    if (props.colorway !== undefined && Object.values(ButtonColors).includes(props.colorway)) {
+        return props.colorway;
+    }
+
+    if (import.meta.dev) {
+        if (props.colorway as string === '') {
+            console.warn(`breeze-ui: Empty button color. Defaulting to '${ButtonColors[0]}'`);
+            console.warn(`breeze-ui: Valid button colors are: ${Object.values(ButtonColors).join(', ')}`);
+        }
+        else if (props.colorway !== undefined) {
+            console.warn(`breeze-ui: Invalid button color: '${props.colorway}'. Defaulting to '${ButtonColors[0]}'`);
+            console.warn(`breeze-ui: Valid button colors are: ${Object.values(ButtonColors).join(', ')}`);
+        }
+    }
+
+    return ButtonColors[0];
 });
 
 const emit = defineEmits<{
@@ -218,6 +238,7 @@ const ariaLabel = computed(() => {
     align-items: center;
     justify-content: center;
     height: 100%;
+    white-space: nowrap;
 }
 
 .icon {
@@ -242,6 +263,15 @@ const ariaLabel = computed(() => {
     color: var(--text-background);
     transition: background-color 0.1s ease, color 0.1s ease;
 }
+.breeze-button--solid.breeze-button--danger {
+    background-color: var(--danger);
+    color: var(--text-foreground);
+}
+.breeze-button--solid.breeze-button--danger:hover,
+.breeze-button--solid.breeze-button--danger:focus-visible {
+    background-color: var(--danger-hover);
+}
+
 .breeze-button--solid:hover,
 .breeze-button--solid:focus-visible {
     background-color: var(--foreground-hover);
@@ -309,6 +339,7 @@ const ariaLabel = computed(() => {
     background-color: var(--background-active);
 }
 
+/* Ghost - Solid */
 .breeze-button--ghost-solid:hover,
 .breeze-button--ghost-solid:focus-visible {
     background-color: var(--foreground-hover);
@@ -366,5 +397,36 @@ const ariaLabel = computed(() => {
     .breeze-button--flat:active:not(.breeze-button--active) {
         border-bottom: 1px solid transparent;
     }
+}
+
+/* Flat - Ghost */
+.breeze-button--flat-ghost {
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: var(--foreground);
+}
+.breeze-button--flat-ghost:hover {
+    background-color: var(--background-hover);
+}
+.breeze-button--flat-ghost:active,
+.breeze-button--flat-ghost:focus-visible {
+    background-color: var(--background-active);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .breeze-button--flat-ghost:active:not(.breeze-button--active) {
+        background-color: transparent;
+    }
+}
+
+/* Flat-Static */
+.breeze-button--flat-static {
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: var(--foreground);
+}
+.breeze-button--flat-static .button-content {
+    border-bottom: 1px solid var(--foreground);
+    transition: border-bottom 0.1s ease;
 }
 </style>
