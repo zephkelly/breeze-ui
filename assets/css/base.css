@@ -1,7 +1,11 @@
 :root {
     --foreground: var(--foreground-light);
     --foreground-hover: var(--foreground-hover-light);
+    --foreground-active: var(--foreground-active-light);
+
     --background: var(--background-light);
+    --background-hover: var(--background-hover-light);
+    --background-active: var(--background-active-light);
 
     --text-foreground: var(--text-foreground-light);
     --text-background: var(--text-background-light);
@@ -13,7 +17,11 @@
     :root:not([data-color-scheme]) {
         --foreground: var(--foreground-dark);
         --foreground-hover: var(--foreground-hover-dark);
+        --foreground-active: var(--foreground-active-dark);
+
         --background: var(--background-dark);
+        --background-hover: var(--background-hover-dark);
+        --background-active: var(--background-active-dark);
 
         --text-foreground: var(--text-foreground-dark);
         --text-background: var(--text-background-dark);
@@ -25,7 +33,11 @@
 :root[data-color-scheme="dark"] {
     --foreground: var(--foreground-dark);
     --foreground-hover: var(--foreground-hover-dark);
+    --foreground-active: var(--foreground-active-dark);
+
     --background: var(--background-dark);
+    --background-hover: var(--background-hover-dark);
+    --background-active: var(--background-active-dark);
 
     --text-foreground: var(--text-foreground-dark);
     --text-background: var(--text-background-dark);
@@ -36,7 +48,11 @@
 :root[data-color-scheme="light"] {
     --foreground: var(--foreground-light);
     --foreground-hover: var(--foreground-hover-light);
+    --foreground-active: var(--foreground-active-light);
+
     --background: var(--background-light);
+    --background-hover: var(--background-hover-light);
+    --background-active: var(--background-active-light);
 
     --text-foreground: var(--text-foreground-light);
     --text-background: var(--text-background-light);

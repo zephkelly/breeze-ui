@@ -1,4 +1,8 @@
-export const ButtonVariants = ['solid', 'flat', 'ghost', 'ghost-flat'] as const;
+export const ButtonVariants = [
+    'solid', 'solid-ghost', 'solid-flat',
+    'flat',
+    'ghost', 'ghost-solid', 'ghost-flat'
+] as const;
 
 export type ButtonVariant = typeof ButtonVariants[number];
 

@@ -127,7 +127,6 @@ const isActive = ref(false);
 const handleClick = debounce((event: MouseEvent, keyboard: boolean) => {
     if (!props.disabled && !props.loading && (props.holdable !== undefined || keyboard)) {
         emit('click', event);
-        console.log('click');
     }
 
     isTouch.value = false;
@@ -213,6 +212,14 @@ const ariaLabel = computed(() => {
     justify-content: center;
 }
 
+
+.content-main {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
 .icon {
     display: inline-flex;
     align-items: center;
@@ -227,35 +234,93 @@ const ariaLabel = computed(() => {
 
 <!-- Variants -->
 <style scoped>
-.breeze-button--solid {
+/* Solid */
+.breeze-button--solid,
+.breeze-button--solid-ghost,
+.breeze-button--solid-flat {
     background-color: var(--foreground);
     color: var(--text-background);
-    transition: background-color 0.15s ease, color 0.15s ease;
+    transition: background-color 0.1s ease, color 0.1s ease;
 }
 .breeze-button--solid:hover,
-.breeze-button--solid:focus-visible,
-.breeze-button--solid:active {
+.breeze-button--solid:focus-visible {
     background-color: var(--foreground-hover);
 }
 
-/* Ghost Styles */
-.breeze-button--ghost{
+.breeze-button--solid:active {
+    background-color: var(--foreground-active);
+}
+
+/* Solid - Ghost */
+.breeze-button--solid-ghost {
+    border: 1px solid var(--foreground);
+}
+
+.breeze-button--solid-ghost:hover,
+.breeze-button--solid-ghost:focus-visible {
+    background-color: var(--background-hover);
+    color: var(--text-foreground);
+}
+
+.breeze-button--solid-ghost:active {
+    background-color: var(--background-active);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .breeze-button--solid:active:not(.breeze-button--active),
+    .breeze-button--solid-ghost:active:not(.breeze-button--active) {
+        background-color: var(--foreground);
+        color: var(--text-background);
+
+    }
+}
+
+/* Solid - Flat */
+.breeze-button--solid-flat:hover,
+.breeze-button--solid-flat:focus-visible {
+    background-color: transparent;
+    color: var(--text-foreground);
+}
+.breeze-button--solid-flat:hover .button-content {
+    border-color: var(--foreground);
+}
+.breeze-button--solid-flat .button-content {
+    border-bottom: 1px solid transparent;
+    transition: border-bottom 0.1s ease;
+}
+
+/* Ghost */
+.breeze-button--ghost,
+.breeze-button--ghost-solid {
     background-color: transparent;
     color: var(--text-foreground);
     border: 1px solid var(--foreground);
 }
-.breeze-button--ghost {
+.breeze-button--ghost,
+.breeze-button--ghost-solid {
     transition: color 0.15s ease, background-color 0.15s ease;
 }
 .breeze-button--ghost:hover,
 .breeze-button--ghost:focus-visible
 {
-    background-color: var(--foreground);
-    color: var(--text-background);
+    background-color: var(--background-hover);
 }
 .breeze-button--ghost:active {
-    background-color: var(--foreground-hover);
+    background-color: var(--background-active);
 }
+
+.breeze-button--ghost-solid:hover,
+.breeze-button--ghost-solid:focus-visible {
+    background-color: var(--foreground-hover);
+    color: var(--text-background);
+    border-color: var(--foreground-hover);
+}
+.breeze-button--ghost-solid:active {
+    background-color: var(--foreground-active);
+    border-color: var(--foreground-active);
+}
+
+/* Ghost flat */
 .breeze-button--ghost-flat {
     background-color: transparent;
     border: 1px solid var(--foreground);
@@ -266,16 +331,18 @@ const ariaLabel = computed(() => {
 }
 .breeze-button--ghost-flat .button-content {
     border-bottom: 1px solid transparent;
-    transition: border-bottom 0.15s ease;
+    transition: border-bottom 0.1s ease;
 }
 .breeze-button--ghost-flat:hover .button-content {
-    border-bottom: 1px solid var(--foreground);
+    border-color: var(--foreground);
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .breeze-button--ghost:active:not(.breeze-button--active) {
+    .breeze-button--ghost:active:not(.breeze-button--active),
+    .breeze-button--ghost-solid:active:not(.breeze-button--active) {
         background-color: transparent;
         color: var(--text-foreground);
+
     }
 }
 
@@ -287,7 +354,7 @@ const ariaLabel = computed(() => {
 }
 .breeze-button--flat .button-content {
     border-bottom: 1px solid transparent;
-    transition: border-bottom 0.15s ease;
+    transition: border-bottom 0.1s ease;
 }
 .breeze-button--flat:hover .button-content,
 .breeze-button--flat:focus-visible .button-content,
