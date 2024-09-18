@@ -13,7 +13,10 @@ export default defineNuxtConfig({
           prefix: 'Breeze'
         }
     ],
-    modules: [join(currentDir, './modules/breeze')],
+    modules: [
+        join(currentDir, './modules/breeze'),
+        'nuxt-purgecss',
+    ],
     breeze: {
         theme: 'default'
     },
@@ -30,5 +33,6 @@ export default defineNuxtConfig({
             'types/**',
             'themes/**',
         ]
-    }
+    },
+    
 })
