@@ -13,10 +13,16 @@
     --text-foreground-dark: #fafafa;
     --text-background-dark: #09090b;
 
-    --danger-dark: #d83338;
-    --danger-hover-dark: #ff0000;
-    --danger-active-dark: #ff0000;
-    --danger-border-dark: #ff0000;
+    --danger-foreground-dark: #d83338;
+    --danger-foreground-border-dark: #971e1e;
+    --danger-foreground-hover-dark: #ff0000;
+    --danger-foreground-active-dark: #c20000;
+
+    --danger-background-dark: #210203;
+    --danger-background-border-dark: #971e1e;
+    --danger-background-hover-dark: #3b0202;
+    --danger-background-active-dark: #4f0000;
+    --danger-background-text-dark: #ff0000;
 }
 
 /* Light Scheme */

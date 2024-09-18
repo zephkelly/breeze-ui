@@ -309,6 +309,7 @@ const ariaLabel = computed(() => {
     justify-content: center;
     height: 100%;
     white-space: nowrap;
+    letter-spacing: 0.2px;
 }
 
 .icon {
@@ -332,14 +333,6 @@ const ariaLabel = computed(() => {
     color: var(--text-background);
     transition: background-color 0.1s ease, color 0.1s ease;
 }
-.breeze-button--solid.breeze-button--danger {
-    background-color: var(--danger);
-    color: var(--text-foreground);
-}
-.breeze-button--solid.breeze-button--danger:hover,
-.breeze-button--solid.breeze-button--danger:focus-visible {
-    background-color: var(--danger-hover);
-}
 .breeze-button--solid:hover,
 .breeze-button--solid:focus-visible {
     background-color: var(--foreground-hover);
@@ -354,23 +347,54 @@ const ariaLabel = computed(() => {
     border-color: var(--foreground-active);
     color: var(--text-background);
 }
+.breeze-button--solid.breeze-button--danger {
+    background-color: var(--danger-foreground);
+    border-color: var(--danger-foreground);
+    color: var(--text-background);
+}
+.breeze-button--solid.breeze-button--danger:hover {
+    background-color: var(--danger-foreground-hover);
+    border-color: var(--danger-foreground-hover);
+}
+.breeze-button--solid.breeze-button--danger:focus-visible .button-content {
+    border-color: var(--text-foreground);
+    border-bottom: 1px solid var(--text-foreground);
+}
+.breeze-button--solid.breeze-button--danger.breeze-button--active {
+    background-color: var(--danger-foreground-active);
+}
 
 /* Solid - Ghost */
 .breeze-button--solid-ghost {
     border: 1px solid var(--foreground);
     color: var(--text-background);
+    background-color: var(--foreground);
     transition: background-color 0.1s ease, color 0.1s ease;
 }
-
 .breeze-button--solid-ghost:hover,
 .breeze-button--solid-ghost:focus-visible {
     background-color: var(--background-hover);
     color: var(--text-foreground);
 }
-
 .breeze-button--solid-ghost.breeze-button--active {
     background-color: var(--background-active);
     color: var(--text-foreground);
+}
+.breeze-button--solid-ghost.breeze-button--danger {
+    background-color: var(--danger-foreground);
+    border-color: var(--danger-foreground);
+    color: var(--text-background);
+}
+.breeze-button--solid-ghost.breeze-button--danger:hover {
+    background-color: var(--danger-background-hover);
+    color: var(--danger-background-text);   
+}
+.breeze-button--solid-ghost.breeze-button--danger:focus-visible {
+    background-color: var(--danger-background-hover);
+    color: var(--danger-background-text);
+}
+.breeze-button--solid-ghost.breeze-button--danger.breeze-button--active {
+    background-color: var(--danger-background-active);
 }
 
 /* Solid - Flat */
@@ -405,6 +429,28 @@ const ariaLabel = computed(() => {
 .breeze-button--solid-flat.breeze-button--active .button-content {
     border-color: var(--text-foreground);
 }
+.breeze-button--solid-flat.breeze-button--danger {
+    background-color: var(--danger-foreground);
+    border-color: var(--danger-foreground);
+    color: var(--text-background);
+}
+.breeze-button--solid-flat.breeze-button--danger:hover {
+    background-color: transparent;
+    color: var(--danger-background-text);
+    border-color: transparent;
+}
+.breeze-button--solid-flat.breeze-button--danger:focus-visible {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--danger-background-text);
+}
+.breeze-button--solid-flat.breeze-button--danger:hover .button-content,
+.breeze-button--solid-flat.breeze-button--danger:focus-visible .button-content {
+    border-color: var(--danger-background-text);
+}
+.breeze-button--solid-flat.breeze-button--danger.breeze-button--active {
+    background-color: var(--danger-background);
+}
 
 /* Ghost */
 .breeze-button--ghost,
@@ -417,12 +463,30 @@ const ariaLabel = computed(() => {
 .breeze-button--ghost-solid {
     transition: color 0.15s ease, background-color 0.15s ease;
 }
+.breeze-button--ghost .button-content {
+    border-bottom: 1px solid transparent;
+    transition: border-bottom 0.1s ease;
+}
 .breeze-button--ghost:hover,
 .breeze-button--ghost:focus-visible {
     background-color: var(--background-hover);
 }
 .breeze-button--ghost.breeze-button--active {
     background-color: var(--background-active);
+}
+.breeze-button--ghost.breeze-button--danger {
+    background-color: var(--danger-background);
+    border-color: var(--danger-background-text);
+    color: var(--danger-background-text);
+}
+.breeze-button--ghost.breeze-button--danger:hover {
+    background-color: var(--danger-background-hover);
+}
+.breeze-button--ghost.breeze-button--danger:focus-visible .button-content {
+    border-color: var(--danger-text-background);
+}
+.breeze-button--ghost.breeze-button--danger.breeze-button--active {
+    background-color: var(--danger-background-active);
 }
 
 /* Ghost - Solid */
@@ -439,6 +503,21 @@ const ariaLabel = computed(() => {
     background-color: var(--foreground-active);
     border-color: var(--foreground-active);
     color: var(--text-background);
+}
+.breeze-button--ghost-solid.breeze-button--danger {
+    background-color: var(--danger-background);
+    border-color: var(--danger-background-text);
+    color: var(--danger-background-text);
+}
+.breeze-button--ghost-solid.breeze-button--danger:focus-visible {
+    background-color: var(--danger-background-hover);
+}
+.breeze-button--ghost-solid.breeze-button--danger:hover {
+    background-color: var(--danger-foreground);
+    color: var(--danger-background);
+}
+.breeze-button--ghost-solid.breeze-button--danger.breeze-button--active {
+    background-color: var(--danger-foreground-active);
 }
 
 /* Ghost flat */
@@ -467,15 +546,22 @@ const ariaLabel = computed(() => {
 .breeze-button--ghost-flat.breeze-button--active .button-content {
     border-color: var(--text-foreground);
 }
-/* 
-@media (hover: hover) and (pointer: fine) {
-    .breeze-button--ghost:active:not(.breeze-button--active),
-    .breeze-button--ghost-solid:active:not(.breeze-button--active) {
-        background-color: transparent;
-        color: var(--text-foreground);
-
-    }
-} */
+.breeze-button--ghost-flat.breeze-button--danger {
+    background-color: var(--danger-background);
+    border-color: var(--danger-background-text);
+    color: var(--danger-background-text);
+}
+.breeze-button--ghost-flat.breeze-button--danger:hover .button-content,
+.breeze-button--ghost-flat.breeze-button--danger:focus-visible .button-content {
+    border-color: var(--danger-background-text);
+}
+.breeze-button--ghost-flat.breeze-button--danger:hover {
+    background-color: transparent;
+    border-color: transparent;
+}
+.breeze-button--ghost-flat.breeze-button--danger.breeze-button--active {
+    background-color: var(--danger-background);
+}
 
 /* Flat Styles */
 .breeze-button--flat {
@@ -486,6 +572,7 @@ const ariaLabel = computed(() => {
 }
 .breeze-button--flat.breeze-button--active {
     background-color: var(--background-hover);
+    border-color: var(--background-hover);
 }
 .breeze-button--flat .button-content {
     border-bottom: 1px solid transparent;
@@ -494,7 +581,22 @@ const ariaLabel = computed(() => {
 .breeze-button--flat:hover .button-content,
 .breeze-button--flat:focus-visible .button-content,
 .breeze-button--flat.breeze-button--active .button-content {
-    border-color: var(--foreground);
+    border-color: var(--danger-background-text);
+}
+.breeze-button--flat.breeze-button--danger {
+    color: var(--danger-background-text);
+}
+.breeze-button--flat.breeze-button--danger:hover {
+    color: var(--danger-background-text);
+}
+.breeze-button--flat.breeze-button--active {
+    background-color: var(--danger-background);
+    border-color: var(--danger-background);
+}
+.breeze-button--flat:focus-visible .button-content,
+.breeze-button--flat.breeze-button--danger:hover .button-content,
+.breeze-button--flat.breeze-button--active .button-content {
+    border-color: var(--danger-background-text);
 }
 
 /* Flat - Ghost */
@@ -511,6 +613,20 @@ const ariaLabel = computed(() => {
 .breeze-button--flat-ghost.breeze-button--active {
     background-color: var(--background-active);
 }
+.breeze-button--flat-ghost.breeze-button--danger {
+    color: var(--danger-background-text);
+}
+.breeze-button--flat-ghost.breeze-button--danger:focus-visible {
+    background-color: var(--danger-background);
+    border-color: var(--danger-background-text);    
+}
+.breeze-button--flat-ghost.breeze-button--danger:hover {
+    background-color: var(--danger-background-hover);
+    border-color: var(--danger-background-text);
+}
+.breeze-button--flat-ghost.breeze-button--danger.breeze-button--active {
+    background-color: var(--danger-background-active);
+}
 
 /* Flat-Static */
 .breeze-button--flat-static {
@@ -521,5 +637,11 @@ const ariaLabel = computed(() => {
 .breeze-button--flat-static .button-content {
     border-bottom: 1px solid var(--foreground);
     transition: border-bottom 0.1s ease;
+}
+.breeze-button--flat-static.breeze-button--danger {
+    color: var(--danger-background-text);
+}
+.breeze-button--flat-static.breeze-button--danger .button-content {
+    border-color: var(--danger-background-text);
 }
 </style>

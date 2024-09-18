@@ -12,9 +12,16 @@
 
     --accent: var(--accent-light);
 
-    --danger: var(--danger-light);
-    --danger-hover: var(--danger-hover-light);
-    --danger-active: var(--danger-active-light);
+    --danger-foreground: var(--danger-foreground-light);
+    --danger-foreground-border: var(--danger-foreground-border-light);
+    --danger-foreground-hover: var(--danger-foreground-hover-light);
+    --danger-foreground-active: var(--danger-foreground-active-light);
+
+    --danger-background: var(--danger-background-light);
+    --danger-background-border: var(--danger-background-border-light);
+    --danger-background-hover: var(--danger-background-hover-light);
+    --danger-background-active: var(--danger-background-active-light);
+    --danger-background-text: var(--danger-background-text-light);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,9 +39,16 @@
 
         --accent: var(--accent-dark);
 
-        --danger: var(--danger-dark);
-        --danger-hover: var(--danger-hover-dark);
-        --danger-active: var(--danger-active-dark);
+        --danger-foreground: var(--danger-foreground-dark);
+        --danger-foreground-border: var(--danger-foreground-border-dark);
+        --danger-foreground-hover: var(--danger-foreground-hover-dark);
+        --danger-foreground-active: var(--danger-foreground-active-dark);
+
+        --danger-background: var(--danger-background-dark);
+        --danger-background-border: var(--danger-background-border-dark);
+        --danger-background-hover: var(--danger-background-hover-dark);
+        --danger-background-active: var(--danger-background-active-dark);
+        --danger-background-text: var(--danger-background-text-dark);
     }
 }
 
@@ -52,9 +66,16 @@
 
     --accent: var(--accent-dark);
 
-    --danger: var(--danger-dark);
-    --danger-hover: var(--danger-hover-dark);
-    --danger-active: var(--danger-active-dark);
+    --danger-foreground: var(--danger-foreground-dark);
+    --danger-foreground-border: var(--danger-foreground-border-dark);
+    --danger-foreground-hover: var(--danger-foreground-hover-dark);
+    --danger-foreground-active: var(--danger-foreground-active-dark);
+
+    --danger-background: var(--danger-background-dark);
+    --danger-background-border: var(--danger-background-border-dark);
+    --danger-background-hover: var(--danger-background-hover-dark);
+    --danger-background-active: var(--danger-background-active-dark);
+    --danger-background-text: var(--danger-background-text-dark);
 }
 
 :root[data-color-scheme="light"] {
@@ -71,9 +92,16 @@
 
     --accent: var(--accent-light);
 
-    --danger: var(--danger-light);
-    --danger-hover: var(--danger-hover-light);
-    --danger-active: var(--danger-active-light);
+    --danger-foreground: var(--danger-foreground-light);
+    --danger-foreground-border: var(--danger-foreground-border-light);
+    --danger-foreground-hover: var(--danger-foreground-hover-light);
+    --danger-foreground-active: var(--danger-foreground-active-light);
+
+    --danger-background: var(--danger-background-light);
+    --danger-background-border: var(--danger-background-border-light);
+    --danger-background-hover: var(--danger-background-hover-light);
+    --danger-background-active: var(--danger-background-active-light);
+    --danger-background-text: var(--danger-background-text-dark);
 }
 
 body {
