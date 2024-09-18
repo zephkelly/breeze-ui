@@ -21,12 +21,11 @@
             tabindex="0"
             :href="href"
             role="button"
-            @click="handleClick"
             @mousedown="handleDown"
             @mouseup="handleUp"
             @mouseleave="handleLeave"
             @keydown.space.prevent="handleKeyDown"
-            @keyup.space.prevent="handleUp(); handleClick($event, true);"
+            @keyup.space.prevent="handleUp();"
         >
         <div class="button-content" v-if="!loading">
             <span v-if="$slots['icon-left']" class="icon left" aria-hidden="true"> 
@@ -62,12 +61,11 @@
             :aria-pressed="holdable ? isActive : undefined"
             :href="href"
             role="external-link"
-            @click="handleClick"
             @mousedown="handleDown"
             @mouseup="handleUp"
             @mouseleave="handleLeave"
             @keydown.space.prevent="handleDown"
-            @keyup.space.prevent="handleUp(); handleClick($event, true);"
+            @keyup.space.prevent="handleUp();"
         >
         <div class="button-content" v-if="!loading">
             <span v-if="$slots['icon-left']" class="icon left" aria-hidden="true"> 
@@ -141,40 +139,75 @@ const emit = defineEmits<{
     (e: 'pressend'): void
 }>();
 
-const isTouch = ref(false);
+// const isTouch = ref(false);
 const isActive = ref(false);
+const isActiveTimeout = ref<number | null>(null);
 
-const handleClick = debounce((event: MouseEvent, keyboard: boolean) => {
-    if (!props.disabled && !props.loading && (props.holdable !== undefined || keyboard)) {
-        emit('click', event);
-    }
-
-    isTouch.value = false;
+const click = debounce((event: MouseEvent) => {
+    emit('click', event);
 }, 100);
 
-const handleDown = (event: MouseEvent) => {
-    if (props.holdable && !props.disabled && !props.loading) {
-        isActive.value = true;
-        emit('pressstart');
-    }
-};
-
-const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === ' ' && !props.disabled && !props.loading) {
-        isActive.value = true;
-        emit('pressstart');
-    }
-};
-
-const handleUp = () => {
-    if (props.holdable && !props.disabled && !props.loading) {
+function setActiveFlash() {
+    isActive.value = true;
+    isActiveTimeout.value = window.setTimeout(() => {
         isActive.value = false;
+    }, 150);
+}
+
+const handleDown = (event: MouseEvent) => {
+    if (props.disabled || props.loading) return;
+
+    if (!props.holdable) {
+        setActiveFlash();
+        click(event);
+    }
+    else if (props.holdable) {
+        isActive.value = true;
+        emit('pressstart');
+    }
+};
+
+const isKeyDownEnterOrSpace = ref(false);
+const handleKeyDown = (event: KeyboardEvent) => {
+    if (props.disabled || props.loading) return;
+    if (event.key !== ' ') return;
+    
+    if (!props.holdable && !isKeyDownEnterOrSpace.value) {   
+        setActiveFlash();
+
+        click(event as unknown as MouseEvent);
+    }
+
+    if (isKeyDownEnterOrSpace.value === false) {
+        isActive.value = true;
+    }
+    
+    isKeyDownEnterOrSpace.value = true;
+    
+
+    emit('pressstart');
+};
+
+const handleUp = () => { 
+    if (props.disabled || props.loading) return;
+    isKeyDownEnterOrSpace.value = false;
+    
+    if (props.holdable) {
+        isActive.value = false;
+        
+        click(event as unknown as MouseEvent);
         emit('pressend');
+    }
+    
+    if (!props.holdable) {
+        isActive.value = false;
     }
 };
 
 const handleLeave = () => {
-    if (props.holdable && !props.disabled && !props.loading && isActive.value) {
+    if (props.disabled || props.loading) return;
+    
+    if (props.holdable && isActive.value) {
         isActive.value = false;
         emit('pressend');
     }
@@ -215,15 +248,8 @@ const ariaLabel = computed(() => {
     outline-offset: 2px;
 }
 
-.breeze-button--bounce.breeze-button--active,
-.breeze-button--bounce.breeze-button:active {
+.breeze-button--bounce.breeze-button--active {
     transform: translateY(1px);
-}
-
-@media (hover: hover) and (pointer: fine) {
-    .breeze-button.breeze-button--bounce.breeze-button--holdable:active:not(.breeze-button--active) {
-        transform: translate(0px);
-    }
 }
 
 .button-content {
@@ -231,7 +257,6 @@ const ariaLabel = computed(() => {
     align-items: center;
     justify-content: center;
 }
-
 
 .content-main {
     display: inline-flex;
@@ -256,10 +281,9 @@ const ariaLabel = computed(() => {
 <!-- Variants -->
 <style scoped>
 /* Solid */
-.breeze-button--solid,
-.breeze-button--solid-ghost,
-.breeze-button--solid-flat {
+.breeze-button--solid {
     background-color: var(--foreground);
+    border: 1px solid var(--foreground);
     color: var(--text-background);
     transition: background-color 0.1s ease, color 0.1s ease;
 }
@@ -271,19 +295,26 @@ const ariaLabel = computed(() => {
 .breeze-button--solid.breeze-button--danger:focus-visible {
     background-color: var(--danger-hover);
 }
-
 .breeze-button--solid:hover,
 .breeze-button--solid:focus-visible {
     background-color: var(--foreground-hover);
 }
-
-.breeze-button--solid:active {
+.breeze-button--solid:focus-visible {
+    background-color: var(--background-active);
+    color: var(--text-foreground);
+    border-color: var(--text-foreground);
+}
+.breeze-button--solid.breeze-button--active {
     background-color: var(--foreground-active);
+    border-color: var(--foreground-active);
+    color: var(--text-background);
 }
 
 /* Solid - Ghost */
 .breeze-button--solid-ghost {
     border: 1px solid var(--foreground);
+    color: var(--text-background);
+    transition: background-color 0.1s ease, color 0.1s ease;
 }
 
 .breeze-button--solid-ghost:hover,
@@ -292,31 +323,42 @@ const ariaLabel = computed(() => {
     color: var(--text-foreground);
 }
 
-.breeze-button--solid-ghost:active {
+.breeze-button--solid-ghost.breeze-button--active {
     background-color: var(--background-active);
-}
-
-@media (hover: hover) and (pointer: fine) {
-    .breeze-button--solid:active:not(.breeze-button--active),
-    .breeze-button--solid-ghost:active:not(.breeze-button--active) {
-        background-color: var(--foreground);
-        color: var(--text-background);
-
-    }
+    color: var(--text-foreground);
 }
 
 /* Solid - Flat */
-.breeze-button--solid-flat:hover,
-.breeze-button--solid-flat:focus-visible {
-    background-color: transparent;
-    color: var(--text-foreground);
-}
-.breeze-button--solid-flat:hover .button-content {
-    border-color: var(--foreground);
+.breeze-button--solid-flat {
+    background-color: var(--foreground);
+    border: 1px solid var(--foreground);
+    color: var(--text-background);
+    transition: background-color 0.1s ease, color 0.1s ease;
 }
 .breeze-button--solid-flat .button-content {
     border-bottom: 1px solid transparent;
     transition: border-bottom 0.1s ease;
+}
+.breeze-button--solid-flat:hover {
+    background-color: transparent;
+    color: var(--text-foreground);
+}
+.breeze-button--solid-flat:hover .button-content {
+    border-color: var(--text-foreground);
+}
+.breeze-button--solid-flat:focus-visible {
+    background-color: transparent;
+    color: var(--text-foreground);
+}
+.breeze-button--solid-flat:focus-visible .button-content {
+    border-color: var(--text-foreground);
+}
+.breeze-button--solid-flat.breeze-button--active {
+    background-color: var(--background-hover);
+    color: var(--text-foreground); 
+}
+.breeze-button--solid-flat.breeze-button--active .button-content {
+    border-color: var(--text-foreground);
 }
 
 /* Ghost */
@@ -331,24 +373,27 @@ const ariaLabel = computed(() => {
     transition: color 0.15s ease, background-color 0.15s ease;
 }
 .breeze-button--ghost:hover,
-.breeze-button--ghost:focus-visible
-{
+.breeze-button--ghost:focus-visible {
     background-color: var(--background-hover);
 }
-.breeze-button--ghost:active {
+.breeze-button--ghost.breeze-button--active {
     background-color: var(--background-active);
 }
 
 /* Ghost - Solid */
-.breeze-button--ghost-solid:hover,
-.breeze-button--ghost-solid:focus-visible {
-    background-color: var(--foreground-hover);
+.breeze-button--ghost-solid:hover {
+    background-color: var(--foreground);
     color: var(--text-background);
     border-color: var(--foreground-hover);
 }
-.breeze-button--ghost-solid:active {
+.breeze-button--ghost-solid:focus-visible {
+    background-color: var(--background-hover);
+    color: var(--text-foreground);
+}
+.breeze-button--ghost-solid.breeze-button--active {
     background-color: var(--foreground-active);
     border-color: var(--foreground-active);
+    color: var(--text-background);
 }
 
 /* Ghost flat */
@@ -356,18 +401,28 @@ const ariaLabel = computed(() => {
     background-color: transparent;
     border: 1px solid var(--foreground);
     color: var(--foreground);
-}
-.breeze-button--ghost-flat:hover{
-    border-color: var(--foreground-hover);
+    transition: background-color 0.1s ease, border-color 0.1s ease;
 }
 .breeze-button--ghost-flat .button-content {
     border-bottom: 1px solid transparent;
     transition: border-bottom 0.1s ease;
 }
-.breeze-button--ghost-flat:hover .button-content {
-    border-color: var(--foreground);
+.breeze-button--ghost-flat:hover,
+.breeze-button--ghost-flat:focus-visible {
+    border-color: var(--foreground-hover);
 }
-
+.breeze-button--ghost-flat:hover .button-content,
+.breeze-button--ghost-flat:focus-visible .button-content {
+    border-color: var(--text-foreground);
+}
+.breeze-button--ghost-flat.breeze-button--active {
+    background-color: var(--background-hover);
+    color: var(--foreground);
+}
+.breeze-button--ghost-flat.breeze-button--active .button-content {
+    border-color: var(--text-foreground);
+}
+/* 
 @media (hover: hover) and (pointer: fine) {
     .breeze-button--ghost:active:not(.breeze-button--active),
     .breeze-button--ghost-solid:active:not(.breeze-button--active) {
@@ -375,13 +430,17 @@ const ariaLabel = computed(() => {
         color: var(--text-foreground);
 
     }
-}
+} */
 
 /* Flat Styles */
 .breeze-button--flat {
     background-color: transparent;
     border: 1px solid transparent;
     color: var(--foreground);
+    transition: background-color 0.1s ease, border-color 0.1s ease;
+}
+.breeze-button--flat.breeze-button--active {
+    background-color: var(--background-hover);
 }
 .breeze-button--flat .button-content {
     border-bottom: 1px solid transparent;
@@ -389,14 +448,8 @@ const ariaLabel = computed(() => {
 }
 .breeze-button--flat:hover .button-content,
 .breeze-button--flat:focus-visible .button-content,
-.breeze-button--flat:active .button-content {
-    border-bottom: 1px solid var(--foreground);
-}
-
-@media (hover: hover) and (pointer: fine) {
-    .breeze-button--flat:active:not(.breeze-button--active) {
-        border-bottom: 1px solid transparent;
-    }
+.breeze-button--flat.breeze-button--active .button-content {
+    border-color: var(--foreground);
 }
 
 /* Flat - Ghost */
@@ -404,19 +457,14 @@ const ariaLabel = computed(() => {
     background-color: transparent;
     border: 1px solid transparent;
     color: var(--foreground);
+    transition: background-color 0.1s ease;
 }
-.breeze-button--flat-ghost:hover {
+.breeze-button--flat-ghost:hover,
+.breeze-button--flat-ghost:focus-visible {
     background-color: var(--background-hover);
 }
-.breeze-button--flat-ghost:active,
-.breeze-button--flat-ghost:focus-visible {
+.breeze-button--flat-ghost.breeze-button--active {
     background-color: var(--background-active);
-}
-
-@media (hover: hover) and (pointer: fine) {
-    .breeze-button--flat-ghost:active:not(.breeze-button--active) {
-        background-color: transparent;
-    }
 }
 
 /* Flat-Static */
