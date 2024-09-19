@@ -5,7 +5,6 @@ export const ButtonVariants = [
 ] as const;
 
 export const ButtonColors = [
-    'foreground', 'background',
     'danger', 'warning', 'success',
 ] as const;
 

@@ -96,14 +96,8 @@
 
 <script setup lang="ts">
 import { type ButtonProps, ButtonVariants, ButtonColors } from './../../types/button';
-import { type ColorSchemeNuxtAppContext } from './../../types/colorScheme';
-
 import { debounce } from './../../utils/debounce';
-
 import { useButtonColor } from './../../composables/useButtonColor';
-
-const nuxtApp = useNuxtApp();
-const { $currentScheme } = nuxtApp as unknown as ColorSchemeNuxtAppContext;
 
 const props = defineProps<ButtonProps>();
 
@@ -159,7 +153,6 @@ const emit = defineEmits<{
     (e: 'pressend'): void
 }>();
 
-// const isTouch = ref(false);
 const isActive = ref(false);
 const isActiveTimeout = ref<number | null>(null);
 
@@ -363,26 +356,22 @@ const ariaLabel = computed(() => {
     color: var(--text-background);
 }
 .breeze-button--solid.breeze-button--colorway {  /* Colorway */
-    background-color: var(--colorway-foreground);
-    border-color: var(--colorway-foreground);
-    color: var(--text-background);
+    background-color: var(--colorway);
+    border-color: var(--colorway);
+    color: var(--colorway-text);
 }
 .breeze-button--solid.breeze-button--colorway:hover {
-    background-color: var(--colorway-foreground-hover);
-    border-color: var(--colorway-foreground-hover);
+    background-color: var(--colorway-hover);
+    border-color: var(--colorway-hover);
 }
 .breeze-button--solid.breeze-button--colorway:focus-visible { 
-    background-color: var(--colorway-background-active);
-    color: var(--colorway-background-text);
-    border-color: var(--colorway-background-text);
+    background-color: var(--colorway-active);
+    color: var(--colorway-text);
+    border-color: var(--colorway-text);
 }
-/* .breeze-button--solid.breeze-button--colorway:focus-visible .button-content {
-    border-color: var(--colorway-foreground-text);
-    border-bottom: 1px solid var(--colorway-foreground);
-} */
 .breeze-button--solid.breeze-button--colorway.breeze-button--active {
-    background-color: var(--colorway-foreground-active);
-    border-color: var(--colorway-foreground-active);
+    background-color: var(--colorway-active);
+    border-color: var(--colorway-active);
 }
 
 /* Solid - Ghost */

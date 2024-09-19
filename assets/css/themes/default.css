@@ -15,36 +15,37 @@
 
     /* Colorway styles */
     --danger-foreground-dark: #d83338;
-    --danger-border-foreground-dark: #971e1e;
-    --danger-hover-foreground-dark: #ff0000;
-    --danger-active-foreground-dark: #c20000;
-    --danger-text-foreground-dark: #09090b;
+    --danger-foreground-border-dark: #971e1e;
+    --danger-foreground-hover-dark: #ff0000;
+    --danger-foreground-active-dark: #c20000;
+    --danger-foreground-text-dark: #09090b;
     --danger-background-dark: #210203;
-    --danger-border-background-dark: #971e1e;
-    --danger-hover-background-dark: #3b0202;
-    --danger-active-background-dark: #4f0000;
-    --danger-text-background-dark: #ff0000;
+    --danger-background-border-dark: #971e1e;
+    --danger-background-hover-dark: #3b0202;
+    --danger-background-active-dark: #4f0000;
+    --danger-background-text-dark: #ff0000;
 
     --warning-foreground-dark: #ffac07;
-    --warning-border-foreground-dark: #d39e00;
-    --warning-hover-foreground-dark: #e0a800;
-    --warning-active-foreground-dark: #d39e00;
+    --warning-foreground-border-dark: #d39e00;
+    --warning-foreground-hover-dark: #e0a800;
+    --warning-foreground-active-dark: #d39e00;
+    --warning-foreground-text-dark: #09090b;
     --warning-background-dark: #261d00;
-    --warning-border-background-dark: #ffeeba;
-    --warning-hover-background-dark: #3f3000;
-    --warning-active-background-dark: #513d00;
-    --warning-text-background-dark: #ffbf00;
+    --warning-background-border-dark: #ffeeba;
+    --warning-background-hover-dark: #3f3000;
+    --warning-background-active-dark: #513d00;
+    --warning-background-text-dark: #ffbf00;
 
     --success-foreground-dark: #28a745;
-    --success-border-foreground-dark: #1e7e34;
-    --success-hover-foreground-dark: #34ce57;
-    --success-active-foreground-dark: #218838;
-    --success-text-foreground-dark: #09090b;
+    --success-foreground-border-dark: #1e7e34;
+    --success-foreground-hover-dark: #34ce57;
+    --success-foreground-active-dark: #218838;
+    --success-foreground-text-dark: #09090b;
     --success-background-dark: #051b0d;
-    --success-border-background-dark: #1e7e34;
-    --success-hover-background-dark: #0a2e16;
-    --success-active-background-dark: #0f3c1f;
-    --success-text-background-dark: #28a745;
+    --success-background-border-dark: #1e7e34;
+    --success-background-hover-dark: #0a2e16;
+    --success-background-active-dark: #0f3c1f;
+    --success-background-text-dark: #28a745;
 }
 
 /* Light Scheme */
@@ -61,6 +62,14 @@
     
     --text-foreground-light: #09090b;
     --text-background-light: #fafafa;
+
+    /* Colorway styles */
+    --danger-foreground-light: #d83338;
+    --danger-foreground-border-light: #971e1e;
+    --danger-foreground-hover-light: #ff0000;
+    --danger-foreground-active-light: #c20000;
+    --danger-foreground-text-light: #fafafa;
+    --danger-background-light: #210203;
 }
 
 /* Common */
