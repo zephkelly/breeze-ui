@@ -12,7 +12,12 @@
 
     --accent: var(--accent-light);
 
-    --danger-foreground: var(--danger-foreground-light);
+    --disabled-foreground: var(--disabled-foreground-light);
+    --disabled-background: var(--disabled-background-light);
+    --disabled-foreground-hover: var(--disabled-foreground-hover-light);
+    --disabled-foreground-text: var(--disabled-foreground-text-light);
+
+    /* --danger-foreground: var(--danger-foreground-light);
     --danger-foreground-border: var(--danger-foreground-border-light);
     --danger-foreground-hover: var(--danger-foreground-hover-light);
     --danger-foreground-active: var(--danger-foreground-active-light);
@@ -21,7 +26,7 @@
     --danger-background-border: var(--danger-background-border-light);
     --danger-background-hover: var(--danger-background-hover-light);
     --danger-background-active: var(--danger-background-active-light);
-    --danger-background-text: var(--danger-background-text-light);
+    --danger-background-text: var(--danger-background-text-light); */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,7 +44,12 @@
 
         --accent: var(--accent-dark);
 
-        --danger-foreground: var(--danger-foreground-dark);
+        --disabled-foreground: var(--disabled-foreground-dark);
+        --disabled-background: var(--disabled-background-dark);
+        --disabled-foreground-hover: var(--disabled-foreground-hover-dark);
+        --disabled-foreground-text: var(--disabled-foreground-text-dark);
+
+        /* --danger-foreground: var(--danger-foreground-dark);
         --danger-foreground-border: var(--danger-foreground-border-dark);
         --danger-foreground-hover: var(--danger-foreground-hover-dark);
         --danger-foreground-active: var(--danger-foreground-active-dark);
@@ -48,7 +58,7 @@
         --danger-background-border: var(--danger-background-border-dark);
         --danger-background-hover: var(--danger-background-hover-dark);
         --danger-background-active: var(--danger-background-active-dark);
-        --danger-background-text: var(--danger-background-text-dark);
+        --danger-background-text: var(--danger-background-text-dark); */
     }
 }
 
@@ -66,6 +76,11 @@
 
     --accent: var(--accent-dark);
 
+    --disabled-foreground: var(--disabled-foreground-dark);
+    --disabled-background: var(--disabled-background-dark);
+    --disabled-foreground-hover: var(--disabled-foreground-hover-dark);
+    --disabled-foreground-text: var(--disabled-foreground-text-dark);
+/* 
     --danger-foreground: var(--danger-foreground-dark);
     --danger-foreground-border: var(--danger-foreground-border-dark);
     --danger-foreground-hover: var(--danger-foreground-hover-dark);
@@ -75,7 +90,7 @@
     --danger-background-border: var(--danger-background-border-dark);
     --danger-background-hover: var(--danger-background-hover-dark);
     --danger-background-active: var(--danger-background-active-dark);
-    --danger-background-text: var(--danger-background-text-dark);
+    --danger-background-text: var(--danger-background-text-dark); */
 }
 
 :root[data-color-scheme="light"] {
@@ -92,7 +107,12 @@
 
     --accent: var(--accent-light);
 
-    --danger-foreground: var(--danger-foreground-light);
+    --disabled-foreground: var(--disabled-foreground-light);
+    --disabled-background: var(--disabled-background-light);
+    --disabled-foreground-hover: var(--disabled-foreground-hover-light);
+    --disabled-foreground-text: var(--disabled-foreground-text-light);
+
+    /* --danger-foreground: var(--danger-foreground-light);
     --danger-foreground-border: var(--danger-foreground-border-light);
     --danger-foreground-hover: var(--danger-foreground-hover-light);
     --danger-foreground-active: var(--danger-foreground-active-light);
@@ -101,7 +121,7 @@
     --danger-background-border: var(--danger-background-border-light);
     --danger-background-hover: var(--danger-background-hover-light);
     --danger-background-active: var(--danger-background-active-light);
-    --danger-background-text: var(--danger-background-text-dark);
+    --danger-background-text: var(--danger-background-text-dark); */
 }
 
 body {
