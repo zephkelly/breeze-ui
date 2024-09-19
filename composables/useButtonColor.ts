@@ -22,7 +22,6 @@ interface ColorwayVariables {
   
       const newVariables: ColorwayVariables = {}
   
-      // For other colorways
       states.forEach(state => {
         const baseVar = `--${currentColorway}-foreground${state}-${currentScheme}`
         const newVar = `--colorway${state}`
