@@ -13,16 +13,38 @@
     --text-foreground-dark: #fafafa;
     --text-background-dark: #09090b;
 
+    /* Colorway styles */
     --danger-foreground-dark: #d83338;
-    --danger-foreground-border-dark: #971e1e;
-    --danger-foreground-hover-dark: #ff0000;
-    --danger-foreground-active-dark: #c20000;
-
+    --danger-border-foreground-dark: #971e1e;
+    --danger-hover-foreground-dark: #ff0000;
+    --danger-active-foreground-dark: #c20000;
+    --danger-text-foreground-dark: #09090b;
     --danger-background-dark: #210203;
-    --danger-background-border-dark: #971e1e;
-    --danger-background-hover-dark: #3b0202;
-    --danger-background-active-dark: #4f0000;
-    --danger-background-text-dark: #ff0000;
+    --danger-border-background-dark: #971e1e;
+    --danger-hover-background-dark: #3b0202;
+    --danger-active-background-dark: #4f0000;
+    --danger-text-background-dark: #ff0000;
+
+    --warning-foreground-dark: #ffc107;
+    --warning-border-foreground-dark: #d39e00;
+    --warning-hover-foreground-dark: #e0a800;
+    --warning-active-foreground-dark: #d39e00;
+    --warning-background-dark: #261d00;
+    --warning-border-background-dark: #ffeeba;
+    --warning-hover-background-dark: #3f3000;
+    --warning-active-background-dark: #513d00;
+    --warning-text-background-dark: #ffbf00;
+
+    --success-foreground-dark: #28a745;
+    --success-border-foreground-dark: #1e7e34;
+    --success-hover-foreground-dark: #34ce57;
+    --success-active-foreground-dark: #218838;
+    --success-text-foreground-dark: #09090b;
+    --success-background-dark: #051b0d;
+    --success-border-background-dark: #1e7e34;
+    --success-hover-background-dark: #0a2e16;
+    --success-active-background-dark: #0f3c1f;
+    --success-text-background-dark: #28a745;
 }
 
 /* Light Scheme */
