@@ -87,25 +87,6 @@ const validatedVariant = computed(() => {
     return ButtonVariants[0];
 });
 
-// const validatedColor = computed(() => {
-//     if (props.colorway !== undefined && Object.values(ButtonColors).includes(props.colorway)) {
-//         return props.colorway;
-//     }
-
-//     if (import.meta.dev) {
-//         if (props.colorway as string === '') {
-//             console.warn(`breeze-ui: Empty button color. Defaulting to '${ButtonColors[0]}'`);
-//             console.warn(`breeze-ui: Valid button colors are: ${Object.values(ButtonColors).join(', ')}`);
-//         }
-//         else if (props.colorway !== undefined) {
-//             console.warn(`breeze-ui: Invalid button color: '${props.colorway}'. Defaulting to '${ButtonColors[0]}'`);
-//             console.warn(`breeze-ui: Valid button colors are: ${Object.values(ButtonColors).join(', ')}`);
-//         }
-//     }
-
-//     return ButtonColors[0];
-// });
-
 const emit = defineEmits<{
     (e: 'click', event: MouseEvent): void
     (e: 'pressstart'): void
@@ -332,7 +313,7 @@ const ariaLabel = computed(() => {
     background-color: var(--colorway-active);
     border-color: var(--colorway-active);
 }
-.breeze-button--solid.breeze-button--disabled {
+.breeze-button--solid.breeze-button--disabled {  /* Disabled */
     background-color: var(--disabled-background);
     border-color: var(--disabled-background);
     color: var(--disabled-foreground);
@@ -372,7 +353,7 @@ const ariaLabel = computed(() => {
 .breeze-button--solid-ghost.breeze-button--colorway.breeze-button--active {
     background-color: var(--colorway-contrast-active);
 }
-.breeze-button--solid-ghost.breeze-button--disabled {
+.breeze-button--solid-ghost.breeze-button--disabled {  /* Disabled */
     background-color: var(--disabled-background);
     border-color: var(--disabled-background);
     color: var(--disabled-foreground);
@@ -416,7 +397,7 @@ const ariaLabel = computed(() => {
 .breeze-button--solid-flat.breeze-button--active .button-content {
     border-color: var(--text-foreground);
 }
-.breeze-button--solid-flat.breeze-button--colorway { /* Colorway */
+.breeze-button--solid-flat.breeze-button--colorway {  /* Colorway */
     background-color: var(--colorway);
     border-color: var(--colorway);
     color: var(--text-background);
@@ -438,7 +419,7 @@ const ariaLabel = computed(() => {
 .breeze-button--solid-flat.breeze-button--colorway.breeze-button--active {
     background-color: var(--colorway-contrast);
 }
-.breeze-button--solid-flat.breeze-button--disabled {
+.breeze-button--solid-flat.breeze-button--disabled {  /* Disabled */
     background-color: var(--disabled-background);
     border-color: var(--disabled-background);
     color: var(--disabled-foreground);
@@ -489,7 +470,7 @@ const ariaLabel = computed(() => {
 .breeze-button--ghost.breeze-button--colorway.breeze-button--active {
     background-color: var(--colorway-contrast-active);
 }
-.breeze-button--ghost.breeze-button--disabled {
+.breeze-button--ghost.breeze-button--disabled {  /* Disabled */
     background-color: var(--disabled-foreground-hover);
     border-color: var(--disabled-foreground-text);
     color: var(--disabled-foreground-text);
@@ -516,7 +497,7 @@ const ariaLabel = computed(() => {
     border-color: var(--foreground-active);
     color: var(--text-background);
 }
-.breeze-button--ghost-solid.breeze-button--colorway { /* Colorway */
+.breeze-button--ghost-solid.breeze-button--colorway {  /* Colorway */
     background-color: var(--colorway-contrast);
     border-color: var(--colorway-contrast-text);
     color: var(--colorway-contrast-text);
@@ -532,7 +513,7 @@ const ariaLabel = computed(() => {
     background-color: var(--colorway-active);
     color: var(--colorway-contrast);
 }
-.breeze-button--ghost-solid.breeze-button--disabled {
+.breeze-button--ghost-solid.breeze-button--disabled {  /* Disabled */
     background-color: var(--disabled-foreground-hover);
     border-color: var(--disabled-foreground-text);
     color: var(--disabled-foreground-text);
@@ -587,7 +568,7 @@ const ariaLabel = computed(() => {
 .breeze-button--ghost-flat.breeze-button--colorway.breeze-button--active {
     background-color: var(--colorway-contrast);
 }
-.breeze-button--ghost-flat.breeze-button--disabled {
+.breeze-button--ghost-flat.breeze-button--disabled {  /* Disabled */
     background-color: var(--disabled-foreground-hover);
     border-color: var(--disabled-foreground-text);
     color: var(--disabled-foreground-text);
@@ -639,7 +620,7 @@ const ariaLabel = computed(() => {
     background-color: var(--colorway-contrast);
     border-color: var(--colorway-contrast);
 }
-.breeze-button--flat.breeze-button--disabled {
+.breeze-button--flat.breeze-button--disabled {  /* Disabled */
     color: var(--disabled-foreground-text);
 }
 .breeze-button--flat.breeze-button--disabled:hover {
@@ -678,7 +659,7 @@ const ariaLabel = computed(() => {
 .breeze-button--flat-ghost.breeze-button--colorway.breeze-button--active {
     background-color: var(--colorway-contrast-active);
 }
-.breeze-button--flat-ghost.breeze-button--disabled {
+.breeze-button--flat-ghost.breeze-button--disabled {  /* Disabled */
     color: var(--disabled-foreground-text);
 }
 .breeze-button--flat-ghost.breeze-button--disabled:hover {
@@ -713,7 +694,7 @@ const ariaLabel = computed(() => {
 .breeze-button--flat-static.breeze-button--colorway .button-content {
     border-color: var(--colorway-background-text);
 }
-.breeze-button--flat-static.breeze-button--disabled {
+.breeze-button--flat-static.breeze-button--disabled {  /* Disabled */
     color: var(--disabled-foreground-text);
 }
 .breeze-button--flat-static.breeze-button--disabled:hover {
