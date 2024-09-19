@@ -449,6 +449,7 @@ onMounted(() => {
 .breeze-button--solid-flat:hover {
     background-color: transparent;
     color: var(--text-foreground);
+    border-color: transparent;
 }
 .breeze-button--solid-flat:hover .button-content {
     border-color: var(--text-foreground);
@@ -558,7 +559,7 @@ onMounted(() => {
     background-color: var(--colorway-foreground-active);
 }
 
-/* Ghost flat */
+/* Ghost-Flat */
 .breeze-button--ghost-flat {
     background-color: transparent;
     border: 1px solid var(--foreground);
@@ -571,7 +572,7 @@ onMounted(() => {
 }
 .breeze-button--ghost-flat:hover,
 .breeze-button--ghost-flat:focus-visible {
-    border-color: var(--foreground-hover);
+    border-color: transparent;
 }
 .breeze-button--ghost-flat:hover .button-content,
 .breeze-button--ghost-flat:focus-visible .button-content {
@@ -608,33 +609,37 @@ onMounted(() => {
     color: var(--foreground);
     transition: background-color 0.1s ease, border-color 0.1s ease;
 }
-.breeze-button--flat.breeze-button--active {
-    background-color: var(--background-hover);
-    border-color: var(--background-hover);
-}
 .breeze-button--flat .button-content {
     border-bottom: 1px solid transparent;
     transition: border-bottom 0.1s ease;
 }
+.breeze-button--flat.breeze-button--active {
+    background-color: var(--background-hover);
+    border-color: var(--background-hover);
+}
 .breeze-button--flat:hover .button-content,
-.breeze-button--flat:focus-visible .button-content,
-.breeze-button--flat.breeze-button--active .button-content {
+.breeze-button--flat:focus-visible .button-content {
+    border-color: var(--foreground);
+}
+.breeze-button--flat.breeze-button--colorway:hover .button-content,
+.breeze-button--flat.breeze-button--colorway:focus-visible .button-content,
+.breeze-button--flat.breeze-button--colorway.breeze-button--active .button-content {   /* Colorway */
     border-color: var(--colorway-background-text);
 }
-.breeze-button--flat.breeze-button--colorway {  /* Colorway */
+.breeze-button--flat.breeze-button--colorway:hover .button-content,
+.breeze-button--flat.breeze-button--colorway:focus-visible .button-content,
+.breeze-button--flat.breeze-button--colorway.breeze-button--active .button-content {
+    border-color: var(--colorway-background-text);
+}
+.breeze-button--flat.breeze-button--colorway {
     color: var(--colorway-background-text);
 }
 .breeze-button--flat.breeze-button--colorway:hover {
     color: var(--colorway-background-text);
 }
-.breeze-button--flat.breeze-button--active {
+.breeze-button--flat.breeze-button--colorway.breeze-button--active {
     background-color: var(--colorway-background);
     border-color: var(--colorway-background);
-}
-.breeze-button--flat:focus-visible .button-content,
-.breeze-button--flat.breeze-button--colorway:hover .button-content,
-.breeze-button--flat.breeze-button--active .button-content {
-    border-color: var(--colorway-background-text);
 }
 
 /* Flat - Ghost */
@@ -647,6 +652,7 @@ onMounted(() => {
 .breeze-button--flat-ghost:hover,
 .breeze-button--flat-ghost:focus-visible {
     background-color: var(--background-hover);
+    border-color: var(--foreground);
 }
 .breeze-button--flat-ghost.breeze-button--active {
     background-color: var(--background-active);
@@ -672,12 +678,18 @@ onMounted(() => {
     border: 1px solid transparent;
     color: var(--foreground);
 }
+.breeze-button--flat-static:focus-visible {
+    background-color: var(--background-hover);
+}
 .breeze-button--flat-static .button-content {
     border-bottom: 1px solid var(--foreground);
     transition: border-bottom 0.1s ease;
 }
 .breeze-button--flat-static.breeze-button--colorway {  /* Colorway */
     color: var(--colorway-background-text);
+}
+.breeze-button--flat-static.breeze-button--colorway:focus-visible {
+    background-color: var(--colorway-background);
 }
 .breeze-button--flat-static.breeze-button--colorway .button-content {
     border-color: var(--colorway-background-text);
