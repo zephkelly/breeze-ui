@@ -5,6 +5,12 @@ export const useColorScheme = () => {
     const isSystemColorScheme = ref(true)
     const systemPreference = ref<'light' | 'dark'>('light')
 
+    const colorSchemeCookie = useCookie('color-scheme', {
+        maxAge: 60 * 60 * 24 * 365, // 1 year
+        path: '/',
+        sameSite: 'lax'
+    })
+
     const currentScheme = computed(() => {
         if (isSystemColorScheme.value) {
             return systemPreference.value
@@ -26,40 +32,43 @@ export const useColorScheme = () => {
     }
 
     const initColorScheme = () => {
-        if (!import.meta.client) return;
-
-        const storedScheme = localStorage.getItem('color-scheme')
-
-        if (storedScheme === 'light' || storedScheme === 'dark') {
-            isSystemColorScheme.value = false;
-            colorScheme.value = storedScheme;
-
-            applyColorScheme(storedScheme);
-        } else {
-            isSystemColorScheme.value = true;
-            colorScheme.value = null;
-            updateSystemPreference();
-
-            document.documentElement.removeAttribute('data-color-scheme');
-            localStorage.removeItem('color-scheme');
-        }
-
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-        mediaQuery.addEventListener('change', updateSystemPreference)
-    }
-
-    const applyColorScheme = (scheme: 'light' | 'dark' | null) => {
-        if (import.meta.client) {
-            if (scheme === null) {
-                document.documentElement.removeAttribute('data-color-scheme')
-                localStorage.removeItem('color-scheme')
-            } else {
-                document.documentElement.setAttribute('data-color-scheme', scheme)
-                localStorage.setItem('color-scheme', scheme)
+        if (import.meta.server) {
+            const event = useRequestEvent();
+            const serverColorScheme = event?.context?.colorScheme;
+            if (serverColorScheme) {
+                colorScheme.value = serverColorScheme as ColorScheme;
+                isSystemColorScheme.value = false;
             }
         }
+        else if (import.meta.client) {
+            const storedScheme = localStorage.getItem('color-scheme') || colorSchemeCookie.value;
+            if (storedScheme === 'light' || storedScheme === 'dark') {
+                colorScheme.value = storedScheme as ColorScheme;
+                isSystemColorScheme.value = false;
+            }
+            else {
+                updateSystemPreference();
+            }
+
+            applyColorScheme(colorScheme.value);
+        }
     }
 
+    const applyColorScheme = (scheme: ColorScheme) => {
+        if (import.meta.client) {
+            document.documentElement.setAttribute('data-color-scheme', scheme || 'light')
+            localStorage.setItem('color-scheme', scheme || 'light')
+        }
+
+        colorSchemeCookie.value = scheme || 'light'
+
+        useHead({
+            htmlAttrs: {
+                'data-color-scheme': scheme || 'light'
+            }
+        })
+    }
+    
     const toggleColorScheme = () => {
         isSystemColorScheme.value = false
 
@@ -80,13 +89,15 @@ export const useColorScheme = () => {
 
     watch(systemPreference, () => {
         if (isSystemColorScheme.value) {
-        applyColorScheme(systemPreference.value)
+            applyColorScheme(systemPreference.value)
         }
     })
 
     if (import.meta.client) {
         nextTick(() => {
             initColorScheme()
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            mediaQuery.addEventListener('change', updateSystemPreference);
         })
     }
 

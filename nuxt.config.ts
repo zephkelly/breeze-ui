@@ -32,7 +32,32 @@ export default defineNuxtConfig({
         dirs: [
             'types/**',
             'themes/**',
+            'modules/**',
+            'plugins/**',
         ]
     },
-    
+    app: {
+        head: {
+            htmlAttrs: {
+                'data-color-scheme': ''
+            }
+        }
+    },
+    // hooks: {
+    //     'pages:extend' (pages) {
+    //       function setMiddleware (pages: any[]) {
+    //         for (const page of pages) {
+    //           if (/* some condition */ true) {
+    //             page.meta ||= {}
+    //             // Note that this will override any middleware set in `definePageMeta` in the page
+    //             page.meta.middleware = ['colorScheme']
+    //           }
+    //           if (page.children) {
+    //             setMiddleware(page.children)
+    //           }
+    //         }
+    //       }
+    //       setMiddleware(pages)
+    //     }
+    //   }
 })
