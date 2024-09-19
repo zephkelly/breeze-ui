@@ -18,27 +18,28 @@
     --disabled-foreground-text-dark: #5f5f5f;
     --disabled-background-dark: #7070709c;
 
-
     /* Colorway styles */
     /* Danger */
     --danger-foreground-dark: #d83338;
-    --danger-foreground-border-dark: #971e1e;
-    --danger-foreground-hover-dark: #ff0000;
+    --danger-foreground-border-dark: #d83338;
+    --danger-foreground-hover-dark: #ee2323;
     --danger-foreground-active-dark: #c20000;
     --danger-foreground-text-dark: #09090b;
-    --danger-background-dark: #210203;
+
+    --danger-background-dark: #4c000349;
     --danger-background-border-dark: #971e1e;
-    --danger-background-hover-dark: #3b0202;
+    --danger-background-hover-dark: #2a0101;
     --danger-background-active-dark: #4f0000;
     --danger-background-text-dark: #ff0000;
 
     /* Foreground */
     --warning-foreground-dark: #ffac07;
     --warning-foreground-border-dark: #d39e00;
-    --warning-foreground-hover-dark: #e0a800;
-    --warning-foreground-active-dark: #d39e00;
+    --warning-foreground-hover-dark: #db8904;
+    --warning-foreground-active-dark: #f7a400;
     --warning-foreground-text-dark: #09090b;
-    --warning-background-dark: #261d00;
+
+    --warning-background-dark: #3528007d;
     --warning-background-border-dark: #ffeeba;
     --warning-background-hover-dark: #3f3000;
     --warning-background-active-dark: #513d00;
@@ -50,6 +51,7 @@
     --success-foreground-hover-dark: #34ce57;
     --success-foreground-active-dark: #218838;
     --success-foreground-text-dark: #09090b;
+
     --success-background-dark: #051b0d;
     --success-background-border-dark: #1e7e34;
     --success-background-hover-dark: #0a2e16;
@@ -60,8 +62,8 @@
 /* Light Scheme */
 :root {
     --foreground-light: #09090b;
-    --foreground-hover-light: #242428;
-    --foreground-active-light: #343437;
+    --foreground-hover-light: #242427;
+    --foreground-active-light: #2c2c2f;
 
     --background-light: #fafafa;
     --background-hover-light: #e9e9e9;
@@ -84,10 +86,11 @@
     --danger-foreground-hover-light: #ff0000;
     --danger-foreground-active-light: #c20000;
     --danger-foreground-text-light: #fafafa;
-    --danger-background-light: #fad7d8;
-    --danger-background-border-light: #971e1e;
-    --danger-background-hover-light: #ffbdbd;
-    --danger-background-active-light: #ffafaf;
+
+    --danger-background-light: #ffd7d9;
+    --danger-background-border-light: #b7000626;
+    --danger-background-hover-light: #fa606066;
+    --danger-background-active-light: #ff1e1e5a;
     --danger-background-text-light: #ff0000;
 
     --warning-foreground-light: #ffa500;
@@ -95,6 +98,7 @@
     --warning-foreground-hover-light: #ffb733;
     --warning-foreground-active-light: #e69500;
     --warning-foreground-text-light: #ffffff;
+
     --warning-background-light: #ffecd0;
     --warning-background-border-light: #ffe0b1;
     --warning-background-hover-light: #ffdfaf;
@@ -106,13 +110,13 @@
     --success-foreground-hover-light: #34ce57;
     --success-foreground-active-light: #1e7e34;
     --success-foreground-text-light: #ffffff;
+    
     --success-background-light: #def5e5;
     --success-background-border-light: #c3e6cb;
     --success-background-hover-light: #d4edda;
     --success-background-active-light: #c3e6cb;
     --success-background-text-light: #28a745;
 }
-
 /* Common */
 :root {
     --font-family-main: 'Arial';
