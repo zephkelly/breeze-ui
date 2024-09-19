@@ -1,13 +1,15 @@
-export interface ColorScheme {
-    primary: string;
-    secondary: string;
-    background: string;
-    text: string;
+export interface Colors {
+    foreground?: string;
+    background?: string;
+    text?: string;
+    hover?: string;
+    border?: string;
+    active?: string;
 }
 
 export interface Theme {
-    light: ColorScheme;
-    dark: ColorScheme;
+    light: Colors;
+    dark: Colors;
     fonts: {
         primary: string;
         secondary: string;

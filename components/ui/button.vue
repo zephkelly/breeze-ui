@@ -13,6 +13,7 @@
                 { 'breeze-button--holdable': holdable },
                 { 'breeze-button--bounce': bounce },
             ]"
+            :style="colorStyle"
             v-bind="$attrs"
             :disabled="disabled || loading"
             :aria-disabled="disabled || loading"
@@ -52,19 +53,21 @@
                 { 'breeze-button': !unstyled },
                 { [`breeze-button--${validatedVariant}`]: !unstyled },
                 { [`breeze-button--${validatedColor}`]: !unstyled },
+                { [`breeze-button--colorway`]: !unstyled && colorway },
                 { 'breeze-button--loading': loading },
                 { 'breeze-button--disabled': disabled },
                 { 'breeze-button--active': isActive },
                 { 'breeze-button--holdable': holdable },
                 { 'breeze-button--bounce': bounce },
             ]"
+            :style="colorStyle"
             v-bind="$attrs"
             :disabled="disabled || loading"
             :aria-disabled="disabled || loading"
             :aria-busy="loading"
             :aria-label="ariaLabel"
             :href="href"
-            role="internal-link"
+            role="internalLink"
             @mousedown="handleDown"
             @mouseup="handleUp"
             @mouseleave="handleLeave"
@@ -93,9 +96,19 @@
 
 <script setup lang="ts">
 import { type ButtonProps, ButtonVariants, ButtonColors } from './../../types/button';
+import { type ColorSchemeNuxtAppContext } from './../../types/colorScheme';
+
 import { debounce } from './../../utils/debounce';
 
+import { useButtonColor } from './../../composables/useButtonColor';
+
+const nuxtApp = useNuxtApp();
+const { $currentScheme } = nuxtApp as unknown as ColorSchemeNuxtAppContext;
+
 const props = defineProps<ButtonProps>();
+
+const colorwayRef = ref(props.colorway)
+const { colorStyle } = useButtonColor(colorwayRef);
 
 const tag = computed(() => {
     if (props.href) return 'a';
@@ -139,32 +152,6 @@ const validatedColor = computed(() => {
 
     return ButtonColors[0];
 });
-
-const buttonRef = ref<HTMLElement | null>(null);
-const setColorway = (colorway: string | null) => {
-    if (!buttonRef.value) return;
-    
-    const variants = ['foreground', 'background'];
-    const states = ['', '-hover', '-active'];
-    const extras = ['-border', '-text'];
-
-    variants.forEach(variant => {
-        states.forEach(state => {
-            const baseVar = colorway 
-                ? `--${colorway}${state}-${variant}-dark`
-                : `--${variant}${state}-dark`;
-            const newVar = `--colorway-${variant}${state}`;
-            buttonRef.value?.style.setProperty(newVar, `var(${baseVar})`);
-        });
-        extras.forEach(extra => {
-            const baseVar = colorway 
-                ? `--${colorway}${extra}-${variant}-dark`
-                : `-${extra}-${variant}-dark`;
-            const newVar = `--colorway-${variant}${extra}`
-            buttonRef.value?.style.setProperty(newVar, `var(${baseVar})`);
-        });
-    });
-};
 
 const emit = defineEmits<{
     (e: 'click', event: MouseEvent): void
@@ -292,15 +279,6 @@ const ariaLabel = computed(() => {
     
     return props.loading ? 'Loading' : undefined;
 });
-
-watch(() => props.colorway, (newColorway) => {
-    setColorway(props?.colorway?.toString() || null);
-});
-
-onMounted(() => {
-    setColorway(props?.colorway?.toString() || null);
-});
-
 </script>
 
 <!-- Default Styles -->
@@ -346,7 +324,7 @@ onMounted(() => {
     height: 100%;
     white-space: nowrap;
     letter-spacing: 0.2px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .icon {
@@ -393,10 +371,15 @@ onMounted(() => {
     background-color: var(--colorway-foreground-hover);
     border-color: var(--colorway-foreground-hover);
 }
-.breeze-button--solid.breeze-button--colorway:focus-visible .button-content {
-    border-color: var(--text-foreground);
-    border-bottom: 1px solid var(--text-foreground);
+.breeze-button--solid.breeze-button--colorway:focus-visible { 
+    background-color: var(--colorway-background-active);
+    color: var(--colorway-background-text);
+    border-color: var(--colorway-background-text);
 }
+/* .breeze-button--solid.breeze-button--colorway:focus-visible .button-content {
+    border-color: var(--colorway-foreground-text);
+    border-bottom: 1px solid var(--colorway-foreground);
+} */
 .breeze-button--solid.breeze-button--colorway.breeze-button--active {
     background-color: var(--colorway-foreground-active);
     border-color: var(--colorway-foreground-active);

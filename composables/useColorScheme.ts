@@ -1,9 +1,11 @@
+import { type ColorScheme } from './../types/colorScheme';
+
 export const useColorScheme = () => {
-    const colorScheme = ref<'light' | 'dark' | null>(null)
+    const colorScheme: Ref<ColorScheme> = ref<ColorScheme>(null)
     const isSystemColorScheme = ref(true)
     const systemPreference = ref<'light' | 'dark'>('light')
 
-    const currentTheme = computed(() => {
+    const currentScheme = computed(() => {
         if (isSystemColorScheme.value) {
             return systemPreference.value
         }
@@ -91,7 +93,7 @@ export const useColorScheme = () => {
     return {
         colorScheme,
         isSystemColorScheme,
-        currentTheme,
+        currentScheme,
         toggleColorScheme,
         resetToSystem,
         systemPreference

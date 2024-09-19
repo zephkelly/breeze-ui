@@ -1,7 +1,7 @@
 import { useColorScheme } from './../../../composables/useColorScheme'
 
 export default defineNuxtPlugin((nuxtApp) => {
-    const { colorScheme, isSystemColorScheme, currentTheme, toggleColorScheme, resetToSystem, systemPreference } = useColorScheme()
+    const { colorScheme, isSystemColorScheme, currentScheme, toggleColorScheme, resetToSystem, systemPreference } = useColorScheme()
 
     if (import.meta.client) {
         nuxtApp.hook('app:mounted', () => {
@@ -15,9 +15,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     return {
         provide: {
-            colorScheme,
             isSystemColorScheme,
-            currentTheme,
+            currentScheme,
             toggleColorScheme,
             resetToSystem,
             systemPreference
