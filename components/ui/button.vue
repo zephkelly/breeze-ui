@@ -484,14 +484,14 @@ const ariaLabel = computed(() => {
 }
 .breeze-button--ghost.breeze-button--colorway {  /* Colorway */
     background-color: var(--colorway-contrast);
-    border-color: var(--colorway);
-    color: var(--colorway);
+    border-color: var(--colorway-contrast-text);
+    color: var(--colorway-contrast-text);
 }
 .breeze-button--ghost.breeze-button--colorway:hover {
     background-color: var(--colorway-contrast-hover);
 }
 .breeze-button--ghost.breeze-button--colorway:focus-visible .button-content {
-    border-color: var(--colorway);
+    border-color: var(--colorway-contrast-text);
 }
 .breeze-button--ghost.breeze-button--colorway.breeze-button--active {
     background-color: var(--colorway-contrast-active);
@@ -514,8 +514,8 @@ const ariaLabel = computed(() => {
 }
 .breeze-button--ghost-solid.breeze-button--colorway { /* Colorway */
     background-color: var(--colorway-contrast);
-    border-color: var(--colorway);
-    color: var(--colorway);
+    border-color: var(--colorway-contrast-text);
+    color: var(--colorway-contrast-text);
 }
 .breeze-button--ghost-solid.breeze-button--colorway:focus-visible {
     background-color: var(--colorway-contrast-hover);
@@ -558,11 +558,11 @@ const ariaLabel = computed(() => {
 .breeze-button--ghost-flat.breeze-button--colorway {  /* Colorway */
     background-color: var(--colorway-contrast);
     border-color: var(--colorway);
-    color: var(--colorway);
+    color: var(--colorway-contrast-text);
 }
 .breeze-button--ghost-flat.breeze-button--colorway:hover .button-content,
 .breeze-button--ghost-flat.breeze-button--colorway:focus-visible .button-content {
-    border-color: var(--colorway);
+    border-color: var(--colorway-contrast-text);
 }
 .breeze-button--ghost-flat.breeze-button--colorway:hover {
     background-color: transparent;
