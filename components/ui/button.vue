@@ -1,10 +1,11 @@
 <template>
     <component
+        v-if="!headless"
         :is="tag"
         ref="buttonRef"
         :class="buttonClasses"
             :style="[cursorStyle, colorStyle]"
-            v-bind="$attrs"
+            v-bind="a11yAttrs"
             :disabled="isDisabled"
             :aria-disabled="isDisabled"
             :aria-busy="loading"
@@ -21,21 +22,26 @@
             @keydown.space.prevent="handleKeyDown"
             @keyup.space.prevent="handleUp"
         >
-        <div class="button-content" v-if="!loading">
-            <span v-if="$slots['icon-left']" class="icon left" aria-hidden="true"> 
-                <slot name="icon-left"></slot>
+        <slot :a11yAttrs="a11yAttrs">
+            <div class="button-content" v-if="!loading">
+                <span v-if="$slots['icon-left']" class="icon left" aria-hidden="true"> 
+                    <slot name="icon-left"></slot>
+                </span>
+                <span class="content-main">
+                    <slot></slot>
+                </span>
+                <span v-if="$slots['icon-right']" class="icon right" aria-hidden="true">
+                    <slot name="icon-right"></slot>
+                </span>
+            </div>
+            <span v-else class="button-loader" aria-hidden="true">
+                <slot name="loader">Loading...</slot>
             </span>
-            <span class="content-main">
-                <slot></slot>
-            </span>
-            <span v-if="$slots['icon-right']" class="icon right" aria-hidden="true">
-                <slot name="icon-right"></slot>
-            </span>
-        </div>
-        <span v-else class="button-loader" aria-hidden="true">
-            <slot name="loader">Loading...</slot>
-        </span>
+        </slot>
     </component>
+    <slot v-else :a11yAttrs="a11yAttrs" name="default">
+
+    </slot>
 </template>
 
 <script setup lang="ts">
@@ -43,12 +49,16 @@
 import { NuxtLink } from '#components'
 import { type ButtonProps, ButtonVariants, ButtonColors } from './../../types/button';
 import { debounce } from './../../utils/debounce';
+
 import { useButtonColor } from './../../composables/useButtonColor';
+import { useDevelopmentWarning } from './../../composables/useDevelopmentWarning';
 
 const props = defineProps<ButtonProps>();
 
 const colorwayRef = ref(props.colorway)
+
 const { colorStyle } = useButtonColor(colorwayRef);
+const { devWarning } = useDevelopmentWarning();
 
 const tag = computed(() => {
     if (props.to) return NuxtLink;
@@ -70,7 +80,7 @@ const buttonClasses = computed(() => [
     { [`breeze-button--${validatedVariant.value}`]: !props.unstyled },
     { 'breeze-button--colorway': !props.unstyled && props.colorway },
     { 'breeze-button--loading': props.loading },
-    { 'breeze-button--disabled': isDisabled.value },
+    { 'breeze-button--disabled': props.disabled },
     { 'breeze-button--active': isActive.value },
     { 'breeze-button--holdable': props.holdable },
     { 'breeze-button--bounce': props.bounce }
@@ -83,12 +93,12 @@ const validatedVariant = computed(() => {
 
     if (import.meta.dev) {   
         if (props.variant as string === '') {
-            console.warn(`breeze-ui: Empty button variant. Defaulting to '${ButtonVariants[0]}'`);
-            console.warn(`breeze-ui: Valid button variants are: ${Object.values(ButtonVariants).join(', ')}`);
+            devWarning(`Empty button variant. Defaulting to '${ButtonVariants[0]}'`);
+            devWarning(`Valid button variants are: ${Object.values(ButtonVariants).join(', ')}`);
         }
         else if (props.variant !== undefined) {
-            console.warn(`breeze-ui: Invalid button variant: '${props.variant}'. Defaulting to '${ButtonVariants[0]}'`);
-            console.warn(`breeze-ui: Valid button variants are: ${Object.values(ButtonVariants).join(', ')}`);
+            devWarning(`Invalid button variant: '${props.variant}'. Defaulting to '${ButtonVariants[0]}'`);
+            devWarning(`Valid button variants are: ${Object.values(ButtonVariants).join(', ')}`);
         }
     }
 
@@ -103,6 +113,42 @@ const ariaLabel = computed(() => {
     
     return props.loading ? 'Loading' : undefined;
 });
+
+const a11yAttrs = computed(() => ({
+    role: 'button',
+    tabindex: 0,
+    disabled: isDisabled.value,
+    'aria-disabled': isDisabled.value,
+    'aria-busy': props.loading,
+    'aria-label': ariaLabel.value,
+    onMousedown: (event: MouseEvent) => handleDown(event),
+    onMouseup: (event: MouseEvent) => handleUp(event as unknown as KeyboardEvent),
+    onMouseleave: handleLeave,
+    onTouchstart: (event: TouchEvent) => {
+        event.preventDefault();
+        handleTouchStart(event);
+    },
+    onTouchend: (event: TouchEvent) => {
+        event.preventDefault();
+        handleTouchEnd(event);
+    },
+    onTouchcancel: (event: TouchEvent) => {
+        event.preventDefault();
+        handleTouchCancel();
+    },
+    onKeydown: (event: KeyboardEvent) => {
+        if (event.key === ' ' || event.key === 'Enter') {
+            event.preventDefault();
+            handleKeyDown(event);
+        }
+    },
+    onKeyup: (event: KeyboardEvent) => {
+        if (event.key === ' ' || event.key === 'Enter') {
+            event.preventDefault();
+            handleUp(event);
+        }
+    }
+}));
 
 const emit = defineEmits<{
     (e: 'click', event: MouseEvent): void
@@ -215,6 +261,27 @@ const handleLeave = () => {
         emit('pressend');
     }
 };
+
+// Dev Checks
+if (import.meta.dev) {
+    if (props.headless) {
+        if (props.bounce) {
+            devWarning(`The 'bounce' prop is not supported when 'headless' is true.`);
+        }
+
+        if (props.holdable) {
+            devWarning(`The 'holdable' prop is not supported when 'headless' is true.`);
+        }
+
+        if (props.variant) {
+            devWarning(`The 'variant' prop is not supported when 'headless' is true.`);
+        }
+
+        if (props.colorway) {
+            devWarning(`The 'colorway' prop is not supported when 'headless' is true.`);
+        }
+    }
+}
 </script>
 
 <!-- Default Styles -->

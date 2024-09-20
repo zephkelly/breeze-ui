@@ -23,4 +23,5 @@ export interface ButtonProps {
     to?: string;
     holdable?: boolean;
     bounce?: boolean;
+    headless?: boolean;
 }

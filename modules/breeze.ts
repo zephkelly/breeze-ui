@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, addComponentsDir, addComponent } from '@nuxt/kit'
 import { fileURLToPath } from 'url'
 
 export default defineNuxtModule({
@@ -7,7 +7,8 @@ export default defineNuxtModule({
         configKey: 'breeze'
     },
     defaults: {
-        theme: 'default'
+        theme: 'default',
+        devWarnings: false
     },
     setup(options, nuxt) {
         const { resolve } = createResolver(import.meta.url)
@@ -18,11 +19,13 @@ export default defineNuxtModule({
 
         // Add theme-specific styles if theme is not 'none'
         if (options.theme !== 'none') {
-        nuxt.options.css.push(resolve(`../assets/css/themes/${options.theme}.css`))
+            nuxt.options.css.push(resolve(`../assets/css/themes/${options.theme}.css`))
         }
 
         // Make theme available in the app
         nuxt.options.runtimeConfig.public.breezeTheme = options.theme
+
+        nuxt.options.runtimeConfig.public.breezeDevWarnings = options.devWarnings
 
         // Add a plugin to inject the theme into the app context
         addPlugin(resolve(runtimeDir, 'plugins', 'theme'))
