@@ -2,23 +2,11 @@
     <component
         :is="tag"
         ref="buttonRef"
-        :class="[
-                { 'breeze-button': !unstyled },
-                { [`breeze-button--${validatedVariant}`]: !unstyled },
-                { [`breeze-button--colorway`]: !unstyled && colorway },
-                { 'breeze-button--loading': loading },
-                { 'breeze-button--disabled': disabled },
-                { 'breeze-button--active': isActive },
-                { 'breeze-button--holdable': holdable },
-                { 'breeze-button--bounce': bounce },
-            ]"
-            :style="[
-                colorStyle,
-                { cursor: disabled ? 'not-allowed' : '' },
-            ]"
+        :class="buttonClasses"
+            :style="[cursorStyle, colorStyle]"
             v-bind="$attrs"
-            :disabled="disabled || loading"
-            :aria-disabled="disabled || loading"
+            :disabled="isDisabled"
+            :aria-disabled="isDisabled"
             :aria-busy="loading"
             :aria-label="ariaLabel"
             tabindex="0"
@@ -68,6 +56,26 @@ const tag = computed(() => {
     return 'button';
 });
 
+const isActive = ref(false);
+const isActiveTimeout = ref<number | null>(null);
+
+const touchStartTime = ref<number>(0);
+const isTouchDevice = ref(false);
+
+const isDisabled = computed(() => props.disabled || props.loading);
+const cursorStyle = computed(() => ({ cursor: isDisabled.value ? 'not-allowed' : '' }))
+
+const buttonClasses = computed(() => [
+    { 'breeze-button': !props.unstyled },
+    { [`breeze-button--${validatedVariant.value}`]: !props.unstyled },
+    { 'breeze-button--colorway': !props.unstyled && props.colorway },
+    { 'breeze-button--loading': props.loading },
+    { 'breeze-button--disabled': isDisabled.value },
+    { 'breeze-button--active': isActive.value },
+    { 'breeze-button--holdable': props.holdable },
+    { 'breeze-button--bounce': props.bounce }
+])
+
 const validatedVariant = computed(() => {
     if (props.variant !== undefined && Object.values(ButtonVariants).includes(props.variant)) {
         return props.variant;
@@ -87,17 +95,20 @@ const validatedVariant = computed(() => {
     return ButtonVariants[0];
 });
 
+
+const ariaLabel = computed(() => {
+    if (props.ariaLabel) {
+        return props.ariaLabel;
+    }
+    
+    return props.loading ? 'Loading' : undefined;
+});
+
 const emit = defineEmits<{
     (e: 'click', event: MouseEvent): void
     (e: 'pressstart'): void
     (e: 'pressend'): void
 }>();
-
-const isActive = ref(false);
-const isActiveTimeout = ref<number | null>(null);
-
-const touchStartTime = ref<number>(0);
-const isTouchDevice = ref(false);
 
 const click = debounce((event: MouseEvent) => {
     emit('click', event);
@@ -204,14 +215,6 @@ const handleLeave = () => {
         emit('pressend');
     }
 };
-
-const ariaLabel = computed(() => {
-    if (props.ariaLabel) {
-        return props.ariaLabel;
-    }
-    
-    return props.loading ? 'Loading' : undefined;
-});
 </script>
 
 <!-- Default Styles -->
