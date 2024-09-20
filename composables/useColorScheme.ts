@@ -60,7 +60,7 @@ export const useColorScheme = () => {
             localStorage.setItem('color-scheme', scheme || 'light')
         }
 
-        colorSchemeCookie.value = scheme || 'light'
+        colorSchemeCookie.value = scheme || 'light';
 
         useHead({
             htmlAttrs: {

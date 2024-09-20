@@ -22,16 +22,21 @@
             @keydown.space.prevent="handleKeyDown"
             @keyup.space.prevent="handleUp"
         >
-        <slot :a11yAttrs="a11yAttrs">
+        <slot name="prebuilt" :a11yAttrs="a11yAttrs">
             <div class="button-content" v-if="!loading">
-                <span v-if="$slots['icon-left']" class="icon left" aria-hidden="true"> 
-                    <slot name="icon-left"></slot>
+                <span v-if="$slots['leading']" class="breeze-button-icon left" aria-hidden="true"> 
+                    <slot name="leading"></slot>
                 </span>
                 <span class="content-main">
-                    <slot></slot>
+                    <div class="button-text" v-if="!isSvgContent">
+                        <slot name="default"></slot>
+                    </div>
+                    <div class="button-icon" v-else>
+                        <slot name="default"></slot>
+                    </div>
                 </span>
-                <span v-if="$slots['icon-right']" class="icon right" aria-hidden="true">
-                    <slot name="icon-right"></slot>
+                <span v-if="$slots['trailing']" class="breeze-button-icon right" aria-hidden="true">
+                    <slot name="trailing"></slot>
                 </span>
             </div>
             <span v-else class="button-loader" aria-hidden="true">
@@ -47,15 +52,19 @@
 <script setup lang="ts">
 //@ts-ignore
 import { NuxtLink } from '#components'
-import { type ButtonProps, ButtonVariants, ButtonColors } from './../../types/button';
+import { type ButtonProps, ButtonVariants, ButtonSizes, ButtonWidths } from './../../types/button';
 import { debounce } from './../../utils/debounce';
 
 import { useButtonColor } from './../../composables/useButtonColor';
 import { useDevelopmentWarning } from './../../composables/useDevelopmentWarning';
 
-const props = defineProps<ButtonProps>();
+const props = withDefaults(defineProps<ButtonProps>(), {
+    size: 'medium',
+});
 
+const buttonRef = ref<HTMLElement | null>(null);
 const colorwayRef = ref(props.colorway)
+const isSvgContent = ref(false);
 
 const { colorStyle } = useButtonColor(colorwayRef);
 const { devWarning } = useDevelopmentWarning();
@@ -78,12 +87,18 @@ const cursorStyle = computed(() => ({ cursor: isDisabled.value ? 'not-allowed' :
 const buttonClasses = computed(() => [
     { 'breeze-button': !props.unstyled },
     { [`breeze-button--${validatedVariant.value}`]: !props.unstyled },
+    { 'breeze-button--full': !props.unstyled && validatedWidth.value === 'full' },
     { 'breeze-button--colorway': !props.unstyled && props.colorway },
     { 'breeze-button--loading': props.loading },
     { 'breeze-button--disabled': props.disabled },
-    { 'breeze-button--active': isActive.value },
+    { 'breeze-button--active': !props.unstyled && isActive.value },
     { 'breeze-button--holdable': props.holdable },
-    { 'breeze-button--bounce': props.bounce }
+    { 'breeze-button--bounce': !props.unstyled && props.bounce },
+    { 'breeze-button--rounded': !props.unstyled && props.rounded },
+    { 'breeze-button--round': !props.unstyled && props.round },
+    { 'breeze-button--sharp': !props.unstyled && props.sharp },
+    { 'breeze-button--icon-only': isSvgContent },
+    { [`breeze-button--size-${validatedSize.value}`]: !props.unstyled && props.size }
 ])
 
 const validatedVariant = computed(() => {
@@ -105,6 +120,43 @@ const validatedVariant = computed(() => {
     return ButtonVariants[0];
 });
 
+const validatedWidth = computed(() => {
+    if (props.width !== undefined && Object.values(ButtonWidths).includes(props.width)) {
+        return props.width;
+    }
+
+    if (import.meta.dev) {
+        if (props.width as string === '') {
+            devWarning(`Empty button width. Defaulting to '${ButtonWidths[0]}'`);
+            devWarning(`Valid button widths are: ${Object.values(ButtonWidths).join(', ')}`);
+        }
+        else if (props.width !== undefined) {
+            devWarning(`Invalid button width: '${props.width}'. Defaulting to '${ButtonWidths[0]}'`);
+            devWarning(`Valid button widths are: ${Object.values(ButtonWidths).join(', ')}`);
+        }
+    }
+
+    return 'auto';
+});
+
+const validatedSize = computed(() => {
+    if (props.size !== undefined && Object.values(ButtonSizes).includes(props.size)) {
+        return props.size;
+    }
+
+    if (import.meta.dev) {
+        if (props.size as string === '') {
+            devWarning(`Empty button size. Defaulting to '${ButtonSizes[0]}'`);
+            devWarning(`Valid button sizes are: ${Object.values(ButtonSizes).join(', ')}`);
+        }
+        else if (props.size !== undefined) {
+            devWarning(`Invalid button size: '${props.size}'. Defaulting to '${ButtonSizes[0]}'`);
+            devWarning(`Valid button sizes are: ${Object.values(ButtonSizes).join(', ')}`);
+        }
+    }
+
+    return ButtonSizes[0];
+});
 
 const ariaLabel = computed(() => {
     if (props.ariaLabel) {
@@ -262,6 +314,14 @@ const handleLeave = () => {
     }
 };
 
+onMounted(async () => {
+    await nextTick();
+    if (buttonRef.value) {
+        const slotContent = buttonRef.value.querySelector('.content-main > div > *') as Element | null;
+        isSvgContent.value = slotContent ? slotContent.tagName.toLowerCase() === 'svg' : false;
+    }
+});
+
 // Dev Checks
 if (import.meta.dev) {
     if (props.headless) {
@@ -281,18 +341,21 @@ if (import.meta.dev) {
             devWarning(`The 'colorway' prop is not supported when 'headless' is true.`);
         }
     }
+
+    if (props.sharp && props.rounded) {
+        devWarning(`Conflicting prop types: 'sharp' and 'rounded'. Defaulting to 'sharp'.`);
+    }
 }
 </script>
 
 <!-- Default Styles -->
 <style scoped>
 .breeze-button {
-    padding: var(--padding-8) var(--padding-16);
+    padding: var(--padding-4) var(--padding-12);
     border: none;
     border-radius: var(--border-radius-6);
     font-weight: 500;
     font-size: var(--font-size-small);
-    height: 32px;
     color: var(--text-color);
     cursor: pointer;
     box-sizing: border-box;
@@ -305,19 +368,70 @@ if (import.meta.dev) {
     text-decoration: none;
 }
 
-.breeze-button:focus-visible {
-    outline: 2px solid var(--focus-color);
-    outline-offset: 2px;
-}
-
 .breeze-button--bounce.breeze-button--active {
     transform: translateY(1px);
+}
+
+.breeze-button--full {
+    width: 100%;
+}
+
+.breeze-button--rounded {
+    border-radius: var(--border-radius-16);
+}
+
+.breeze-button--round {
+    border-radius: var(--border-radius-full);
+}
+
+.breeze-button--sharp {
+    border-radius: 0;
+}
+
+.breeze-button--icon-only,
+.breeze-button--round {
+    aspect-ratio: 1;
+    padding: var(--padding-6);
+}
+
+.breeze-button--size-tiny {
+    height: 24px;
+    max-height: 24px;
+}
+.breeze-button--size-tiny.breeze-button--icon-only {
+    padding: var(--padding-2);
+}
+
+.breeze-button--size-small {
+    height: 32px;
+    max-height: 32px;
+}
+.breeze-button--size-small.breeze-button--icon-only {
+    padding: var(--padding-4);
+}
+
+.breeze-button--size-medium {
+    height: 40px;
+    max-height: 40px;
+}
+.breeze-button--size-medium.breeze-button--icon-only {
+    padding: var(--padding-6);
+}
+
+.breeze-button--size-large {
+    height: 48px;
+    max-height: 48px;
+}
+.breeze-button--size-large.breeze-button--icon-only {
+    padding: var(--padding-8);
 }
 
 .button-content {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 0.35rem;
+    height: 100%;
 }
 
 .content-main {
@@ -330,22 +444,53 @@ if (import.meta.dev) {
     font-weight: 500;
 }
 
-.icon {
+.button-icon {
+    position: relative;
     display: inline-flex;
     align-items: center;
+    height: 100%;
+    width: 100%;
 }
-.icon.left {
-    margin-right: 0.5rem;
+
+.button-text {
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
 }
-.icon.right {
-    margin-left: 0.5rem;
+
+.breeze-button-icon {
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+}
+</style>
+
+<style>
+.breeze-button .button-content svg {
+    height: 100%;
+    width: 100%;
+}
+
+.breeze-button-icon svg {
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1;
+    position: relative;
+    top: 1px;
+}
+
+.breeze-button .content-main .button-icon svg {
+    position: relative;
+    top: 0.3px;
 }
 </style>
 
 <!-- Variants -->
 <style scoped>
 /* Solid */
-.breeze-button--solid {
+.breeze-button--solid,
+.breeze-button--solid-ghost,
+.breeze-button--solid-flat {
     background-color: var(--foreground);
     border: 1px solid var(--foreground);
     color: var(--text-background);
@@ -365,9 +510,21 @@ if (import.meta.dev) {
     border-color: var(--foreground-active);
     color: var(--text-background);
 }
+.breeze-button--solid-ghost:hover,
+.breeze-button--solid-ghost:focus-visible {
+    background-color: var(--background-hover);
+    color: var(--text-foreground);
+}
+.breeze-button--solid-ghost.breeze-button--active {
+    background-color: var(--background-active);
+    color: var(--text-foreground);
+}
 .breeze-button--solid.breeze-button--colorway {  /* Colorway */
     background-color: var(--colorway);
     border-color: var(--colorway);
+    color: var(--colorway-text);
+}
+.breeze-button--solid.breeze-button--colorway .content-main {  /* Colorway */
     color: var(--colorway-text);
 }
 .breeze-button--solid.breeze-button--colorway:hover {
@@ -396,21 +553,6 @@ if (import.meta.dev) {
 }
 
 /* Solid - Ghost */
-.breeze-button--solid-ghost {
-    border: 1px solid var(--foreground);
-    color: var(--text-background);
-    background-color: var(--foreground);
-    transition: background-color 0.1s ease, color 0.1s ease;
-}
-.breeze-button--solid-ghost:hover,
-.breeze-button--solid-ghost:focus-visible {
-    background-color: var(--background-hover);
-    color: var(--text-foreground);
-}
-.breeze-button--solid-ghost.breeze-button--active {
-    background-color: var(--background-active);
-    color: var(--text-foreground);
-}
 .breeze-button--solid-ghost.breeze-button--colorway {  /* Colorway */
     background-color: var(--colorway);
     border-color: var(--colorway);
@@ -439,12 +581,6 @@ if (import.meta.dev) {
 }
 
 /* Solid - Flat */
-.breeze-button--solid-flat {
-    background-color: var(--foreground);
-    border: 1px solid var(--foreground);
-    color: var(--text-background);
-    transition: background-color 0.1s ease, color 0.1s ease, border-color 0.1s ease;
-}
 .breeze-button--solid-flat .button-content {
     border-bottom: 1px solid transparent;
     transition: border-bottom 0.1s ease;
@@ -515,10 +651,12 @@ if (import.meta.dev) {
 
 /* Ghost */
 .breeze-button--ghost,
-.breeze-button--ghost-solid {
+.breeze-button--ghost-solid,
+.breeze-button--ghost-flat {
     background-color: transparent;
     color: var(--text-foreground);
     border: 1px solid var(--foreground);
+    transition: color 0.1s ease, background-color 0.1s ease, border-color 0.1s ease;
 }
 .breeze-button--ghost,
 .breeze-button--ghost-solid {
@@ -591,6 +729,7 @@ if (import.meta.dev) {
 }
 .breeze-button--ghost-solid.breeze-button--colorway.breeze-button--active {
     background-color: var(--colorway-active);
+    border-color: var(--colorway-active);
     color: var(--colorway-text);
 }
 .breeze-button--ghost-solid.breeze-button--disabled {  /* Disabled */
@@ -607,12 +746,6 @@ if (import.meta.dev) {
 }
 
 /* Ghost-Flat */
-.breeze-button--ghost-flat {
-    background-color: transparent;
-    border: 1px solid var(--foreground);
-    color: var(--foreground);
-    transition: background-color 0.1s ease, border-color 0.1s ease;
-}
 .breeze-button--ghost-flat .button-content {
     border-bottom: 1px solid transparent;
     transition: border-bottom 0.1s ease;
@@ -671,7 +804,9 @@ if (import.meta.dev) {
 
 
 /* Flat Styles */
-.breeze-button--flat {
+.breeze-button--flat,
+.breeze-button--flat-ghost,
+.breeze-button--flat-static {
     background-color: transparent;
     border: 1px solid transparent;
     color: var(--foreground);
@@ -715,12 +850,6 @@ if (import.meta.dev) {
 }
 
 /* Flat - Ghost */
-.breeze-button--flat-ghost {
-    background-color: transparent;
-    border: 1px solid transparent;
-    color: var(--foreground);
-    transition: background-color 0.1s ease;
-}
 .breeze-button--flat-ghost:hover,
 .breeze-button--flat-ghost:focus-visible {
     background-color: var(--background-hover);
@@ -757,11 +886,6 @@ if (import.meta.dev) {
 }
 
 /* Flat-Static */
-.breeze-button--flat-static {
-    background-color: transparent;
-    border: 1px solid transparent;
-    color: var(--foreground);
-}
 .breeze-button--flat-static:focus-visible {
     background-color: var(--background-hover);
 }

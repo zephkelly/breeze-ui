@@ -8,9 +8,18 @@ export const ButtonColors = [
     'danger', 'warning', 'success',
 ] as const;
 
+export const ButtonWidths = [
+    'auto', 'full'
+] as const;
+
+export const ButtonSizes = [
+    'tiny', 'small', 'medium', 'large'
+] as const;
 
 export type ButtonVariant = typeof ButtonVariants[number];
 export type ButtonColor = typeof ButtonColors[number];
+export type ButtonWidth = typeof ButtonWidths[number];
+export type ButtonSize = typeof ButtonSizes[number];
 
 export interface ButtonProps {
     variant?: ButtonVariant;
@@ -21,7 +30,12 @@ export interface ButtonProps {
     ariaLabel?: string;
     href?: string;
     to?: string;
+    width?: ButtonWidth,
+    size?: ButtonSize,
     holdable?: boolean;
-    bounce?: boolean;
     headless?: boolean;
+    bounce?: boolean;
+    rounded?: boolean;
+    round?: boolean;
+    sharp?: boolean;
 }
