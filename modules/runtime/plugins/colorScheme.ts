@@ -1,7 +1,7 @@
 import { useColorScheme } from './../../../composables/useColorScheme'
 
 export default defineNuxtPlugin((nuxtApp) => {
-    const { colorScheme, currentScheme, toggleColorScheme, resetToSystem, updateSystemPreference, setColorScheme } = useColorScheme()
+    const { currentScheme, toggleColorScheme, resetToSystem, updateSystemPreference, setColorScheme } = useColorScheme()
 
     const colorSchemeCookie = useCookie('color-scheme', {
         maxAge: 60 * 60 * 24 * 365, // 1 year
@@ -62,10 +62,10 @@ export default defineNuxtPlugin((nuxtApp) => {
         updateSystemPreference()
         nuxtApp.hook('app:mounted', () => {
             initColorScheme()
-            applyColorScheme(colorScheme.value)
+            applyColorScheme(currentScheme.value)
         })
 
-        watch(colorScheme, (newScheme) => {
+        watch(currentScheme, (newScheme) => {
             applyColorScheme(newScheme)
         })
 
@@ -76,14 +76,9 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     return {
         provide: {
-            colorScheme: readonly(colorScheme),
             currentScheme: readonly(currentScheme),
             toggleColorScheme,
-            resetToSystem,
-            setColorScheme: (scheme: ColorScheme | null) => {
-                setColorScheme(scheme)
-                applyColorScheme(scheme)
-            }
+            resetToSystemScheme: resetToSystem
         }
     }
 })

@@ -43,8 +43,6 @@ export const useColorScheme = () => {
     }
 
     return {
-        colorScheme,
-        isSystemColorScheme,
         currentScheme,
         toggleColorScheme,
         resetToSystem,

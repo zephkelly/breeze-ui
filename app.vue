@@ -3,17 +3,21 @@
     <BButtonGroup>
         <BButton @click="handleClick" variant="ghost"> Hello</BButton>
         <BButton @click="" holdable variant="solid"> Hello</BButton>
-        <BButton @click="handleClick" holdable variant="solid"> Hello</BButton>
+        <BButton @click="handleClick2" holdable variant="solid"> Hello</BButton>
     </BButtonGroup>
   </div>
 </template>
 
 <script setup lang="ts">
 
-const { $toggleColorScheme } = useNuxtApp();
+const { $toggleColorScheme, $resetToSystemScheme } = useNuxtApp();
 
 function handleClick() {
-  $toggleColorScheme();
+    $toggleColorScheme();
+}
+
+function handleClick2() {
+    $resetToSystemScheme();
 }
 </script>
 
