@@ -4,7 +4,7 @@
         :is="tag"
         ref="buttonRef"
         :class="buttonClasses"
-        :style="[cursorStyle, colorStyle]"
+        :style="[cursorStyle, colorProperties]"
         v-bind="a11yAttrs"
         :disabled="isDisabled"
         :aria-disabled="isDisabled"
@@ -58,16 +58,15 @@ import { debounce } from '../../utils/debounce';
 import { useButtonColor } from '../../composables/useButtonColor';
 import { useDevelopmentWarning } from '../../composables/useDevelopmentWarning';
 
+const { colorProperties, calculateColor } = useButtonColor();
+const { devWarning } = useDevelopmentWarning();
+
 const props = withDefaults(defineProps<ButtonProps>(), {
     size: 'medium',
     variant: 'solid',
 });
 
 const buttonRef = ref<HTMLElement | null>(null);
-const colorRef = ref(props.color)
-
-const { colorStyle } = useButtonColor(colorRef);
-const { devWarning } = useDevelopmentWarning();
 
 const tag = computed(() => {
     if (props.to) return NuxtLink;
@@ -156,6 +155,25 @@ const validatedSize = computed(() => {
     }
 
     return ButtonSizes[0];
+});
+
+const validatedColor = computed(() => {
+    if (props.color !== undefined && Object.values(ButtonColors).includes(props.color)) {
+        return props.color;
+    }
+
+    if (import.meta.dev) {
+        if (props.color as string === '') {
+            devWarning(`Empty button color. Defaulting to no color.`);
+            devWarning(`Valid button colors are: ${Object.values(ButtonColors).join(', ')}`);
+        }
+        else if (props.color !== undefined) {
+            devWarning(`Invalid button color: '${props.color}'. Defaulting to no color.`);
+            devWarning(`Valid button colors are: ${Object.values(ButtonColors).join(', ')}`);
+        }
+    }
+
+    return undefined;
 });
 
 const ariaLabel = computed(() => {
@@ -313,6 +331,10 @@ const handleLeave = () => {
         emit('pressend');
     }
 };
+
+watch([validatedColor, () => useNuxtApp().$currentScheme.value], () => {
+    calculateColor(validatedColor.value);
+}, { immediate: true })
 
 // Dev Checks
 if (import.meta.dev) {
