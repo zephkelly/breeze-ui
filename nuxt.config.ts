@@ -12,6 +12,9 @@ export default defineNuxtConfig({
         theme: 'default',
         devWarnings: true,
     },
+    typescript: {
+        typeCheck: true,
+    },
     components: [
         {
           path: join(currentDir, './components'),

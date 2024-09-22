@@ -89,7 +89,7 @@ const buttonClasses = computed(() => [
     { 'breeze-button--full': !props.unstyled && validatedWidth.value === 'full' },
     { 'breeze-button--colorway': !props.unstyled && props.color },
     { 'breeze-button--loading': props.loading },
-    { 'breeze-button--disabled': props.disabled },
+    { 'breeze-button--disabled': props.disabled || props.loading },
     { 'breeze-button--active': !props.unstyled && isActive.value },
     { 'breeze-button--holdable': props.holdable },
     { 'breeze-button--bounce': !props.unstyled && props.bounce },
@@ -635,7 +635,7 @@ if (import.meta.dev) {
     color: var(--text-foreground);
     border: 1px solid transparent;
     background-color: transparent;
-    transition: color 0.1s ease, background-color 0.1s ease;
+    transition: color 0.1s ease, background-color 0.1s ease, border-color 0.1s ease;
 }
 .breeze-button--flat.breeze-button--colorway,
 .breeze-button--flat-solid.breeze-button--colorway,
