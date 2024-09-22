@@ -63,4 +63,4 @@ interface ColorwayVariables {
       colorStyle,
       setColorVariables
     }
-  }
+}

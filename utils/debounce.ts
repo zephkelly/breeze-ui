@@ -8,18 +8,6 @@ export function debounce(func: any, timeout: any) {
     };
 }
 
-// export function debounceLeading(func: any, delay: any) {
-//     let timeoutId: any;
-//     return (...args: any) => {
-//         if (!timeoutId) {
-//             func(...args);
-//         }
-
-//         clearTimeout(timeoutId);
-//         timeoutId = setTimeout(() => timeoutId = null, delay);
-//     };
-// }
-
 export function debounceLeading(func: (...args: any[]) => void, delay: number) {
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
     return (...args: any[]) => {
