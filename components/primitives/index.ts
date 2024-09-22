@@ -1,1 +1,1 @@
-export { default as BreezeButton } from './button.vue';
+export { default as Button } from './button.vue';

@@ -20,43 +20,43 @@
 
     /* Colorway styles */
     /* Danger */
-    --danger-foreground-dark: #d83338;
-    --danger-foreground-border-dark: #d83338;
-    --danger-foreground-hover-dark: #ee2323;
-    --danger-foreground-active-dark: #c20000;
-    --danger-foreground-text-dark: #09090b;
+    --red-foreground-dark: #d83338;
+    --red-foreground-border-dark: #d83338;
+    --red-foreground-hover-dark: #ee2323;
+    --red-foreground-active-dark: #c20000;
+    --red-foreground-text-dark: #09090b;
 
-    --danger-background-dark: #4c000349;
-    --danger-background-border-dark: #971e1e;
-    --danger-background-hover-dark: #2a0101;
-    --danger-background-active-dark: #4f0000;
-    --danger-background-text-dark: #ff0000;
+    --red-background-dark: #4c000349;
+    --red-background-border-dark: #971e1e;
+    --red-background-hover-dark: #2a0101;
+    --red-background-active-dark: #4f0000;
+    --red-background-text-dark: #ff0000;
 
     /* Foreground */
-    --warning-foreground-dark: #ffac07;
-    --warning-foreground-border-dark: #d39e00;
-    --warning-foreground-hover-dark: #db8904;
-    --warning-foreground-active-dark: #f7a400;
-    --warning-foreground-text-dark: #09090b;
+    --orange-foreground-dark: #ffac07;
+    --orange-foreground-border-dark: #d39e00;
+    --orange-foreground-hover-dark: #db8904;
+    --orange-foreground-active-dark: #f7a400;
+    --orange-foreground-text-dark: #09090b;
 
-    --warning-background-dark: #3528007d;
-    --warning-background-border-dark: #ffeeba;
-    --warning-background-hover-dark: #3f3000;
-    --warning-background-active-dark: #513d00;
-    --warning-background-text-dark: #ffbf00;
+    --orange-background-dark: #3528007d;
+    --orange-background-border-dark: #ffeeba;
+    --orange-background-hover-dark: #3f3000;
+    --orange-background-active-dark: #513d00;
+    --orange-background-text-dark: #ffbf00;
 
     /* Success */
-    --success-foreground-dark: #28a745;
-    --success-foreground-border-dark: #1e7e34;
-    --success-foreground-hover-dark: #34ce57;
-    --success-foreground-active-dark: #218838;
-    --success-foreground-text-dark: #09090b;
+    --green-foreground-dark: #34ce57;
+    --green-foreground-border-dark: #1e7e34;
+    --green-foreground-hover-dark: #28a745;
+    --green-foreground-active-dark: #218838;
+    --green-foreground-text-dark: #09090b;
 
-    --success-background-dark: #051b0d;
-    --success-background-border-dark: #1e7e34;
-    --success-background-hover-dark: #0a2e16;
-    --success-background-active-dark: #0f3c1f;
-    --success-background-text-dark: #28a745;
+    --green-background-dark: #051b0d;
+    --green-background-border-dark: #1e7e34;
+    --green-background-hover-dark: #0a2e16;
+    --green-background-active-dark: #0f3c1f;
+    --green-background-text-dark: #28a745;
 }
 
 /* Light Scheme */
@@ -81,45 +81,45 @@
 
     /* Colorway styles */
     /* Danger */
-    --danger-foreground-light: #d83338;
-    --danger-foreground-border-light: #971e1e;
-    --danger-foreground-hover-light: #ff0000;
-    --danger-foreground-active-light: #c20000;
-    --danger-foreground-text-light: #fafafa;
+    --red-foreground-light: #d83338;
+    --red-foreground-border-light: #971e1e;
+    --red-foreground-hover-light: #ff0000;
+    --red-foreground-active-light: #c20000;
+    --red-foreground-text-light: #fafafa;
 
-    --danger-background-light: #ffd7d9;
-    --danger-background-border-light: #b7000626;
-    --danger-background-hover-light: #fa606066;
-    --danger-background-active-light: #ff1e1e5a;
-    --danger-background-text-light: #ff0000;
+    --red-background-light: #ffd7d9;
+    --red-background-border-light: #b7000626;
+    --red-background-hover-light: #fa606066;
+    --red-background-active-light: #ff1e1e5a;
+    --red-background-text-light: #ff0000;
 
-    --warning-foreground-light: #ffa500;
-    --warning-foreground-border-light: #cc8b00;
-    --warning-foreground-hover-light: #ffb733;
-    --warning-foreground-active-light: #e69500;
-    --warning-foreground-text-light: #ffffff;
+    --orange-foreground-light: #ffa500;
+    --orange-foreground-border-light: #cc8b00;
+    --orange-foreground-hover-light: #ffb733;
+    --orange-foreground-active-light: #e69500;
+    --orange-foreground-text-light: #ffffff;
 
-    --warning-background-light: #ffecd0;
-    --warning-background-border-light: #ffe0b1;
-    --warning-background-hover-light: #ffdfaf;
-    --warning-background-active-light: #ffd699;
-    --warning-background-text-light: #de9103;
+    --orange-background-light: #ffecd0;
+    --orange-background-border-light: #ffe0b1;
+    --orange-background-hover-light: #ffdfaf;
+    --orange-background-active-light: #ffd699;
+    --orange-background-text-light: #de9103;
 
-    --success-foreground-light: #28a745;
-    --success-foreground-border-light: #218838;
-    --success-foreground-hover-light: #34ce57;
-    --success-foreground-active-light: #1e7e34;
-    --success-foreground-text-light: #ffffff;
+    --green-foreground-light: #34ce57;
+    --green-foreground-border-light: #218838;
+    --green-foreground-hover-light: #28a745;
+    --green-foreground-active-light: #1e7e34;
+    --green-foreground-text-light: #ffffff;
     
-    --success-background-light: #def5e5;
-    --success-background-border-light: #c3e6cb;
-    --success-background-hover-light: #d4edda;
-    --success-background-active-light: #c3e6cb;
-    --success-background-text-light: #28a745;
+    --green-background-light: #def5e5;
+    --green-background-border-light: #c3e6cb;
+    --green-background-hover-light: #d4edda;
+    --green-background-active-light: #c3e6cb;
+    --green-background-text-light: #28a745;
 }
 /* Common */
 :root {
-    --font-family-main: 'Arial';
+    --font-family-main: 'Arial', sans-serif;
     
     --border-radius-4: 4px;
     --border-radius-6: 6px;
@@ -127,7 +127,10 @@
     --border-radius-16: 16px;
     --border-radius-full: 50%;
 
-    --font-size-small: clamp(0.75rem, 1.5vw, 1rem);
+    --font-size-tiny: clamp(0.65rem, 1.5vw, 0.85rem);
+    --font-size-small: clamp(0.85rem, 1.5vw, 1rem);
+    --font-size-medium: clamp(1rem, 1.5vw, 1.15rem);
+    --font-size-large: clamp(1.15rem, 1.5vw, 1.25rem);
 
     --padding-2: 0.125rem;
     --padding-4: 0.25rem;

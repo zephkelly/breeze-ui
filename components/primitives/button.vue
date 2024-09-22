@@ -1,24 +1,92 @@
 <template>
     <component
-        
+        v-if="!headless"
+        :is="tag"
+        ref="buttonRef"
+        :class="[
+            { 'breeze-button': !unstyled },
+            // { [`breeze-button--${validatedVariant}`]: !unstyled },
+            { 'breeze-button--solid': variant === 'solid' },
+            { 'breeze-button--ghost': !unstyled && validatedVariant === 'ghost' },
+            { 'breeze-button--flat': !unstyled && validatedVariant === 'flat' },
+            { 'breeze-button--solid-ghost': !unstyled && validatedVariant === 'solid-ghost' },
+            { 'breeze-button--ghost-solid': !unstyled && validatedVariant === 'ghost-solid' },
+            { 'breeze-button--solid-flat': !unstyled && validatedVariant === 'solid-flat' },
+            { 'breeze-button--ghost-flat': !unstyled && validatedVariant === 'ghost-flat' },
+            { 'breeze-button--flat-static': !unstyled && validatedVariant === 'flat-static' },
+            { 'breeze-button--full': !unstyled && validatedWidth === 'full' },
+            { 'breeze-button--colorway': !unstyled && color },
+            { 'breeze-button--loading': loading },
+            { 'breeze-button--disabled': disabled },
+            { 'breeze-button--active': !unstyled && isActive },
+            { 'breeze-button--holdable': holdable },
+            { 'breeze-button--bounce': !unstyled && props.bounce },
+            { 'breeze-button--rounded': !unstyled && props.rounded },
+            { 'breeze-button--round': !unstyled && props.round },
+            { 'breeze-button--sharp': !unstyled && props.sharp },
+            { 'breeze-button--icon-only': !unstyled && props.icon },
+            { [`breeze-button--size-${validatedSize}`]: !unstyled && props.size }
+        ]"
+            :style="[cursorStyle, colorStyle]"
+            v-bind="a11yAttrs"
+            :disabled="isDisabled"
+            :aria-disabled="isDisabled"
+            :aria-busy="loading"
+            :aria-label="ariaLabel"
+            tabindex="0"
+            :href="href"
+            role="button"
+            @mousedown="handleDown"
+            @mouseup="handleUp"
+            @mouseleave="handleLeave"
+            @touchstart.prevent="handleTouchStart"
+            @touchend.prevent="handleTouchEnd"
+            @touchcancel.prevent="handleTouchCancel"
+            @keydown.space.prevent="handleKeyDown"
+            @keyup.space.prevent="handleUp"
+        >
+        <slot name="prebuilt" :a11yAttrs="a11yAttrs">
+            <div class="button-content" v-if="!loading">
+                <span v-if="$slots['leading']" class="breeze-button-icon left" aria-hidden="true"> 
+                    <slot name="leading"></slot>
+                </span>
+                <span class="content-main" ref="contentMainRef">
+                    <div class="button-icon" v-if="icon">
+                        <slot name="default"></slot>
+                    </div>
+                    <div class="button-text" v-else>
+                        <slot name="default"></slot>
+                    </div>
+                </span>
+                <span v-if="$slots['trailing']" class="breeze-button-icon right" aria-hidden="true">
+                    <slot name="trailing"></slot>
+                </span>
+            </div>
+            <span v-else class="button-loader" aria-hidden="true">
+                <slot name="loader">Loading...</slot>
+            </span>
+        </slot>
+    </component>
+    <slot v-else :a11yAttrs="a11yAttrs" name="default">
+
+    </slot>
 </template>
 
 <script setup lang="ts">
 //@ts-ignore
 import { NuxtLink } from '#components'
-import { type ButtonProps, ButtonVariants, ButtonSizes, ButtonWidths } from './../../types/button';
-import { debounce } from './../../utils/debounce';
+import { type ButtonProps, ButtonVariants, ButtonSizes, ButtonWidths } from '../../types/button';
+import { debounce } from '../../utils/debounce';
 
-import { useButtonColor } from './../../composables/useButtonColor';
-import { useDevelopmentWarning } from './../../composables/useDevelopmentWarning';
+import { useButtonColor } from '../../composables/useButtonColor';
+import { useDevelopmentWarning } from '../../composables/useDevelopmentWarning';
 
 const props = withDefaults(defineProps<ButtonProps>(), {
     size: 'medium',
 });
 
 const buttonRef = ref<HTMLElement | null>(null);
-const colorwayRef = ref(props.colorway)
-const isSvgContent = ref(false);
+const colorwayRef = ref(props.color)
 
 const { colorStyle } = useButtonColor(colorwayRef);
 const { devWarning } = useDevelopmentWarning();
@@ -36,24 +104,7 @@ const touchStartTime = ref<number>(0);
 const isTouchDevice = ref(false);
 
 const isDisabled = computed(() => props.disabled || props.loading);
-const cursorStyle = computed(() => ({ cursor: isDisabled.value ? 'not-allowed' : '' }))
-
-const buttonClasses = computed(() => [
-    { 'breeze-button': !props.unstyled },
-    { [`breeze-button--${validatedVariant.value}`]: !props.unstyled },
-    { 'breeze-button--full': !props.unstyled && validatedWidth.value === 'full' },
-    { 'breeze-button--colorway': !props.unstyled && props.colorway },
-    { 'breeze-button--loading': props.loading },
-    { 'breeze-button--disabled': props.disabled },
-    { 'breeze-button--active': !props.unstyled && isActive.value },
-    { 'breeze-button--holdable': props.holdable },
-    { 'breeze-button--bounce': !props.unstyled && props.bounce },
-    { 'breeze-button--rounded': !props.unstyled && props.rounded },
-    { 'breeze-button--round': !props.unstyled && props.round },
-    { 'breeze-button--sharp': !props.unstyled && props.sharp },
-    { 'breeze-button--icon-only': isSvgContent },
-    { [`breeze-button--size-${validatedSize.value}`]: !props.unstyled && props.size }
-])
+const cursorStyle = computed(() => ({ cursor: isDisabled.value ? 'not-allowed' : undefined }))
 
 const validatedVariant = computed(() => {
     if (props.variant !== undefined && Object.values(ButtonVariants).includes(props.variant)) {
@@ -268,14 +319,6 @@ const handleLeave = () => {
     }
 };
 
-onMounted(async () => {
-    await nextTick();
-    if (buttonRef.value) {
-        const slotContent = buttonRef.value.querySelector('.content-main > div > *') as Element | null;
-        isSvgContent.value = slotContent ? slotContent.tagName.toLowerCase() === 'svg' : false;
-    }
-});
-
 // Dev Checks
 if (import.meta.dev) {
     if (props.headless) {
@@ -291,7 +334,7 @@ if (import.meta.dev) {
             devWarning(`The 'variant' prop is not supported when 'headless' is true.`);
         }
 
-        if (props.colorway) {
+        if (props.color) {
             devWarning(`The 'colorway' prop is not supported when 'headless' is true.`);
         }
     }
@@ -305,7 +348,7 @@ if (import.meta.dev) {
 <!-- Default Styles -->
 <style scoped>
 .breeze-button {
-    padding: var(--padding-4) var(--padding-12);
+    padding: var(--padding-6) var(--padding-12);
     border: none;
     border-radius: var(--border-radius-6);
     font-weight: 500;
@@ -336,48 +379,54 @@ if (import.meta.dev) {
 
 .breeze-button--round {
     border-radius: var(--border-radius-full);
+    padding: var(--padding-6);
 }
 
 .breeze-button--sharp {
     border-radius: 0;
 }
 
-.breeze-button--icon-only,
-.breeze-button--round {
+.breeze-button--icon-only {
     aspect-ratio: 1;
     padding: var(--padding-6);
 }
 
 .breeze-button--size-tiny {
-    height: 24px;
-    max-height: 24px;
+    height: 26px;
+    max-height: 26px;
+    font-size: var(--font-size-tiny);
 }
 .breeze-button--size-tiny.breeze-button--icon-only {
-    padding: var(--padding-2);
+    padding: var(--padding-4);
 }
 
 .breeze-button--size-small {
-    height: 32px;
-    max-height: 32px;
+    height: 28px;
+    max-height: 28px;
+    font-size: var(--font-size-small);
+    padding: var(--padding-6) var(--padding-12);
 }
 .breeze-button--size-small.breeze-button--icon-only {
     padding: var(--padding-4);
 }
 
 .breeze-button--size-medium {
-    height: 40px;
-    max-height: 40px;
+    height: 32px;
+    max-height: 32px;
+    font-size: var(--font-size-medium);
 }
 .breeze-button--size-medium.breeze-button--icon-only {
-    padding: var(--padding-6);
+    padding: var(--padding-4);
 }
 
 .breeze-button--size-large {
-    height: 48px;
-    max-height: 48px;
+    height: 34px;
+    max-height: 34px;
+    font-size: var(--font-size-large);
+    padding: var(--padding-6) var(--padding-12);
 }
 .breeze-button--size-large.breeze-button--icon-only {
-    padding: var(--padding-8);
+    padding: var(--padding-4);
 }
 
 .button-content {
@@ -386,6 +435,7 @@ if (import.meta.dev) {
     justify-content: center;
     gap: 0.35rem;
     height: 100%;
+    width: 100%;
 }
 
 .content-main {
@@ -398,7 +448,8 @@ if (import.meta.dev) {
     font-weight: 500;
 }
 
-.button-icon {
+.button-icon,
+.button-text {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -406,15 +457,461 @@ if (import.meta.dev) {
     width: 100%;
 }
 
-.button-text {
-    display: inline-flex;
-    align-items: center;
-    height: 100%;
+.button-text > * {
+    position: relative;
+    /* bottom: 0.5px; */
 }
 
 .breeze-button-icon {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     height: 100%;
+}
+
+:deep(.breeze-button-icon svg) {
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1;
+    position: relative;
+}
+
+:deep(.button-icon svg) {
+    position: relative;
+    top: 0.3px;
+    width: 100%;
+    height: 100%;
+}
+</style>
+
+<!-- Variants -->
+<style scoped>
+/* Solid */
+.breeze-button--solid,
+.breeze-button--solid-ghost,
+.breeze-button--solid-flat {
+    background-color: var(--foreground);
+    border: 1px solid var(--foreground);
+    color: var(--text-background);
+    transition: background-color 0.1s ease, color 0.1s ease;
+}
+.breeze-button--solid:hover,
+.breeze-button--solid:focus-visible {
+    background-color: var(--foreground-hover);
+}
+.breeze-button--solid:focus-visible {
+    background-color: var(--background-active);
+    color: var(--text-foreground);
+    border-color: var(--text-foreground);
+}
+.breeze-button--solid.breeze-button--active {
+    background-color: var(--foreground-active);
+    border-color: var(--foreground-active);
+    color: var(--text-background);
+}
+.breeze-button--solid-ghost:hover,
+.breeze-button--solid-ghost:focus-visible {
+    background-color: var(--background-hover);
+    color: var(--text-foreground);
+}
+.breeze-button--solid-ghost.breeze-button--active {
+    background-color: var(--background-active);
+    color: var(--text-foreground);
+}
+.breeze-button--solid.breeze-button--colorway {  /* Colorway */
+    background-color: var(--colorway);
+    border-color: var(--colorway);
+    color: var(--colorway-text);
+}
+.breeze-button--solid.breeze-button--colorway .content-main {  /* Colorway */
+    color: var(--colorway-text);
+}
+.breeze-button--solid.breeze-button--colorway:hover {
+    background-color: var(--colorway-hover);
+    border-color: var(--colorway-hover);
+}
+.breeze-button--solid.breeze-button--colorway:focus-visible { 
+    background-color: var(--colorway-contrast-hover);
+    color: var(--colorway-contrast-text);
+    border-color: var(--colorway-hover);
+}
+.breeze-button--solid.breeze-button--colorway.breeze-button--active {
+    background-color: var(--colorway-active);
+    border-color: var(--colorway-active);
+    color: var(--colorway-text);
+}
+.breeze-button--solid.breeze-button--disabled {  /* Disabled */
+    background-color: var(--disabled-background);
+    border-color: var(--disabled-background);
+    color: var(--disabled-foreground);
+}
+.breeze-button--solid.breeze-button--disabled:hover {
+    background-color: var(--disabled-background);
+    border-color: var(--disabled-background);
+    color: var(--disabled-foreground);
+}
+
+/* Solid - Ghost */
+.breeze-button--solid-ghost.breeze-button--colorway {  /* Colorway */
+    background-color: var(--colorway);
+    border-color: var(--colorway);
+    color: var(--colorway-text);
+}
+.breeze-button--solid-ghost.breeze-button--colorway:focus-visible,
+.breeze-button--solid-ghost.breeze-button--colorway:hover {
+    background-color: var(--colorway-contrast-hover);
+    color: var(--colorway-contrast-text);
+    border-color: var(--colorway-contrast-text);
+}
+.breeze-button--solid-ghost.breeze-button--colorway.breeze-button--active {
+    background-color: var(--colorway-contrast-active);
+    color: var(--colorway-contrast-text);
+    border-color: var(--colorway-contrast-text); 
+}
+.breeze-button--solid-ghost.breeze-button--disabled {  /* Disabled */
+    background-color: var(--disabled-background);
+    border-color: var(--disabled-background);
+    color: var(--disabled-foreground);
+}
+.breeze-button--solid-ghost.breeze-button--disabled:hover {
+    background-color: var(--disabled-background);
+    border-color: var(--disabled-background);
+    color: var(--disabled-foreground);
+}
+
+/* Solid - Flat */
+.breeze-button--solid-flat .button-content {
+    border-bottom: 1px solid transparent;
+    transition: border-bottom 0.1s ease;
+}
+.breeze-button--solid-flat:hover {
+    background-color: transparent;
+    color: var(--text-foreground);
+    border-color: transparent;
+}
+.breeze-button--solid-flat:hover .button-content {
+    border-color: var(--text-foreground);
+}
+.breeze-button--solid-flat:focus-visible {
+    background-color: transparent;
+    color: var(--text-foreground);
+}
+.breeze-button--solid-flat:focus-visible .button-content {
+    border-color: var(--text-foreground);
+}
+.breeze-button--solid-flat.breeze-button--active {
+    background-color: var(--background-hover);
+    color: var(--text-foreground); 
+}
+.breeze-button--solid-flat.breeze-button--active .button-content {
+    border-color: var(--text-foreground);
+}
+.breeze-button--solid-flat.breeze-button--colorway {  /* Colorway */
+    background-color: var(--colorway);
+    border-color: var(--colorway);
+    color: var(--colorway-text);
+}
+.breeze-button--solid-flat.breeze-button--colorway:hover {
+    background-color: transparent;
+    color: var(--colorway-contrast-text);
+    border-color: transparent;
+}
+.breeze-button--solid-flat.breeze-button--colorway:focus-visible {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--colorway-contrast-text);
+}
+.breeze-button--solid-flat.breeze-button--colorway:hover .button-content,
+.breeze-button--solid-flat.breeze-button--colorway:focus-visible .button-content {
+    border-color: var(--colorway-contrast-text);
+}
+.breeze-button--solid-flat.breeze-button--colorway.breeze-button--active {
+    background-color: var(--colorway-contrast);
+    border-color: var(--colorway-contrast);
+    color: var(--colorway-contrast-text);
+}
+.breeze-button--solid-flat.breeze-button--colorway.breeze-button--active .button-content {
+    border-color: var(--colorway-contrast-text);
+}
+.breeze-button--solid-flat.breeze-button--disabled {  /* Disabled */
+    background-color: var(--disabled-background);
+    border-color: var(--disabled-background);
+    color: var(--disabled-foreground);
+}
+.breeze-button--solid-flat.breeze-button--disabled:hover {
+    background-color: var(--disabled-background);
+    border-color: var(--disabled-background);
+    color: var(--disabled-foreground);
+}
+.breeze-button--solid-flat.breeze-button--disabled:hover .button-content,
+.breeze-button--solid-flat.breeze-button--disabled:focus-visible .button-content {
+    border-color: transparent;
+}
+
+/* Ghost */
+.breeze-button--ghost,
+.breeze-button--ghost-solid,
+.breeze-button--ghost-flat {
+    background-color: transparent;
+    color: var(--text-foreground);
+    border: 1px solid var(--foreground);
+    transition: color 0.1s ease, background-color 0.1s ease, border-color 0.1s ease;
+}
+.breeze-button--ghost,
+.breeze-button--ghost-solid {
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+.breeze-button--ghost .button-content {
+    border-bottom: 1px solid transparent;
+    transition: border-bottom 0.1s ease;
+}
+.breeze-button--ghost:hover,
+.breeze-button--ghost:focus-visible {
+    background-color: var(--background-hover);
+}
+.breeze-button--ghost.breeze-button--active {
+    background-color: var(--background-active);
+}
+.breeze-button--ghost.breeze-button--colorway {  /* Colorway */
+    background-color: var(--colorway-contrast);
+    border-color: var(--colorway-contrast-text);
+    color: var(--colorway-contrast-text);
+}
+.breeze-button--ghost.breeze-button--colorway:hover {
+    background-color: var(--colorway-contrast-hover);
+}
+.breeze-button--ghost.breeze-button--colorway:focus-visible .button-content {
+    border-color: var(--colorway-contrast-text);
+}
+.breeze-button--ghost.breeze-button--colorway.breeze-button--active {
+    background-color: var(--colorway-contrast-active);
+}
+.breeze-button--ghost.breeze-button--disabled {  /* Disabled */
+    background-color: var(--disabled-foreground-hover);
+    border-color: var(--disabled-foreground-text);
+    color: var(--disabled-foreground-text);
+}
+.breeze-button--ghost.breeze-button--disabled:hover {
+    background-color: var(--disabled-foreground-hover);
+}
+.breeze-button--ghost.breeze-button--disabled:focus-visible .button-content {
+    border-color: transparent;
+}
+
+/* Ghost - Solid */
+.breeze-button--ghost-solid:hover {
+    background-color: var(--foreground-hover);
+    color: var(--text-background);
+    border-color: var(--foreground-hover);
+}
+.breeze-button--ghost-solid:focus-visible {
+    background-color: var(--background-hover);
+    color: var(--text-foreground);
+}
+.breeze-button--ghost-solid.breeze-button--active {
+    background-color: var(--foreground-active);
+    border-color: var(--foreground-active);
+    color: var(--text-background);
+}
+.breeze-button--ghost-solid.breeze-button--colorway {  /* Colorway */
+    background-color: var(--colorway-contrast);
+    border-color: var(--colorway-contrast-text);
+    color: var(--colorway-contrast-text);
+}
+.breeze-button--ghost-solid.breeze-button--colorway:focus-visible {
+    background-color: var(--colorway-contrast-hover);
+}
+.breeze-button--ghost-solid.breeze-button--colorway:hover {
+    background-color: var(--colorway-hover);
+    border-color: var(--colorway-hover);
+    color: var(--colorway-text);
+}
+.breeze-button--ghost-solid.breeze-button--colorway.breeze-button--active {
+    background-color: var(--colorway-active);
+    border-color: var(--colorway-active);
+    color: var(--colorway-text);
+}
+.breeze-button--ghost-solid.breeze-button--disabled {  /* Disabled */
+    background-color: var(--disabled-foreground-hover);
+    border-color: var(--disabled-foreground-text);
+    color: var(--disabled-foreground-text);
+}
+.breeze-button--ghost-solid.breeze-button--disabled:hover {
+    background-color: var(--disabled-foreground-hover);
+    color: var(--disabled-foreground-text);
+}
+.breeze-button--ghost-solid.breeze-button--disabled:focus-visible .button-content {
+    border-color: transparent;
+}
+
+/* Ghost-Flat */
+.breeze-button--ghost-flat .button-content {
+    border-bottom: 1px solid transparent;
+    transition: border-bottom 0.1s ease;
+}
+.breeze-button--ghost-flat:hover,
+.breeze-button--ghost-flat:focus-visible {
+    border-color: transparent;
+}
+.breeze-button--ghost-flat:hover .button-content,
+.breeze-button--ghost-flat:focus-visible .button-content {
+    border-color: var(--text-foreground);
+}
+.breeze-button--ghost-flat.breeze-button--active {
+    background-color: var(--background-hover);
+    color: var(--foreground);
+}
+.breeze-button--ghost-flat.breeze-button--active .button-content {
+    border-color: var(--text-foreground);
+}
+.breeze-button--ghost-flat.breeze-button--colorway {  /* Colorway */
+    background-color: var(--colorway-contrast);
+    border-color: var(--colorway);
+    color: var(--colorway-contrast-text);
+}
+.breeze-button--ghost-flat.breeze-button--colorway:hover .button-content,
+.breeze-button--ghost-flat.breeze-button--colorway:focus-visible .button-content {
+    border-color: var(--colorway-contrast-text);
+}
+.breeze-button--ghost-flat.breeze-button--colorway:hover {
+    background-color: transparent;
+    border-color: transparent;
+}
+.breeze-button--ghost-flat.breeze-button--colorway.breeze-button--active {
+    background-color: var(--colorway-contrast);
+    border-color: var(--colorway-contrast);
+}
+.breeze-button--ghost-flat.breeze-button--colorway.breeze-button--active .button-content {
+    border-color: var(--colorway-contrast-text);
+}
+.breeze-button--ghost-flat.breeze-button--disabled {  /* Disabled */
+    background-color: var(--disabled-foreground-hover);
+    border-color: var(--disabled-foreground-text);
+    color: var(--disabled-foreground-text);
+}
+.breeze-button--ghost-flat.breeze-button--disabled:hover {
+    background-color: var(--disabled-foreground-hover);
+    border-color: var(--disabled-foreground-text);
+    color: var(--disabled-foreground-text);
+}
+.breeze-button--ghost-flat.breeze-button--disabled:hover .button-content {
+    border-color: transparent;
+}
+.breeze-button--ghost-flat.breeze-button--disabled:focus-visible .button-content {
+    border-color: transparent;
+}
+
+
+/* Flat Styles */
+.breeze-button--flat,
+.breeze-button--flat-ghost,
+.breeze-button--flat-static {
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: var(--foreground);
+    transition: background-color 0.1s ease, border-color 0.1s ease;
+}
+.breeze-button--flat .button-content {
+    border-bottom: 1px solid transparent;
+    transition: border-bottom 0.1s ease;
+}
+.breeze-button--flat.breeze-button--active {
+    background-color: var(--background-hover);
+    border-color: var(--background-hover);
+}
+.breeze-button--flat:hover .button-content,
+.breeze-button--flat:focus-visible .button-content {
+    border-color: var(--foreground);
+}
+.breeze-button--flat.breeze-button--colorway {
+    color: var(--colorway-contrast-text);
+}
+.breeze-button--flat.breeze-button--colorway:hover .button-content,
+.breeze-button--flat.breeze-button--colorway:focus-visible .button-content,
+.breeze-button--flat.breeze-button--colorway.breeze-button--active .button-content {   /* Colorway */
+    border-color: var(--colorway-contrast-text);
+}
+.breeze-button--flat.breeze-button--colorway:hover {
+    color: var(--colorway-contrast-text);
+}
+.breeze-button--flat.breeze-button--colorway.breeze-button--active {
+    background-color: var(--colorway-contrast);
+    border-color: var(--colorway-contrast);
+}
+.breeze-button--flat.breeze-button--disabled {  /* Disabled */
+    color: var(--disabled-foreground-text);
+}
+.breeze-button--flat.breeze-button--disabled:hover {
+    color: var(--disabled-foreground-text);
+}
+.breeze-button--flat.breeze-button--disabled:hover .button-content {
+    border-color: transparent;
+}
+
+/* Flat - Ghost */
+.breeze-button--flat-ghost:hover,
+.breeze-button--flat-ghost:focus-visible {
+    background-color: var(--background-hover);
+    border-color: var(--foreground);
+}
+.breeze-button--flat-ghost.breeze-button--active {
+    background-color: var(--background-active);
+}
+.breeze-button--flat-ghost.breeze-button--colorway {  /* Colorway */
+    color: var(--colorway-contrast-text);
+}
+.breeze-button--flat-ghost.breeze-button--colorway:focus-visible {
+    background-color: var(--colorway-contrast);
+    border-color: var(--colorway-contrast-text);    
+}
+.breeze-button--flat-ghost.breeze-button--colorway:hover {
+    background-color: var(--colorway-contrast-hover);
+    border-color: var(----colorway-contrast-text);
+}
+.breeze-button--flat-ghost.breeze-button--colorway.breeze-button--active {
+    background-color: var(--colorway-contrast-active);
+    border-color: var(--colorway-contrast-text);
+}
+.breeze-button--flat-ghost.breeze-button--disabled {  /* Disabled */
+    color: var(--disabled-foreground-text);
+}
+.breeze-button--flat-ghost.breeze-button--disabled:hover {
+    color: var(--disabled-foreground-text);
+    background-color: transparent;
+    border-color: transparent;
+}
+.breeze-button--flat-ghost.breeze-button--disabled:hover .button-content {
+    border-color: transparent;
+}
+
+/* Flat-Static */
+.breeze-button--flat-static:focus-visible {
+    background-color: var(--background-hover);
+}
+.breeze-button--flat-static .button-content {
+    border-bottom: 1px solid var(--foreground);
+    transition: border-bottom 0.1s ease;
+}
+.breeze-button--flat-static.breeze-button--colorway {  /* Colorway */
+    color: var(--colorway-contrast-text);
+}
+.breeze-button--flat-static.breeze-button--colorway:focus-visible {
+    background-color: var(--colorway-contrast);
+    border-color: var(--colorway-contrast-text); 
+}
+.breeze-button--flat-static.breeze-button--colorway .button-content {
+    border-color: var(--colorway-contrast-text);
+}
+.breeze-button--flat-static.breeze-button--disabled {  /* Disabled */
+    color: var(--disabled-foreground-text);
+}
+.breeze-button--flat-static.breeze-button--disabled:hover {
+    color: var(--disabled-foreground-text);
+}
+.breeze-button--flat-static.breeze-button--disabled .button-content {
+    border-color: var(--disabled-foreground-text);
+}
+.breeze-button--flat-static.breeze-button--disabled:hover .button-content {
+    border-color: var(--disabled-foreground-text);
 }
 </style>

@@ -1,11 +1,11 @@
 export const ButtonVariants = [
     'solid', 'solid-ghost', 'solid-flat',
-    'flat', 'flat-ghost', 'flat-static',
+    'flat', 'flat-ghost', 'flat-solid', 'flat-static',
     'ghost', 'ghost-solid', 'ghost-flat'
 ] as const;
 
 export const ButtonColors = [
-    'danger', 'warning', 'success',
+    'red', 'orange', 'green',
 ] as const;
 
 export const ButtonWidths = [
@@ -23,7 +23,7 @@ export type ButtonSize = typeof ButtonSizes[number];
 
 export interface ButtonProps {
     variant?: ButtonVariant;
-    colorway?: ButtonColor;
+    color?: ButtonColor;
     disabled?: boolean;
     loading?: boolean;
     unstyled?: boolean;
@@ -38,4 +38,5 @@ export interface ButtonProps {
     rounded?: boolean;
     round?: boolean;
     sharp?: boolean;
+    icon?: boolean;
 }

@@ -1,3 +1,5 @@
+@import url(reset.css);
+
 :root {
     --foreground: var(--foreground-light);
     --foreground-hover: var(--foreground-hover-light);
