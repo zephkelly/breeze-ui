@@ -33,15 +33,15 @@
     --red-background-text-dark: #ff0000;
 
     /* Foreground */
-    --orange-foreground-dark: #ffac07;
+    --orange-foreground-dark: #ffa407;
     --orange-foreground-border-dark: #d39e00;
     --orange-foreground-hover-dark: #db8904;
     --orange-foreground-active-dark: #f7a400;
     --orange-foreground-text-dark: #09090b;
 
-    --orange-background-dark: #3528007d;
+    --orange-background-dark: #4b2e007d;
     --orange-background-border-dark: #ffeeba;
-    --orange-background-hover-dark: #3f3000;
+    --orange-background-hover-dark: #472f00;
     --orange-background-active-dark: #513d00;
     --orange-background-text-dark: #ffbf00;
 
@@ -93,16 +93,16 @@
     --red-background-active-light: #ff1e1e5a;
     --red-background-text-light: #ff0000;
 
-    --orange-foreground-light: #ffa500;
+    --orange-foreground-light: #ffb733;
     --orange-foreground-border-light: #cc8b00;
-    --orange-foreground-hover-light: #ffb733;
+    --orange-foreground-hover-light: #ffa500;
     --orange-foreground-active-light: #e69500;
     --orange-foreground-text-light: #ffffff;
 
     --orange-background-light: #ffecd0;
     --orange-background-border-light: #ffe0b1;
     --orange-background-hover-light: #ffdfaf;
-    --orange-background-active-light: #ffd699;
+    --orange-background-active-light: #ffdba4;
     --orange-background-text-light: #de9103;
 
     --green-foreground-light: #34ce57;
