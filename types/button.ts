@@ -38,4 +38,5 @@ export interface ButtonProps {
     rounded?: boolean;
     round?: boolean;
     sharp?: boolean;
+    icon?: boolean;
 }

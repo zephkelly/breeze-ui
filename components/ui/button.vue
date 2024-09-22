@@ -27,11 +27,11 @@
                 <span v-if="$slots['leading']" class="breeze-button-icon left" aria-hidden="true"> 
                     <slot name="leading"></slot>
                 </span>
-                <span class="content-main">
-                    <div class="button-text" v-if="!isSvgContent">
+                <span class="content-main" ref="contentMainRef">
+                    <div class="button-icon" v-if="icon">
                         <slot name="default"></slot>
                     </div>
-                    <div class="button-icon" v-else>
+                    <div class="button-text" v-else>
                         <slot name="default"></slot>
                     </div>
                 </span>
@@ -64,7 +64,6 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 
 const buttonRef = ref<HTMLElement | null>(null);
 const colorwayRef = ref(props.colorway)
-const isSvgContent = ref(false);
 
 const { colorStyle } = useButtonColor(colorwayRef);
 const { devWarning } = useDevelopmentWarning();
@@ -97,7 +96,7 @@ const buttonClasses = computed(() => [
     { 'breeze-button--rounded': !props.unstyled && props.rounded },
     { 'breeze-button--round': !props.unstyled && props.round },
     { 'breeze-button--sharp': !props.unstyled && props.sharp },
-    { 'breeze-button--icon-only': isSvgContent },
+    { 'breeze-button--icon-only': !props.unstyled && props.icon },
     { [`breeze-button--size-${validatedSize.value}`]: !props.unstyled && props.size }
 ])
 
@@ -314,14 +313,6 @@ const handleLeave = () => {
     }
 };
 
-onMounted(async () => {
-    await nextTick();
-    if (buttonRef.value) {
-        const slotContent = buttonRef.value.querySelector('.content-main > div > *') as Element | null;
-        isSvgContent.value = slotContent ? slotContent.tagName.toLowerCase() === 'svg' : false;
-    }
-});
-
 // Dev Checks
 if (import.meta.dev) {
     if (props.headless) {
@@ -351,7 +342,7 @@ if (import.meta.dev) {
 <!-- Default Styles -->
 <style scoped>
 .breeze-button {
-    padding: var(--padding-4) var(--padding-12);
+    padding: var(--padding-6) var(--padding-12);
     border: none;
     border-radius: var(--border-radius-6);
     font-weight: 500;
@@ -382,48 +373,54 @@ if (import.meta.dev) {
 
 .breeze-button--round {
     border-radius: var(--border-radius-full);
+    padding: var(--padding-6);
 }
 
 .breeze-button--sharp {
     border-radius: 0;
 }
 
-.breeze-button--icon-only,
-.breeze-button--round {
+.breeze-button--icon-only {
     aspect-ratio: 1;
     padding: var(--padding-6);
 }
 
 .breeze-button--size-tiny {
-    height: 24px;
-    max-height: 24px;
+    height: 26px;
+    max-height: 26px;
+    font-size: var(--font-size-tiny);
 }
 .breeze-button--size-tiny.breeze-button--icon-only {
-    padding: var(--padding-2);
+    padding: var(--padding-4);
 }
 
 .breeze-button--size-small {
-    height: 32px;
-    max-height: 32px;
+    height: 28px;
+    max-height: 28px;
+    font-size: var(--font-size-small);
+    padding: var(--padding-6) var(--padding-12);
 }
 .breeze-button--size-small.breeze-button--icon-only {
     padding: var(--padding-4);
 }
 
 .breeze-button--size-medium {
-    height: 40px;
-    max-height: 40px;
+    height: 32px;
+    max-height: 32px;
+    font-size: var(--font-size-medium);
 }
 .breeze-button--size-medium.breeze-button--icon-only {
-    padding: var(--padding-6);
+    padding: var(--padding-4);
 }
 
 .breeze-button--size-large {
-    height: 48px;
-    max-height: 48px;
+    height: 34px;
+    max-height: 34px;
+    font-size: var(--font-size-large);
+    padding: var(--padding-6) var(--padding-12);
 }
 .breeze-button--size-large.breeze-button--icon-only {
-    padding: var(--padding-8);
+    padding: var(--padding-4);
 }
 
 .button-content {
@@ -432,6 +429,7 @@ if (import.meta.dev) {
     justify-content: center;
     gap: 0.35rem;
     height: 100%;
+    width: 100%;
 }
 
 .content-main {
@@ -444,7 +442,8 @@ if (import.meta.dev) {
     font-weight: 500;
 }
 
-.button-icon {
+.button-icon,
+.button-text {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -452,36 +451,34 @@ if (import.meta.dev) {
     width: 100%;
 }
 
-.button-text {
-    display: inline-flex;
-    align-items: center;
-    height: 100%;
+.button-text > * {
+    position: relative;
+    /* bottom: 0.5px; */
 }
 
 .breeze-button-icon {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     height: 100%;
 }
 </style>
 
 <style>
-.breeze-button .button-content svg {
-    height: 100%;
-    width: 100%;
-}
+
 
 .breeze-button-icon svg {
     height: 100%;
     width: auto;
     aspect-ratio: 1;
     position: relative;
-    top: 1px;
 }
 
-.breeze-button .content-main .button-icon svg {
+.breeze-button .button-icon svg {
     position: relative;
     top: 0.3px;
+    width: 100%;
+    height: 100%;
 }
 </style>
 
