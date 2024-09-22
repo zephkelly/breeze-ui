@@ -1,52 +1,72 @@
 import { useColorScheme } from './../../../composables/useColorScheme'
 
 export default defineNuxtPlugin((nuxtApp) => {
-    const { colorScheme, isSystemColorScheme, currentScheme, toggleColorScheme, resetToSystem, systemPreference } = useColorScheme()
+    const { colorScheme, currentScheme, toggleColorScheme, resetToSystem, updateSystemPreference, setColorScheme } = useColorScheme()
 
-    const setColorScheme = (scheme: string) => {
-        colorScheme.value = scheme as 'light' | 'dark'
+    const colorSchemeCookie = useCookie('color-scheme', {
+        maxAge: 60 * 60 * 24 * 365, // 1 year
+        path: '/',
+        sameSite: 'lax'
+    })
+
+    const applyColorScheme = (scheme: ColorScheme | null) => {
+        const appliedScheme = scheme || currentScheme.value
         useHead({
             htmlAttrs: {
-                'data-color-scheme': scheme
+                'data-color-scheme': appliedScheme
             }
         })
         if (import.meta.client) {
-            document.documentElement.setAttribute('data-color-scheme', scheme)
+            if (appliedScheme !== null) {
+                document.documentElement.setAttribute('data-color-scheme', appliedScheme)
+                localStorage.setItem('color-scheme', appliedScheme)
+            }
+        }
+        colorSchemeCookie.value = scheme || 'system'
+    }
+
+    const initColorScheme = () => {
+        if (import.meta.server) {
+            const event = useRequestEvent()
+            const serverColorScheme = event?.context?.colorScheme
+            if (serverColorScheme) {
+                setColorScheme(serverColorScheme as ColorScheme)
+            }
+        } else if (import.meta.client) {
+            const storedScheme = localStorage.getItem('color-scheme') || colorSchemeCookie.value
+            if (storedScheme === 'light' || storedScheme === 'dark') {
+                setColorScheme(storedScheme as ColorScheme)
+            } else {
+                updateSystemPreference()
+            }
         }
     }
 
     if (import.meta.server) {
         const event = useRequestEvent()
-        const colorSchemeCookie = useCookie('color-scheme')
-        
         const cookieColorScheme = colorSchemeCookie.value
-        
+
         if (cookieColorScheme === 'light' || cookieColorScheme === 'dark') {
-            setColorScheme(cookieColorScheme)
-            isSystemColorScheme.value = false
+            setColorScheme(cookieColorScheme as ColorScheme)
+        } else {
+            const headerColorScheme = event?.node.req?.headers['sec-ch-prefers-color-scheme'] as ColorScheme
+            setColorScheme(headerColorScheme || null)
         }
-        else {
-            const headerColorScheme = event?.node.req?.headers['sec-ch-prefers-color-scheme']
-            if (headerColorScheme === 'light' || headerColorScheme === 'dark') {
-                setColorScheme(headerColorScheme)
-                isSystemColorScheme.value = true
-            }
-            else {
-                setColorScheme('light')
-            }
-        }
-    
+
         if (event) {
-            event.context.colorScheme = colorScheme.value || 'light'
+            event.context.colorScheme = currentScheme.value
         }
     }
-    
+
     if (import.meta.client) {
+        updateSystemPreference()
         nuxtApp.hook('app:mounted', () => {
-            const scheme = currentScheme.value
-            if (scheme) {
-                setColorScheme(scheme)
-            }
+            initColorScheme()
+            applyColorScheme(colorScheme.value)
+        })
+
+        watch(colorScheme, (newScheme) => {
+            applyColorScheme(newScheme)
         })
 
         setTimeout(() => {
@@ -54,14 +74,16 @@ export default defineNuxtPlugin((nuxtApp) => {
         }, 50)
     }
 
-      return {
+    return {
         provide: {
-          colorScheme,
-          isSystemColorScheme,
-          currentScheme,
-          toggleColorScheme,
-          resetToSystem,
-          systemPreference
+            colorScheme: readonly(colorScheme),
+            currentScheme: readonly(currentScheme),
+            toggleColorScheme,
+            resetToSystem,
+            setColorScheme: (scheme: ColorScheme | null) => {
+                setColorScheme(scheme)
+                applyColorScheme(scheme)
+            }
         }
     }
 })

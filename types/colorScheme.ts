@@ -1,4 +1,4 @@
-export type ColorScheme = 'light' | 'dark' | null;
+export type ColorScheme = 'light' | 'dark';
 
 export interface ColorSchemeNuxtAppContext {
     $isSystemColorScheme: Ref<boolean>;

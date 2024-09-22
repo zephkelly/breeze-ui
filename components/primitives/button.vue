@@ -332,7 +332,7 @@ const handleLeave = () => {
     }
 };
 
-watch([validatedColor, () => useNuxtApp().$currentScheme.value], () => {
+watch(validatedColor, () => {
     calculateColor(validatedColor.value);
 }, { immediate: true })
 
