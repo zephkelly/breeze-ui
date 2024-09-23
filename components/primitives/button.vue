@@ -61,6 +61,8 @@ import { useDevelopmentWarning } from '../../composables/useDevelopmentWarning';
 const { colorProperties, calculateColor } = useButtonColor();
 const { devWarning } = useDevelopmentWarning();
 
+const { $currentScheme } = useNuxtApp();
+
 const props = withDefaults(defineProps<ButtonProps>(), {
     size: 'medium',
     variant: 'solid',
@@ -88,6 +90,7 @@ const buttonClasses = computed(() => [
     { [`breeze-button--${validatedVariant.value}`]: !props.unstyled },
     { 'breeze-button--full': !props.unstyled && validatedWidth.value === 'full' },
     { 'breeze-button--colorway': !props.unstyled && props.color },
+    { [`breeze-button--colorway-${validatedColor.value}`]: !props.unstyled && props.color },
     { 'breeze-button--loading': props.loading },
     { 'breeze-button--disabled': props.disabled || props.loading },
     { 'breeze-button--active': !props.unstyled && isActive.value },
@@ -336,6 +339,10 @@ watch(validatedColor, () => {
     calculateColor(validatedColor.value);
 }, { immediate: true })
 
+watch($currentScheme, () => {
+    calculateColor(validatedColor.value);
+}, { immediate: true })
+
 // Dev Checks
 if (import.meta.dev) {
     if (props.headless) {
@@ -368,7 +375,6 @@ if (import.meta.dev) {
     padding: var(--padding-6) var(--padding-12);
     border: none;
     border-radius: var(--border-radius-6);
-    font-weight: 500;
     font-size: var(--font-size-small);
     color: var(--text-color);
     cursor: pointer;
@@ -477,6 +483,9 @@ if (import.meta.dev) {
     height: 100%;
     width: 100%;
 }
+.button-text {
+    font-weight: 600;
+}
 
 .breeze-button-icon {
     display: inline-flex;
@@ -527,6 +536,7 @@ if (import.meta.dev) {
 .breeze-button--flat-solid:focus-visible {
     background-color: var(--foreground-hover);
     border-color: var(--foreground-hover);
+    color: var(--text-background);
 }
 .breeze-button--solid.breeze-button--colorway:hover,
 .breeze-button--ghost-solid.breeze-button--colorway:hover,

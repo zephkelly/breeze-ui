@@ -35,9 +35,12 @@
 }
 
 .breeze-button-group :deep(.breeze-button) {
-  margin-right: -1px;
   position: relative;
   z-index: calc(var(--total-buttons) - var(--button-index, 0));
+}
+
+.breeze-button-group :deep(.breeze-button:not(.breeze-button--colorway)) {
+  margin-right: -1px;
 }
 
 .breeze-button-group :deep(.breeze-button:not(:first-child):not(:last-child)) {

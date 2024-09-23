@@ -3,7 +3,7 @@ import { type ColorSchemeNuxtAppContext, type ColorScheme } from './../types/col
 interface ColorwayVariables {
     [key: string]: string
 }
-  
+
 export function useButtonColor() {
     const nuxtApp = useNuxtApp()
     const { $currentScheme } = nuxtApp as unknown as ColorSchemeNuxtAppContext
