@@ -369,14 +369,13 @@ if (import.meta.dev) {
 }
 </script>
 
-<!-- Default Styles -->
 <style scoped>
 .breeze-button {
     padding: var(--padding-6) var(--padding-12);
     border: none;
     border-radius: var(--border-radius-6);
     font-size: var(--font-size-small);
-    color: var(--text-color);
+    color: var(--text-foreground);
     cursor: pointer;
     box-sizing: border-box;
     font-family: var(--font-family-main);
@@ -509,15 +508,13 @@ if (import.meta.dev) {
 }
 </style>
 
-<!-- Variants -->
 <style scoped>
-/* Solid */
 .breeze-button--solid,
 .breeze-button--solid-ghost,
 .breeze-button--solid-flat {
     color: var(--text-background);
     background-color: var(--foreground);
-    border: 1px solid var(--foreground);
+    border: var(--border-width) solid var(--foreground);
     transition: background-color 0.1s ease, color 0.1s ease, border-color 0.1s ease;
 }
 .breeze-button--solid.breeze-button--colorway,
@@ -574,13 +571,12 @@ if (import.meta.dev) {
     border-color: var(--disabled-foreground-hover);
 }
 
-/* Ghost */
 .breeze-button--ghost,
 .breeze-button--ghost-solid,
 .breeze-button--ghost-flat {
     background-color: transparent;
     color: var(--text-foreground);
-    border: 1px solid var(--foreground);
+    border: var(--border-width) solid var(--foreground);
     transition: color 0.1s ease, background-color 0.1s ease, border-color 0.1s ease;
 }
 .breeze-button--ghost.breeze-button--colorway,
@@ -591,7 +587,6 @@ if (import.meta.dev) {
     color: var(--colorway);
 }
 
-/* Ghost Hover/Focus */
 .breeze-button--ghost:hover,
 .breeze-button--solid-ghost:hover,
 .breeze-button--flat-ghost:hover,
@@ -613,7 +608,6 @@ if (import.meta.dev) {
     border-color: var(--colorway);
 }
 
-/* Ghost Active */
 .breeze-button--ghost.breeze-button--active,
 .breeze-button--solid-ghost.breeze-button--active,
 .breeze-button--flat-ghost.breeze-button--active {
@@ -625,7 +619,6 @@ if (import.meta.dev) {
     background-color: var(--colorway-contrast-active);
 }
 
-/* Ghost Disabled */
 .breeze-button--ghost.breeze-button--disabled,
 .breeze-button--solid-ghost.breeze-button--disabled,
 .breeze-button--flat-ghost.breeze-button--disabled,
@@ -637,13 +630,13 @@ if (import.meta.dev) {
     border-color: var(--disabled-foreground-text);
 }
 
-/* Flat */
+
 .breeze-button--flat,
 .breeze-button--flat-static,
 .breeze-button--flat-solid,
 .breeze-button--flat-ghost {
     color: var(--text-foreground);
-    border: 1px solid transparent;
+    border: var(--border-width) solid transparent;
     background-color: transparent;
     transition: color 0.1s ease, background-color 0.1s ease, border-color 0.1s ease;
 }
@@ -657,7 +650,6 @@ if (import.meta.dev) {
     border-bottom: 1px solid var(--foreground);
 }
 
-/* Flat Hover/Focus */
 .breeze-button--flat:hover,
 .breeze-button--solid-flat:hover,
 .breeze-button--ghost-flat:hover,
@@ -688,7 +680,6 @@ if (import.meta.dev) {
     border-color: var(--foreground);
 }
 
-/* Flat Active */
 .breeze-button--flat.breeze-button--active,
 .breeze-button--solid-flat.breeze-button--active,
 .breeze-button--ghost-flat.breeze-button--active {
@@ -701,7 +692,6 @@ if (import.meta.dev) {
     background-color: var(--colorway-contrast-hover);
 }
 
-/* Flat Disabled */
 .breeze-button--flat.breeze-button--disabled,
 .breeze-button--flat-static.breeze-button--disabled,
 .breeze-button--solid-flat.breeze-button--disabled,

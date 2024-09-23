@@ -1,9 +1,8 @@
 <template>
   <div class="main">
     <BButtonGroup>
-        <BButton @click="handleClick" variant="ghost"> Hello</BButton>
-        <BButton @click="" holdable variant="solid"> Hello</BButton>
-        <BButton @click="handleClick2" holdable variant="solid"> Hello</BButton>
+        <BButton @click="handleClick" variant="ghost" color="red"> Hello</BButton>
+        <BButton @click="handleClick2" holdable variant="ghost" color="red"> Hello</BButton>
     </BButtonGroup>
   </div>
 </template>

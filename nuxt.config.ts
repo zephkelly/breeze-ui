@@ -12,8 +12,12 @@ export default defineNuxtConfig({
         theme: 'default',
         devWarnings: true,
     },
-    typescript: {
-        typeCheck: true,
+    // typescript: {
+    //     typeCheck: true,
+    // },
+    css: ['./assets/css/base.css'],
+    build: {
+        transpile: ['breeze']
     },
     components: [
         {

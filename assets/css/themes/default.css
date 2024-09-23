@@ -127,6 +127,8 @@
     --border-radius-16: 16px;
     --border-radius-full: 50%;
 
+    --border-width: 1px;
+
     --font-size-tiny: clamp(0.65rem, 1.5vw, 0.85rem);
     --font-size-small: clamp(0.85rem, 1.5vw, 1rem);
     --font-size-medium: clamp(0.8rem, 1.5vw, 0.875rem);
