@@ -46,9 +46,9 @@ export default defineNuxtConfig({
     },
     app: {
         head: {
-            htmlAttrs: {
-                'data-color-scheme': ''
-            }
+            // htmlAttrs: {
+            //     'data-color-scheme': ''
+            // }
         }
     },
 })

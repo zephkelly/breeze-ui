@@ -62,15 +62,18 @@ function copyDefaultTheme(userThemesDir: string, resolve: Function) {
     const userDefaultCssPath = pathResolve(userThemesDir, 'default.css')
     if (!existsSync(userDefaultCssPath)) {
         const layerDefaultCssPath = resolve('../assets/css/themes/default.css')
+
         if (existsSync(layerDefaultCssPath)) {
-        copyFileSync(layerDefaultCssPath, userDefaultCssPath)
-        console.log(`Copied default.css to: ${userDefaultCssPath}`)
-        } else {
-        console.warn('Could not find default.css in the layer to copy.')
+            copyFileSync(layerDefaultCssPath, userDefaultCssPath)
+        // console.log(`Copied default.css to: ${userDefaultCssPath}`)
         }
-    } else {
-        console.log(`Default theme already exists: ${userDefaultCssPath}`)
-        console.log('Skipping default theme copy to avoid overwriting existing file.')
+        else {
+            console.warn('Could not find default.css in the layer to copy.')
+        }
+    }
+    else {
+        // console.log(`Default theme already exists: ${userDefaultCssPath}`)
+        // console.log('Skipping default theme copy to avoid overwriting existing file.')
     }
 }
 
@@ -80,13 +83,14 @@ function loadThemeCss(options: ModuleOptions, nuxt: any, userThemesDir: string, 
         const moduleThemeCssPath = resolve(`../assets/css/themes/${themeName}.css`)
 
         if (existsSync(userThemeCssPath)) {
-        console.log(`Using user's theme CSS file: ${userThemeCssPath}`)
-        nuxt.options.css.push(userThemeCssPath)
-        return true
-        } else if (existsSync(moduleThemeCssPath)) {
-        console.log(`Using module's theme CSS file: ${moduleThemeCssPath}`)
-        nuxt.options.css.push(moduleThemeCssPath)
-        return true
+            // console.log(`Using user's theme CSS file: ${userThemeCssPath}`)
+            nuxt.options.css.push(userThemeCssPath)
+            return true
+        }
+        else if (existsSync(moduleThemeCssPath)) {
+            // console.log(`Using module's theme CSS file: ${moduleThemeCssPath}`)
+            nuxt.options.css.push(moduleThemeCssPath)
+            return true
         }
 
         return false
@@ -95,9 +99,11 @@ function loadThemeCss(options: ModuleOptions, nuxt: any, userThemesDir: string, 
     if (!loadTheme(options.theme)) {
         console.warn(`Could not find theme CSS file for theme: ${options.theme}`)
         console.log('Falling back to default theme')
+
         options.theme = 'default'
+
         if (!loadTheme('default')) {
-        console.error('Could not load default theme. Please ensure default.css exists.')
+            console.error('Could not load default theme. Please ensure default.css exists.')
         }
     }
 }

@@ -335,13 +335,13 @@ const handleLeave = () => {
     }
 };
 
-watch(validatedColor, () => {
-    calculateColor(validatedColor.value);
-}, { immediate: true })
+// watch(validatedColor, () => {
+//     calculateColor(validatedColor.value);
+// }, { immediate: true })
 
-watch($currentScheme, () => {
-    calculateColor(validatedColor.value);
-}, { immediate: true })
+// watch($currentScheme, () => {
+//     calculateColor(validatedColor.value);
+// }, { immediate: true })
 
 // Dev Checks
 if (import.meta.dev) {
