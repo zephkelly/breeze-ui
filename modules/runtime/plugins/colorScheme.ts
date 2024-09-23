@@ -1,8 +1,9 @@
 import { useColorScheme } from './../../../composables/useColorScheme'
+import type { ColorScheme } from './../../../types/colorScheme'
 
 export default defineNuxtPlugin((nuxtApp) => {
-    const { currentScheme, toggleColorScheme, resetToSystem, updateSystemPreference, setColorScheme } = useColorScheme()
-
+    const { currentScheme, toggleColorScheme, resetToSystem, updateSystemPreference, setColorScheme, isSystemColorScheme } = useColorScheme()
+    
     const colorSchemeCookie = useCookie('color-scheme', {
         maxAge: 60 * 60 * 24 * 365, // 1 year
         path: '/',
@@ -10,68 +11,61 @@ export default defineNuxtPlugin((nuxtApp) => {
     })
 
     const applyColorScheme = (scheme: ColorScheme | null) => {
-        const appliedScheme = scheme || currentScheme.value
+        const appliedScheme = scheme || currentScheme.value || 'light'
         useHead({
             htmlAttrs: {
                 'data-color-scheme': appliedScheme
             }
         })
         if (import.meta.client) {
-            if (appliedScheme !== null) {
-                document.documentElement.setAttribute('data-color-scheme', appliedScheme)
-                localStorage.setItem('color-scheme', appliedScheme)
-            }
+            document.documentElement.setAttribute('data-color-scheme', appliedScheme)
+            localStorage.setItem('color-scheme', isSystemColorScheme.value ? 'system' : appliedScheme)
         }
-        colorSchemeCookie.value = scheme || 'system'
+        colorSchemeCookie.value = isSystemColorScheme.value ? 'system' : appliedScheme
     }
 
     const initColorScheme = () => {
-        if (import.meta.server) {
-            const event = useRequestEvent()
-            const serverColorScheme = event?.context?.colorScheme
-            if (serverColorScheme) {
-                setColorScheme(serverColorScheme as ColorScheme)
-            }
-        } else if (import.meta.client) {
-            const storedScheme = localStorage.getItem('color-scheme') || colorSchemeCookie.value
-            if (storedScheme === 'light' || storedScheme === 'dark') {
-                setColorScheme(storedScheme as ColorScheme)
-            } else {
-                updateSystemPreference()
-            }
+        const storedScheme = colorSchemeCookie.value as ColorScheme | 'system' | undefined
+        if (storedScheme === 'light' || storedScheme === 'dark') {
+            setColorScheme(storedScheme)
+        } else {
+            resetToSystem()
+            updateSystemPreference()
         }
+        applyColorScheme(currentScheme.value)
     }
 
     if (import.meta.server) {
         const event = useRequestEvent()
-        const cookieColorScheme = colorSchemeCookie.value
-
-        if (cookieColorScheme === 'light' || cookieColorScheme === 'dark') {
-            setColorScheme(cookieColorScheme as ColorScheme)
-        } else {
-            const headerColorScheme = event?.node.req?.headers['sec-ch-prefers-color-scheme'] as ColorScheme
-            setColorScheme(headerColorScheme || null)
-        }
-
+        initColorScheme()
+       
         if (event) {
             event.context.colorScheme = currentScheme.value
         }
+        useHead({
+            htmlAttrs: {
+                'data-color-scheme': currentScheme.value
+            }
+        })
     }
 
     if (import.meta.client) {
-        updateSystemPreference()
         nuxtApp.hook('app:mounted', () => {
             initColorScheme()
-            applyColorScheme(currentScheme.value)
+       
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+            const handleChange = () => {
+                if (isSystemColorScheme.value) {
+                    updateSystemPreference()
+                    applyColorScheme(currentScheme.value)
+                }
+            }
+            mediaQuery.addEventListener('change', handleChange)
         })
-
+   
         watch(currentScheme, (newScheme) => {
             applyColorScheme(newScheme)
         })
-
-        setTimeout(() => {
-            document.documentElement.style.visibility = 'visible'
-        }, 50)
     }
 
     return {

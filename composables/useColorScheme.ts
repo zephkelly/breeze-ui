@@ -42,12 +42,20 @@ export const useColorScheme = () => {
         setColorScheme(null)
     }
 
+    if (import.meta.client) {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+        mediaQuery.addEventListener('change', () => {
+            updateSystemPreference()
+        })
+    }
+
     return {
         currentScheme,
         toggleColorScheme,
         resetToSystem,
         systemPreference,
         updateSystemPreference,
-        setColorScheme
+        setColorScheme,
+        isSystemColorScheme
     }
 }
