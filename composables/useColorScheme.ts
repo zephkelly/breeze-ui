@@ -6,8 +6,7 @@ const currentUserColorScheme = () => useState<ColorSchemeOrNull>('currentUserCol
 const currentSystemColorScheme = () => useState<ColorSchemeOrNull>('currentSystemColorScheme', () => null)
 
 export const useColorScheme = () => {
-    const currentColorScheme: Ref<ColorScheme> = computed(() => currentUserColorScheme().value ?? currentSystemColorScheme().value ?? 'light')
-    const isSystemColorScheme = computed(() => currentUserColorScheme().value === null || currentSystemColorScheme().value !== null)
+    const currentColorScheme = computed(() => currentUserColorScheme().value ?? currentSystemColorScheme().value ?? 'light')
 
     const updateSystemColorScheme = () => {
         currentSystemColorScheme().value = getSystemColorScheme()
@@ -16,7 +15,7 @@ export const useColorScheme = () => {
     const updateUserColorScheme = (scheme: ColorSchemeOrNull) => {
         currentUserColorScheme().value = scheme
     }
-
+    
     const toggleUserColorScheme = () => {
         if (currentUserColorScheme().value === null) {
             if (currentSystemColorScheme().value === null) {

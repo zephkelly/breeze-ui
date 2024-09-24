@@ -49,24 +49,42 @@ export default defineNuxtConfig({
             script: [
               {
                 innerHTML: `
-                  (function() {
-                    function getInitialColorScheme() {               
-                    const scheme = getInitialColorScheme();
+                    (function() {
+                        function getInitialColorScheme() {
+                            const cookie = document.cookie.split('; ').find(row => row.startsWith('color-scheme='));
+                            if (cookie) {
+                                const scheme = cookie.split('=')[1];
+                                return scheme;
+                            }
 
-                    if (scheme === 'dark') {
-                      document.documentElement.style.backgroundColor = '#09090b';
-                    }
+                            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                                return 'dark';
+                            }
+                            else {
+                                return 'light';
+                            }
+                        }
+                        
+                        const scheme = getInitialColorScheme();
+                        
+                        if (scheme === 'light') {
+                            document.documentElement.style.backgroundColor = '#fafafa;';
+                        }
+                        else {
+                            document.documentElement.style.backgroundColor = '#09090b';
+                        }
 
-                    window.addEventListener('load', () => {
-                      document.documentElement.style.removeProperty('background-color');
-                    });
-                    
-                    document.documentElement.setAttribute('data-color-scheme', scheme);
-                  })();
+                        window.addEventListener('load', () => {
+                            document.documentElement.style.removeProperty('background-color');
+                        });
+                        
+                        document.documentElement.setAttribute('data-color-scheme', scheme);
+                    })();
                 `,
                 type: 'text/javascript',
               },
             ],
         },
-    },
+    },     
+    ssr: true,
 })

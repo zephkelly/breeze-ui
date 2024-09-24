@@ -19,7 +19,7 @@
     /* Colorway styles */
     /* Danger */
     --red-900-dark: #54000060;
-    --red-850-dark: #500000a1;
+    --red-850-dark: #d100003b;
     --red-800-dark: #78000094;
     --red-700-dark: #b02727;
     --red-600-dark: #c22f2f;
@@ -85,8 +85,8 @@
     /* Colorway styles */
     /* Danger */
 
-    --red-900-light: #ff9d9d60;
-    --red-850-light: #ffa6a6a1;
+    --red-900-light: #d100003b;
+    --red-850-light: #fea4a4a1;
     --red-800-light: #ff848494;
     --red-700-light: #c30000;
     --red-600-light: #db0000;

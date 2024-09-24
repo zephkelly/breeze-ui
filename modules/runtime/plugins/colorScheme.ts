@@ -12,6 +12,25 @@ export default defineNuxtPlugin((nuxtApp) => {
         sameSite: 'lax'
     })
 
+    function getInitialColorScheme(): ColorScheme {
+        const storedScheme = colorSchemeCookie.value as ColorScheme | undefined
+        if (storedScheme !== undefined && storedScheme !== null) {
+            return storedScheme
+        }
+        if (import.meta.client) {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+        return 'light' // Default to light if we can't determine
+    }
+
+    function setSystemColorScheme() {
+        if (colorSchemeCookie.value) {
+            colorSchemeCookie.value = null
+        }
+
+        applySystemColorScheme();
+    }
+
     function applyColorScheme(scheme: ColorScheme | null, schemeSource: ColorSchemeSource) {
         if (scheme === null) return;
 
@@ -28,22 +47,32 @@ export default defineNuxtPlugin((nuxtApp) => {
             else if (schemeSource === 'system') {
                 colorSchemeCookie.value = null
             }
-
+            
             document.documentElement.setAttribute('data-color-scheme', scheme)
         }
     }
 
     if (import.meta.server) {
         const storedScheme = colorSchemeCookie.value as ColorScheme | undefined
-
         if (storedScheme) {
             applyColorScheme(storedScheme, 'cookie')
         }
     }
 
-    nuxtApp.hook('app:mounted', () => {
-        updateSystemColorScheme()
+    if (import.meta.client) {
+        watch(currentColorScheme, (newScheme) => {
+            if (currentUserColorScheme().value === null) {
+                console.log('Applying color scheme', newScheme, 'from system')
+                applyColorScheme(newScheme, 'system')
+            }
+            else {
+                console.log('Applying color scheme', newScheme, 'from user')
+                applyColorScheme(newScheme, 'user')
+            }
+        })
+    }
 
+    nuxtApp.hook('app:created', () => {
         const storedScheme = colorSchemeCookie.value as ColorScheme | undefined
 
         if (storedScheme) {
@@ -52,34 +81,18 @@ export default defineNuxtPlugin((nuxtApp) => {
             return;
         }
 
-        applyColorScheme(currentColorScheme.value, 'system')
+        // applyColorScheme(currentColorScheme.value, 'system')
     })
 
-    watch(currentColorScheme, (newScheme) => {
-        if (currentUserColorScheme().value === null) {
-            applyColorScheme(newScheme, 'system')
-        }
-        else {
-            applyColorScheme(newScheme, 'user')
-        }
-    })
-
-    function getInitialColorScheme(): ColorScheme {
-        const storedScheme = colorSchemeCookie.value as ColorScheme | undefined
-        if (storedScheme !== undefined && storedScheme !== null) {
-            return storedScheme
-        }
-        if (import.meta.client) {
-            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-        }
-        return 'light' // Default to light if we can't determine
-    }
+    nuxtApp.hook('app:mounted', () => {
+        updateSystemColorScheme()
+    });
 
     return {
         provide: {
             currentColorScheme, currentUserColorScheme,
             toggleColorScheme: toggleUserColorScheme,
-            setSystemColorScheme: applySystemColorScheme,
+            setSystemColorScheme: setSystemColorScheme,
             getInitialColorScheme
         }
     }
