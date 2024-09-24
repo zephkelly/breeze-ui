@@ -46,9 +46,27 @@ export default defineNuxtConfig({
     },
     app: {
         head: {
-            // htmlAttrs: {
-            //     'data-color-scheme': ''
-            // }
-        }
+            script: [
+              {
+                innerHTML: `
+                  (function() {
+                    function getInitialColorScheme() {               
+                    const scheme = getInitialColorScheme();
+
+                    if (scheme === 'dark') {
+                      document.documentElement.style.backgroundColor = '#09090b';
+                    }
+
+                    window.addEventListener('load', () => {
+                      document.documentElement.style.removeProperty('background-color');
+                    });
+                    
+                    document.documentElement.setAttribute('data-color-scheme', scheme);
+                  })();
+                `,
+                type: 'text/javascript',
+              },
+            ],
+        },
     },
 })

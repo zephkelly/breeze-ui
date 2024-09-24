@@ -65,7 +65,7 @@ function copyDefaultTheme(userThemesDir: string, resolve: Function) {
 
         if (existsSync(layerDefaultCssPath)) {
             copyFileSync(layerDefaultCssPath, userDefaultCssPath)
-        // console.log(`Copied default.css to: ${userDefaultCssPath}`)
+            // console.log(`Copied default.css to: ${userDefaultCssPath}`)
         }
         else {
             console.warn('Could not find default.css in the layer to copy.')

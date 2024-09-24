@@ -6,7 +6,7 @@ interface ColorwayVariables {
 
 export function useButtonColor() {
     const nuxtApp = useNuxtApp()
-    const { $currentScheme } = nuxtApp as unknown as ColorSchemeNuxtAppContext
+    const { $currentColorScheme } = nuxtApp as unknown as ColorSchemeNuxtAppContext
   
     const colorProperties = ref<ColorwayVariables>({})
   
@@ -16,7 +16,7 @@ export function useButtonColor() {
         }
     
         let currentColorway = colorway
-        let currentScheme = $currentScheme.value
+        let currentScheme = $currentColorScheme.value
         const states = ['', '-hover', '-active']
         const extras = ['-border', '-text']
     

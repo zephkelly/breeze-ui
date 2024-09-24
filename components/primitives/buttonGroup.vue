@@ -52,14 +52,11 @@ const processedButtons = computed(() => {
     position: relative;
     z-index: calc(var(--total-buttons) - var(--button-index, 0));
 }
-.breeze-button-group :deep(.breeze-button:not([class="breeze-button--colorway"])) {
+.breeze-button-group :deep(.breeze-button.breeze-button--ghost) {
     margin-right: -1px;
 }
 .breeze-button-group :deep(.breeze-button[class="breeze-button--colorway"]) {
     margin-right: 0;
-}
-.breeze-button-group :deep(.breeze-button[data-same-colorway="true"]) + :not(.breeze-button--colorway) {
-    margin-right: -1px;
 }
 .breeze-button-group :deep(.breeze-button:not(:first-child):not(:last-child)) {
     border-radius: 0;
@@ -74,8 +71,5 @@ const processedButtons = computed(() => {
 }
 .breeze-button-group :deep(.breeze-button:focus-visible) {
     z-index: calc(var(--total-buttons) + 1);
-}
-.breeze-button-group :deep(.breeze-button--ghost:not(:last-child)) + .breeze-button--ghost {
-    border-right-color: inherit;
 }
 </style>

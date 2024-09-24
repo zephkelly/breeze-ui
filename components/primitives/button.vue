@@ -61,7 +61,7 @@ import { useDevelopmentWarning } from '../../composables/useDevelopmentWarning';
 const { colorProperties, calculateColor } = useButtonColor();
 const { devWarning } = useDevelopmentWarning();
 
-const { $currentScheme } = useNuxtApp();
+const { $currentColorScheme } = useNuxtApp();
 
 const props = withDefaults(defineProps<ButtonProps>(), {
     size: 'medium',
@@ -335,13 +335,13 @@ const handleLeave = () => {
     }
 };
 
-// watch(validatedColor, () => {
-//     calculateColor(validatedColor.value);
-// }, { immediate: true })
+watch(validatedColor, () => {
+    calculateColor(validatedColor.value);
+}, { immediate: true })
 
-// watch($currentScheme, () => {
-//     calculateColor(validatedColor.value);
-// }, { immediate: true })
+watch($currentColorScheme, () => {
+    calculateColor(validatedColor.value);
+}, { immediate: true })
 
 // Dev Checks
 if (import.meta.dev) {
@@ -522,6 +522,7 @@ if (import.meta.dev) {
 .breeze-button--solid-flat.breeze-button--colorway {
     background-color: var(--colorway);
     border-color: var(--colorway);
+    color: var(--colorway-contrast-text);
 }
 
 /* Solid Hover/Focus */
@@ -584,7 +585,7 @@ if (import.meta.dev) {
 .breeze-button--ghost-flat.breeze-button--colorway {
     background-color: var(--colorway-contrast);
     border-color: var(--colorway);
-    color: var(--colorway);
+    color: var(--colorway-text);
 }
 
 .breeze-button--ghost:hover,
@@ -668,7 +669,7 @@ if (import.meta.dev) {
 .breeze-button--ghost-flat.breeze-button--colorway:focus-visible {
     color: var(--colorway);
     background-color: var(--colorway-contrast);
-    border-color: var(--colorway-contrast);
+    border-color: transparent;
 }
 
 .breeze-button--flat:hover .button-content,

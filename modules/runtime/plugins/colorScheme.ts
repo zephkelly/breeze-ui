@@ -64,10 +64,23 @@ export default defineNuxtPlugin((nuxtApp) => {
         }
     })
 
+    function getInitialColorScheme(): ColorScheme {
+        const storedScheme = colorSchemeCookie.value as ColorScheme | undefined
+        if (storedScheme !== undefined && storedScheme !== null) {
+            return storedScheme
+        }
+        if (import.meta.client) {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+        return 'light' // Default to light if we can't determine
+    }
+
     return {
         provide: {
+            currentColorScheme, currentUserColorScheme,
             toggleColorScheme: toggleUserColorScheme,
-            setSystemColorScheme: applySystemColorScheme
+            setSystemColorScheme: applySystemColorScheme,
+            getInitialColorScheme
         }
     }
 });
