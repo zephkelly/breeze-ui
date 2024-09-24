@@ -53,7 +53,7 @@ const processedButtons = computed(() => {
     z-index: calc(var(--total-buttons) - var(--button-index, 0));
 }
 .breeze-button-group :deep(.breeze-button.breeze-button--ghost) {
-    margin-right: -1px;
+    margin-right: -var(--button-border-width);
 }
 .breeze-button-group :deep(.breeze-button[class="breeze-button--colorway"]) {
     margin-right: 0;

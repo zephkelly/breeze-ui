@@ -6,53 +6,26 @@ interface ColorwayVariables {
 
 export function useButtonColor() {
     const nuxtApp = useNuxtApp()
-    const { $currentColorScheme } = nuxtApp as unknown as ColorSchemeNuxtAppContext
   
-    const colorProperties = ref<ColorwayVariables>({})
-  
-    const calculateColor = (colorway: string | undefined) => {
-        if (!colorway) {
-            return {}
-        }
-    
-        let currentColorway = colorway
-        let currentScheme = $currentColorScheme.value
-        const states = ['', '-hover', '-active']
-        const extras = ['-border', '-text']
-    
-        const newVariables: ColorwayVariables = {}
-    
-        states.forEach(state => {
-            const baseVar = `--${currentColorway}-foreground${state}-${currentScheme}`
-            const newVar = `--colorway${state}`
-            newVariables[newVar] = `var(${baseVar})`
-        })
-    
-        extras.forEach(extra => {
-            const baseVar = `--${currentColorway}-foreground${extra}-${currentScheme}`
-            const newVar = `--colorway${extra}`
-            newVariables[newVar] = `var(${baseVar})`
-        })
-    
-        // Set contrast variables
-        states.forEach(state => {
-            const baseVar = `--${currentColorway}-background${state}-${currentScheme}`
-            const newVar = `--colorway-contrast${state}`
-            newVariables[newVar] = `var(${baseVar})`
-        })
-    
-        extras.forEach(extra => {
-            const baseVar = `--${currentColorway}-background${extra}-${currentScheme}`
-            const newVar = `--colorway-contrast${extra}`
-            newVariables[newVar] = `var(${baseVar})`
-        })
+    const currentColor = ref<ColorScheme | null>(null)
 
-        colorProperties.value = newVariables
-        return newVariables
+    const colorProperties = computed(() => {
+        return {
+            '--color-100': `var(--${currentColor.value}-100)`,
+            '--color-200': `var(--${currentColor.value}-200)`,
+            '--color-300': `var(--${currentColor.value}-300)`,
+            '--color-400': `var(--${currentColor.value}-400)`,
+            '--color-500': `var(--${currentColor.value}-500)`,
+        }
+    })
+  
+    const setButtonColor = (color: string | undefined) => {
+        if (!color) return
+        currentColor.value = color as ColorScheme
     }
 
     return {
-        colorProperties,
-        calculateColor
+        getButtonColors: colorProperties,
+        setButtonColor
     }
 }

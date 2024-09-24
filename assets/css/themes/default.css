@@ -1,3 +1,24 @@
+/* Color Properties/Variables */
+:root {
+    --red-100: #ad000039;
+    --red-200: #d100004b;
+    --red-300: #d7000065;
+    --red-400: #b02727;
+    --red-500: #d83338;
+
+    --orange-100: #ee7d0340;
+    --orange-200: #ff80005c;
+    --orange-300: #ef770078;
+    --orange-400: #de8500;
+    --orange-500: #df8200;
+
+    --green-100: #34ce5733;
+    --green-200: #34ce574d;
+    --green-300: #34ce5765;
+    --green-400: #1fb743;
+    --green-500: #34ce57;
+}
+
 /* Dark Scheme */
 :root {
     --foreground-dark: #fafafa;
@@ -15,53 +36,6 @@
     --disabled-foreground-hover-dark: #d2d2d22a;
     --disabled-foreground-text-dark: #5f5f5f;
     --disabled-background-dark: #7070709c;
-
-    /* Colorway styles */
-    /* Danger */
-    --red-900-dark: #54000060;
-    --red-850-dark: #d100003b;
-    --red-800-dark: #78000094;
-    --red-700-dark: #b02727;
-    --red-600-dark: #c22f2f;
-    --red-500: #d83338;
-
-    --red-foreground-dark: var(--red-500);
-    --red-foreground-border-dark: var(--red-500);
-    --red-foreground-hover-dark: var(--red-700-dark);
-    --red-foreground-active-dark: var(--red-600-dark);
-    --red-foreground-text-dark: var(--red-500);
-
-    --red-background-dark: var(--red-900-dark);
-    --red-background-border-dark: var(--red-700-dark);
-    --red-background-hover-dark: var(--red-850-dark);
-    --red-background-active-dark: var(--red-800-dark);
-    --red-background-text-dark: var(--background);
-
-    /* Foreground */
-    --orange-foreground-dark: #ffa407;
-    --orange-foreground-border-dark: #d39e00;
-    --orange-foreground-hover-dark: #db8904;
-    --orange-foreground-active-dark: #f7a400;
-    --orange-foreground-text-dark: #09090b;
-
-    --orange-background-dark: #4b2e007d;
-    --orange-background-border-dark: #ffeeba;
-    --orange-background-hover-dark: #472f00;
-    --orange-background-active-dark: #513d00;
-    --orange-background-text-dark: var(--background);
-
-    /* Success */
-    --green-foreground-dark: #34ce57;
-    --green-foreground-border-dark: #1e7e34;
-    --green-foreground-hover-dark: #28a745;
-    --green-foreground-active-dark: #218838;
-    --green-foreground-text-dark: #09090b;
-
-    --green-background-dark: #051b0d;
-    --green-background-border-dark: #1e7e34;
-    --green-background-hover-dark: #0a2e16;
-    --green-background-active-dark: #0f3c1f;
-    --green-background-text-dark: #28a745;
 }
 
 /* Light Scheme */
@@ -81,52 +55,8 @@
     --disabled-foreground-hover-light: #dadada;
     --disabled-foreground-text-light: #9d9d9d;
     --disabled-background-light: #b5b5b5;
-
-    /* Colorway styles */
-    /* Danger */
-
-    --red-900-light: #d100003b;
-    --red-850-light: #fea4a4a1;
-    --red-800-light: #ff848494;
-    --red-700-light: #c30000;
-    --red-600-light: #db0000;
-
-    --red-foreground-light: var(--red-500);
-    --red-foreground-border-light: var(--red-500);
-    --red-foreground-hover-light: var(--red-700-light);
-    --red-foreground-active-light: var(--red-600-light);
-    --red-foreground-text-light: var(--red-500);
-
-    --red-background-light: var(--red-900-light);
-    --red-background-border-light: #b7000626;
-    --red-background-hover-light: var(--red-850-light);
-    --red-background-active-light: var(--red-800-light);
-    --red-background-text-light: #fafafa;
-
-    --orange-foreground-light: #f1a20f;
-    --orange-foreground-border-light: #cc8b00;
-    --orange-foreground-hover-light: #ffa500;
-    --orange-foreground-active-light: #e69500;
-    --orange-foreground-text-light: #ffffff;
-
-    --orange-background-light: #ffecd0;
-    --orange-background-border-light: #ffe0b1;
-    --orange-background-hover-light: #ffdfaf;
-    --orange-background-active-light: #ffdba4;
-    --orange-background-text-light: var(--background);
-
-    --green-foreground-light: #34ce57;
-    --green-foreground-border-light: #218838;
-    --green-foreground-hover-light: #28a745;
-    --green-foreground-active-light: #1e7e34;
-    --green-foreground-text-light: #ffffff;
-    
-    --green-background-light: #def5e5;
-    --green-background-border-light: #c3e6cb;
-    --green-background-hover-light: #d4edda;
-    --green-background-active-light: #c3e6cb;
-    --green-background-text-light: #28a745;
 }
+
 /* Common */
 :root {
     --font-family-main: 'Arial', sans-serif;
@@ -137,7 +67,7 @@
     --border-radius-16: 16px;
     --border-radius-full: 50%;
 
-    --border-width: 1px;
+    --button-border-width: 2px;
 
     --font-size-tiny: clamp(0.65rem, 1.5vw, 0.85rem);
     --font-size-small: clamp(0.85rem, 1.5vw, 1rem);

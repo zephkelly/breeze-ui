@@ -1,11 +1,11 @@
 <template>
   <div class="main">
     <BButtonGroup>
-        <BButton @click="" variant="solid" color="red" holdable> Hello</BButton>
-        <BButton @click="" variant="ghost" color="red" holdable> Hello</BButton>
-        <BButton @click="" variant="ghost" color="orange"> Hello</BButton>
-        <BButton @click="" variant="flat" color="red" holdable> Hello</BButton>
-        <BButton @click="handleClick" variant="flat" color="red"> Hello</BButton>
+        <BButton @click="" variant="solid" color="green" holdable> Hello</BButton>
+        <BButton @click="" variant="ghost" color="green" holdable> Hello</BButton>
+        <BButton @click="" variant="ghost" color="green"> Hello</BButton>
+        <BButton @click="" variant="flat" color="green" holdable> Hello</BButton>
+        <BButton @click="handleClick" variant="flat" color="green"> Hello</BButton>
         <BButton @click="handleClick2" holdable variant="solid"> Hello</BButton>
     </BButtonGroup>
   </div>

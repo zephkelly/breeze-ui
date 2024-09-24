@@ -4,7 +4,7 @@
         :is="tag"
         ref="buttonRef"
         :class="buttonClasses"
-        :style="[cursorStyle, colorProperties]"
+        :style="[cursorStyle, getButtonColors]"
         v-bind="a11yAttrs"
         :disabled="isDisabled"
         :aria-disabled="isDisabled"
@@ -58,7 +58,7 @@ import { debounce } from '../../utils/debounce';
 import { useButtonColor } from '../../composables/useButtonColor';
 import { useDevelopmentWarning } from '../../composables/useDevelopmentWarning';
 
-const { colorProperties, calculateColor } = useButtonColor();
+const { getButtonColors, setButtonColor } = useButtonColor();
 const { devWarning } = useDevelopmentWarning();
 
 const { $currentColorScheme } = useNuxtApp();
@@ -336,11 +336,11 @@ const handleLeave = () => {
 };
 
 watch(validatedColor, () => {
-    calculateColor(validatedColor.value);
+    setButtonColor(validatedColor.value);
 }, { immediate: true })
 
 watch($currentColorScheme, () => {
-    calculateColor(validatedColor.value);
+    setButtonColor(validatedColor.value);
 }, { immediate: true })
 
 // Dev Checks
@@ -514,15 +514,15 @@ if (import.meta.dev) {
 .breeze-button--solid-flat {
     color: var(--text-background);
     background-color: var(--foreground);
-    border: var(--border-width) solid var(--foreground);
+    border: var(--button-border-width) solid var(--foreground);
     transition: background-color 0.1s ease, color 0.1s ease, border-color 0.1s ease;
 }
 .breeze-button--solid.breeze-button--colorway,
 .breeze-button--solid-ghost.breeze-button--colorway,
 .breeze-button--solid-flat.breeze-button--colorway {
-    background-color: var(--colorway);
-    border-color: var(--colorway);
-    color: var(--colorway-contrast-text);
+    background-color: var(--color-500);
+    border-color: var(--color-500);
+    color: var(--text-background);
 }
 
 /* Solid Hover/Focus */
@@ -542,8 +542,9 @@ if (import.meta.dev) {
 .breeze-button--solid.breeze-button--colorway:focus-visible,
 .breeze-button--ghost-solid.breeze-button--colorway:focus-visible,
 .breeze-button--flat-solid.breeze-button--colorway:focus-visible {
-    background-color: var(--colorway-hover);
-    border-color: var(--colorway-hover);
+    background-color: var(--color-400);
+    border-color: var(--color-400);
+    color: var(--text-background);
 }
 
 /* Solid Active */
@@ -556,8 +557,8 @@ if (import.meta.dev) {
 .breeze-button--solid.breeze-button--colorway.breeze-button--active,
 .breeze-button--ghost-solid.breeze-button--colorway.breeze-button--active,
 .breeze-button--flat-solid.breeze-button--colorway.breeze-button--active {
-    background-color: var(--colorway-active);
-    border-color: var(--colorway-active);
+    background-color: var(--color-500);
+    border-color: var(--color-500);
 }
 
 /* Solid Disabled */
@@ -577,15 +578,15 @@ if (import.meta.dev) {
 .breeze-button--ghost-flat {
     background-color: transparent;
     color: var(--text-foreground);
-    border: var(--border-width) solid var(--foreground);
+    border: var(--button-border-width) solid var(--foreground);
     transition: color 0.1s ease, background-color 0.1s ease, border-color 0.1s ease;
 }
 .breeze-button--ghost.breeze-button--colorway,
 .breeze-button--ghost-solid.breeze-button--colorway,
 .breeze-button--ghost-flat.breeze-button--colorway {
-    background-color: var(--colorway-contrast);
-    border-color: var(--colorway);
-    color: var(--colorway-text);
+    background-color: var(--color-100);
+    border-color: var(--color-500);
+    color: var(--color-500);
 }
 
 .breeze-button--ghost:hover,
@@ -604,9 +605,9 @@ if (import.meta.dev) {
 .breeze-button--ghost.breeze-button--colorway:focus-visible,
 .breeze-button--solid-ghost.breeze-button--colorway:focus-visible,
 .breeze-button--flat-ghost.breeze-button--colorway:focus-visible {
-    background-color: var(--colorway-contrast-hover);
-    color: var(--colorway);
-    border-color: var(--colorway);
+    background-color: var(--color-200);
+    color: var(--color-500);
+    border-color: var(--color-500);
 }
 
 .breeze-button--ghost.breeze-button--active,
@@ -617,7 +618,7 @@ if (import.meta.dev) {
 .breeze-button--ghost.breeze-button--colorway.breeze-button--active,
 .breeze-button--solid-ghost.breeze-button--colorway.breeze-button--active,
 .breeze-button--flat-ghost.breeze-button--colorway.breeze-button--active {
-    background-color: var(--colorway-contrast-active);
+    background-color: var(--color-300);
 }
 
 .breeze-button--ghost.breeze-button--disabled,
@@ -637,14 +638,14 @@ if (import.meta.dev) {
 .breeze-button--flat-solid,
 .breeze-button--flat-ghost {
     color: var(--text-foreground);
-    border: var(--border-width) solid transparent;
+    border: var(--button-border-width) solid transparent;
     background-color: transparent;
     transition: color 0.1s ease, background-color 0.1s ease, border-color 0.1s ease;
 }
 .breeze-button--flat.breeze-button--colorway,
 .breeze-button--flat-solid.breeze-button--colorway,
 .breeze-button--flat-ghost.breeze-button--colorway {
-    color: var(--colorway);
+    color: var(--color-500);
 }
 
 .breeze-button--flat-static .button-content {
@@ -667,8 +668,8 @@ if (import.meta.dev) {
 .breeze-button--flat.breeze-button--colorway:focus-visible,
 .breeze-button--solid-flat.breeze-button--colorway:focus-visible,
 .breeze-button--ghost-flat.breeze-button--colorway:focus-visible {
-    color: var(--colorway);
-    background-color: var(--colorway-contrast);
+    color: var(--color-500);
+    background-color: var(--color-200);
     border-color: transparent;
 }
 
@@ -690,7 +691,7 @@ if (import.meta.dev) {
 .breeze-button--flat.breeze-button--colorway.breeze-button--active,
 .breeze-button--solid-flat.breeze-button--colorway.breeze-button--active,
 .breeze-button--ghost-flat.breeze-button--colorway.breeze-button--active {
-    background-color: var(--colorway-contrast-hover);
+    background-color: var(--color-300);
 }
 
 .breeze-button--flat.breeze-button--disabled,
