@@ -1,11 +1,13 @@
 <template>
   <div class="main">
-    <BButtonGroup>
-        <BButton @click="" variant="solid" color="green" holdable> Hello</BButton>
+      <BButtonGroup>
+        <BButton @click="handleClick" variant="solid" color="green" to="/hello" v-slot="props" holdable headless>
+            <button v-bind="props.attributes" >Hello</button>
+        </BButton>
         <BButton @click="" variant="ghost" color="green" holdable> Hello</BButton>
         <BButton @click="" variant="ghost" color="green"> Hello</BButton>
         <BButton @click="" variant="flat" color="green" holdable> Hello</BButton>
-        <BButton @click="handleClick" variant="flat" color="green"> Hello</BButton>
+        <BButton @click="handleClick" variant="flat" color="green" holdable> Hello</BButton>
         <BButton @click="handleClick2" holdable variant="solid"> Hello</BButton>
     </BButtonGroup>
   </div>

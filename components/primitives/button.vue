@@ -1,96 +1,73 @@
 <template>
     <component
         v-if="!headless"
-        :is="tag"
+        :is="componentType"
+        :to="to"
+        :href="href"
         ref="buttonRef"
         :class="buttonClasses"
         :style="[cursorStyle, getButtonColors]"
-        v-bind="a11yAttrs"
-        :disabled="isDisabled"
-        :aria-disabled="isDisabled"
-        :aria-busy="loading"
-        :aria-label="ariaLabel"
-        tabindex="0"
-        :href="href"
-        role="button"
+        v-bind="mergedAttrs"
         @mousedown="handleDown"
         @mouseup="handleUp"
         @mouseleave="handleLeave"
         @touchstart.prevent="handleTouchStart"
         @touchend.prevent="handleTouchEnd"
         @touchcancel.prevent="handleTouchCancel"
-        @keydown.space.prevent="handleKeyDown"
-        @keyup.space.prevent="handleUp"
+        @keydown="handleKeyDown"
+        @keyup="handleKeyUp"
     >
-        <slot name="prebuilt" :a11yAttrs="a11yAttrs">
-            <div class="button-content" v-if="!loading">
-                <span v-if="$slots['leading']" class="breeze-button-icon left" aria-hidden="true"> 
-                    <slot name="leading"></slot>
-                </span>
-                <span class="content-main" ref="contentMainRef">
-                    <div class="button-icon" v-if="icon">
-                        <slot name="default"></slot>
-                    </div>
-                    <div class="button-text" v-else>
-                        <slot name="default"></slot>
-                    </div>
-                </span>
-                <span v-if="$slots['trailing']" class="breeze-button-icon right" aria-hidden="true">
-                    <slot name="trailing"></slot>
-                </span>
-            </div>
-            <span v-else class="button-loader" aria-hidden="true">
-                <slot name="loader">Loading...</slot>
+        <div class="button-content" v-if="!loading">
+            <span v-if="$slots['leading']" class="breeze-button-icon left" aria-hidden="true"> 
+                <slot name="leading"></slot>
             </span>
-        </slot>
+            <span class="content-main" ref="contentMainRef">
+                <div class="button-icon" v-if="icon">
+                    <slot name="default"></slot>
+                </div>
+                <div class="button-text" v-else>
+                    <slot name="default"></slot>
+                </div>
+            </span>
+            <span v-if="$slots['trailing']" class="breeze-button-icon right" aria-hidden="true">
+                <slot name="trailing"></slot>
+            </span>
+        </div>
+        <span v-else class="button-loader" aria-hidden="true">
+            <slot name="loader">Loading...</slot>
+        </span>
     </component>
-    <slot v-else :a11yAttrs="a11yAttrs" name="default">
+    <slot v-else :attributes="a11yAttrs" name="default">
 
     </slot>
 </template>
 
 <script setup lang="ts">
-//@ts-ignore
-import { NuxtLink } from '#components'
 import { type ButtonProps, ButtonVariants, ButtonSizes, ButtonWidths } from '../../types/button';
+import { useDevelopmentWarning } from '../../composables/useDevelopmentWarning';
+import { useButtonColor } from '../../composables/useButtonColor';
 import { debounce } from '../../utils/debounce';
 
-import { useButtonColor } from '../../composables/useButtonColor';
-import { useDevelopmentWarning } from '../../composables/useDevelopmentWarning';
-
-const { getButtonColors, setButtonColor } = useButtonColor();
-const { devWarning } = useDevelopmentWarning();
-
 const { $currentColorScheme } = useNuxtApp();
+
+const buttonRef = ref<HTMLElement | null>(null);
+const isActive = ref(false);
+const isActiveTimeout = ref<number | null>(null);
+const touchStartTime = ref<number>(0);
 
 const props = withDefaults(defineProps<ButtonProps>(), {
     size: 'medium',
     variant: 'solid',
+    holdable: false,
 });
 
-const buttonRef = ref<HTMLElement | null>(null);
-
-const tag = computed(() => {
-    if (props.to) return NuxtLink;
-    if (props.href) return 'a';
-    return 'button';
-});
-
-const isActive = ref(false);
-const isActiveTimeout = ref<number | null>(null);
-
-const touchStartTime = ref<number>(0);
-const isTouchDevice = ref(false);
-
-const isDisabled = computed(() => props.disabled || props.loading);
-const cursorStyle = computed(() => ({ cursor: isDisabled.value ? 'not-allowed' : undefined }))
-
+// Computed values
 const buttonClasses = computed(() => [
     { 'breeze-button': !props.unstyled },
-    { [`breeze-button--${validatedVariant.value}`]: !props.unstyled },
-    { 'breeze-button--full': !props.unstyled && validatedWidth.value === 'full' },
+    { [`breeze-button--${props.variant}`]: !props.unstyled },
+    { 'breeze-button--full': !props.unstyled && props.width === 'full' },
     { 'breeze-button--colorway': !props.unstyled && props.color },
-    { [`breeze-button--colorway-${validatedColor.value}`]: !props.unstyled && props.color },
+    { [`breeze-button--colorway-${props.color}`]: !props.unstyled && props.color },
     { 'breeze-button--loading': props.loading },
     { 'breeze-button--disabled': props.disabled || props.loading },
     { 'breeze-button--active': !props.unstyled && isActive.value },
@@ -100,84 +77,11 @@ const buttonClasses = computed(() => [
     { 'breeze-button--round': !props.unstyled && props.round },
     { 'breeze-button--sharp': !props.unstyled && props.sharp },
     { 'breeze-button--icon-only': !props.unstyled && props.icon },
-    { [`breeze-button--size-${validatedSize.value}`]: !props.unstyled && props.size }
+    { [`breeze-button--size-${props.size}`]: !props.unstyled && props.size }
 ])
 
-const validatedVariant = computed(() => {
-    if (props.variant !== undefined && Object.values(ButtonVariants).includes(props.variant)) {
-        return props.variant;
-    }
-
-    if (import.meta.dev) {   
-        if (props.variant as string === '') {
-            devWarning(`Empty button variant. Defaulting to '${ButtonVariants[0]}'`);
-            devWarning(`Valid button variants are: ${Object.values(ButtonVariants).join(', ')}`);
-        }
-        else if (props.variant !== undefined) {
-            devWarning(`Invalid button variant: '${props.variant}'. Defaulting to '${ButtonVariants[0]}'`);
-            devWarning(`Valid button variants are: ${Object.values(ButtonVariants).join(', ')}`);
-        }
-    }
-
-    return ButtonVariants[0];
-});
-
-const validatedWidth = computed(() => {
-    if (props.width !== undefined && Object.values(ButtonWidths).includes(props.width)) {
-        return props.width;
-    }
-
-    if (import.meta.dev) {
-        if (props.width as string === '') {
-            devWarning(`Empty button width. Defaulting to '${ButtonWidths[0]}'`);
-            devWarning(`Valid button widths are: ${Object.values(ButtonWidths).join(', ')}`);
-        }
-        else if (props.width !== undefined) {
-            devWarning(`Invalid button width: '${props.width}'. Defaulting to '${ButtonWidths[0]}'`);
-            devWarning(`Valid button widths are: ${Object.values(ButtonWidths).join(', ')}`);
-        }
-    }
-
-    return 'auto';
-});
-
-const validatedSize = computed(() => {
-    if (props.size !== undefined && Object.values(ButtonSizes).includes(props.size)) {
-        return props.size;
-    }
-
-    if (import.meta.dev) {
-        if (props.size as string === '') {
-            devWarning(`Empty button size. Defaulting to '${ButtonSizes[0]}'`);
-            devWarning(`Valid button sizes are: ${Object.values(ButtonSizes).join(', ')}`);
-        }
-        else if (props.size !== undefined) {
-            devWarning(`Invalid button size: '${props.size}'. Defaulting to '${ButtonSizes[0]}'`);
-            devWarning(`Valid button sizes are: ${Object.values(ButtonSizes).join(', ')}`);
-        }
-    }
-
-    return ButtonSizes[0];
-});
-
-const validatedColor = computed(() => {
-    if (props.color !== undefined && Object.values(ButtonColors).includes(props.color)) {
-        return props.color;
-    }
-
-    if (import.meta.dev) {
-        if (props.color as string === '') {
-            devWarning(`Empty button color. Defaulting to no color.`);
-            devWarning(`Valid button colors are: ${Object.values(ButtonColors).join(', ')}`);
-        }
-        else if (props.color !== undefined) {
-            devWarning(`Invalid button color: '${props.color}'. Defaulting to no color.`);
-            devWarning(`Valid button colors are: ${Object.values(ButtonColors).join(', ')}`);
-        }
-    }
-
-    return undefined;
-});
+const isDisabled = computed(() => props.disabled || props.loading);
+const cursorStyle = computed(() => ({ cursor: isDisabled.value ? 'not-allowed' : undefined }))
 
 const ariaLabel = computed(() => {
     if (props.ariaLabel) {
@@ -187,42 +91,50 @@ const ariaLabel = computed(() => {
     return props.loading ? 'Loading' : undefined;
 });
 
+const componentType = computed(() => {
+    if (props.to) return resolveComponent('NuxtLink');
+    if (props.href) return 'a';
+    return 'button';
+});
+
+
+
+// Attributes
+const attrs = useAttrs()
+
 const a11yAttrs = computed(() => ({
     role: 'button',
-    tabindex: 0,
+    tabindex: isDisabled.value ? -1 : 0,
     disabled: isDisabled.value,
+    active: isActive.value,
+    loading: props.loading,
     'aria-disabled': isDisabled.value,
     'aria-busy': props.loading,
     'aria-label': ariaLabel.value,
-    onMousedown: (event: MouseEvent) => handleDown(event),
-    onMouseup: (event: MouseEvent) => handleUp(event as unknown as KeyboardEvent),
+    'aria-pressed': props.holdable ? isActive.value : undefined,
+    onMousedown: handleDown,
+    onMouseup: handleUp,
     onMouseleave: handleLeave,
-    onTouchstart: (event: TouchEvent) => {
-        event.preventDefault();
-        handleTouchStart(event);
-    },
-    onTouchend: (event: TouchEvent) => {
-        event.preventDefault();
-        handleTouchEnd(event);
-    },
-    onTouchcancel: (event: TouchEvent) => {
-        event.preventDefault();
-        handleTouchCancel();
-    },
-    onKeydown: (event: KeyboardEvent) => {
-        if (event.key === ' ' || event.key === 'Enter') {
-            event.preventDefault();
-            handleKeyDown(event);
-        }
-    },
-    onKeyup: (event: KeyboardEvent) => {
-        if (event.key === ' ' || event.key === 'Enter') {
-            event.preventDefault();
-            handleUp(event);
-        }
-    }
+    onTouchstart: handleTouchStart,
+    onTouchend: handleTouchEnd,
+    onTouchcancel: handleTouchCancel,
+    onKeydown: handleKeyDown,
+    onKeyup: handleKeyUp,
 }));
 
+const mergedAttrs = computed(() => ({
+    ...attrs,
+    ...a11yAttrs.value,
+    disabled: isDisabled.value,
+    active: isActive.value,
+    loading: props.loading,
+    'aria-disabled': isDisabled.value,
+    'aria-busy': props.loading,
+    'aria-label': ariaLabel.value,
+}))
+
+
+// Events
 const emit = defineEmits<{
     (e: 'click', event: MouseEvent): void
     (e: 'pressstart'): void
@@ -253,28 +165,64 @@ const handleDown = (event: MouseEvent) => {
     }
 };
 
+const handleUp = (event: MouseEvent) => {
+    if (props.disabled || props.loading) return;
+    
+    if (props.holdable) {
+        isActive.value = false;
+        
+        click(event as MouseEvent);
+        emit('pressend');
+    }
+    
+    if (!props.holdable) {
+        isActive.value = false;
+    }
+};
+
 const isKeyDownEnterOrSpace = ref(false);
 const handleKeyDown = (event: KeyboardEvent) => {
     if (props.disabled || props.loading) return;
-    if (event.key !== ' ') return;
-    
-    if (!props.holdable && !isKeyDownEnterOrSpace.value) {   
-        setActiveFlash();
-        click(event as unknown as MouseEvent);
-    }
 
-    if (isKeyDownEnterOrSpace.value === false) {
-        isActive.value = true;
-    }
-    
-    isKeyDownEnterOrSpace.value = true;
-    
+    if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
 
-    emit('pressstart');
+        if (!props.holdable && !isKeyDownEnterOrSpace.value) {   
+            setActiveFlash();
+            click(event as unknown as MouseEvent);
+        }
+
+        if (isKeyDownEnterOrSpace.value === false) {
+            isActive.value = true;
+        }
+        
+        isKeyDownEnterOrSpace.value = true;
+        
+
+        emit('pressstart');
+    }
+};
+
+const handleKeyUp = (event: KeyboardEvent) => {
+    if (props.disabled || props.loading) return;
+
+    if (event.key === 'Enter' || event.key === ' ') {
+        isKeyDownEnterOrSpace.value = false;
+        
+        if (props.holdable) {
+            isActive.value = false;
+            
+            click(event as unknown as MouseEvent);
+            emit('pressend');
+        }
+        
+        if (!props.holdable) {
+            isActive.value = false;
+        }
+    }
 };
 
 const handleTouchStart = (event: TouchEvent) => {
-    isTouchDevice.value = true;
     if (props.disabled || props.loading) return;
 
     touchStartTime.value = Date.now();
@@ -310,21 +258,6 @@ const handleTouchCancel = () => {
     }
 };
 
-const handleUp = (event: KeyboardEvent) => {
-    if (props.disabled || props.loading) return;
-    isKeyDownEnterOrSpace.value = false;
-    
-    if (props.holdable) {
-        isActive.value = false;
-        
-        click(event as unknown as MouseEvent);
-        emit('pressend');
-    }
-    
-    if (!props.holdable) {
-        isActive.value = false;
-    }
-};
 
 const handleLeave = () => {
     if (props.disabled || props.loading) return;
@@ -335,15 +268,26 @@ const handleLeave = () => {
     }
 };
 
-watch(validatedColor, () => {
-    setButtonColor(validatedColor.value);
+
+
+// Color handling
+const { getButtonColors, setButtonColor } = useButtonColor();
+
+watch(() => props.color, (newColor) => {
+    if (newColor) {
+        setButtonColor(props.color);
+    }
 }, { immediate: true })
 
 watch($currentColorScheme, () => {
-    setButtonColor(validatedColor.value);
+    setButtonColor(props.color);
 }, { immediate: true })
 
+
+
 // Dev Checks
+const { devWarning } = useDevelopmentWarning();
+
 if (import.meta.dev) {
     if (props.headless) {
         if (props.bounce) {
@@ -361,21 +305,62 @@ if (import.meta.dev) {
         if (props.color) {
             devWarning(`The 'color' prop is not supported when 'headless' is true.`);
         }
+
+        if (props.size) {
+            devWarning(`The 'size' prop is not supported when 'headless' is true.`);
+        }
+
+        if (props.width) {
+            devWarning(`The 'width' prop is not supported when 'headless' is true.`);
+        }
+
+        if (props.rounded) {
+            devWarning(`The 'rounded' prop is not supported when 'headless' is true.`);
+        }
+
+        if (props.round) {
+            devWarning(`The 'round' prop is not supported when 'headless' is true.`);
+        }
+
+        if (props.sharp) {
+            devWarning(`The 'sharp' prop is not supported when 'headless' is true.`);
+        }
     }
 
     if (props.sharp && props.rounded) {
         devWarning(`Conflicting prop types: 'sharp' and 'rounded'. Defaulting to 'sharp'.`);
     }
+
+    if (props.color as string === '') {
+        devWarning(`Empty button color. Defaulting to no color.`);
+        devWarning(`Valid button colors are: ${Object.values(ButtonColors).join(', ')}`);
+    }
+
+    if (props.size as string === '') {
+        devWarning(`Empty button size. Defaulting to '${ButtonSizes[0]}'`);
+        devWarning(`Valid button sizes are: ${Object.values(ButtonSizes).join(', ')}`);
+    }
+
+    if (props.width as string === '') {
+        devWarning(`Empty button width. Defaulting to '${ButtonWidths[0]}'`);
+        devWarning(`Valid button widths are: ${Object.values(ButtonWidths).join(', ')}`);
+    }
+
+    if (props.variant as string === '') {
+        devWarning(`Empty button variant. Defaulting to '${ButtonVariants[0]}'`);
+        devWarning(`Valid button variants are: ${Object.values(ButtonVariants).join(', ')}`);
+    }
 }
 </script>
 
+<!-- Default Values -->
 <style scoped>
 .breeze-button {
     padding: var(--padding-6) var(--padding-12);
     border: none;
     border-radius: var(--border-radius-6);
     font-size: var(--font-size-small);
-    color: var(--text-foreground);
+    color: var(--text-background);
     cursor: pointer;
     box-sizing: border-box;
     font-family: var(--font-family-main);
@@ -508,6 +493,7 @@ if (import.meta.dev) {
 }
 </style>
 
+<!-- Variant values -->
 <style scoped>
 .breeze-button--solid,
 .breeze-button--solid-ghost,

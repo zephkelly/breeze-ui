@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     ],
     breeze: {
         theme: 'default',
-        devWarnings: true,
+        devWarnings: false,
     },
     // typescript: {
     //     typeCheck: true,

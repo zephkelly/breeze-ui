@@ -9,11 +9,7 @@
             v-for="(button, index) in processedButtons"
             :key="index"
             :is="button.component"
-            v-bind="button.props"
-            :data-index="index"
-            :data-total="processedButtons.length"
-            :data-same-colorway="button.sameColorway"
-            :style="{ '--button-index': index }"
+            v-bind="button.isHeadless ? {} : getExtraProps(button, index)"
         />
     </div>
 </template>
@@ -27,16 +23,35 @@ const defaultSlotContent = computed(() => slots.default?.() || []);
 
 const processedButtons = computed(() => {
     return defaultSlotContent.value.map((button, index, array) => {
-    const colorwayClass = button.props?.class?.match(/breeze-button--colorway-\w+/)?.[0];
-    const nextButton = array[index + 1];
-    const nextColorwayClass = nextButton?.props?.class?.match(/breeze-button--colorway-\w+/)?.[0];
-    
-    return {
-        component: button,
-        props: button.props || {},
-        sameColorway: colorwayClass && colorwayClass === nextColorwayClass
-    };
+        const colorwayClass = button.props?.class?.match(/breeze-button--colorway-\w+/)?.[0];
+        const nextButton = array[index + 1];
+        const nextColorwayClass = nextButton?.props?.class?.match(/breeze-button--colorway-\w+/)?.[0];
+        
+        let isHeadless = false;
+        
+        if (button.props?.headless === undefined) {
+            isHeadless = false;
+        } else if (button.props?.headless === '') {
+            isHeadless = true;
+        } else {
+            isHeadless = button.props?.headless;
+        }
+        
+        
+        return {
+            component: button,
+            props: button.props || {},
+            sameColorway: colorwayClass && colorwayClass === nextColorwayClass,
+            isHeadless,
+        };
     });
+});
+
+const getExtraProps = (button: any, index: number) => ({
+    'data-index': index,
+    'data-total': processedButtons.value.length,
+    'data-same-colorway': button.sameColorway,
+    style: { '--button-index': index }
 });
 </script>
   
