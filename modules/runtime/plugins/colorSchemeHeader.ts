@@ -15,7 +15,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         // Add the system preference to all request headers
         nuxtApp.vueApp.config.globalProperties.$fetch = $fetch.create({
           headers: {
-            'X-Color-Scheme-Preference': systemPreference
+            // 'X-Color-Scheme-Preference': systemPreference
           }
         })
       }

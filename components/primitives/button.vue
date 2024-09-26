@@ -57,6 +57,19 @@ const props = withDefaults(defineProps<ButtonProps>(), {
     size: 'medium',
     variant: 'solid',
     holdable: false,
+    color: undefined,
+    disabled: false,
+    loading: false,
+    bounce: false,
+    rounded: false,
+    round: false,
+    sharp: false,
+    icon: false,
+    width: 'auto',
+    unstyled: false,
+    ariaLabel: undefined,
+    to: undefined,
+    href: undefined,
 });
 
 // Computed class list for the button
@@ -107,9 +120,9 @@ const attrs = useAttrs()
 const a11yAttrs = computed(() => ({
     role: 'button',
     tabindex: isDisabled.value ? -1 : 0,
-    // disabled: isDisabled.value,
-    // active: isActive.value,
-    // loading: props.loading,
+    disabled: isDisabled.value,
+    active: isActive.value,
+    loading: props.loading,
     'aria-disabled': isDisabled.value,
     'aria-busy': props.loading,
     'aria-label': ariaLabel.value,
@@ -410,21 +423,23 @@ if (import.meta.dev) {
     height: 26px;
     max-height: 26px;
     font-size: var(--font-size-tiny);
+    padding: var(--padding-5) var(--padding-8);
 }
 .breeze-button--size-small {
     height: 28px;
     max-height: 28px;
     font-size: var(--font-size-small);
-    padding: var(--padding-6) var(--padding-12);
+    padding: var(--padding-5) var(--padding-12);
 }
 .breeze-button--size-medium {
     height: 32px;
     max-height: 32px;
     font-size: var(--font-size-medium);
+    padding: var(--padding-5) var(--padding-12);
 }
 .breeze-button--size-large {
-    height: 34px;
-    max-height: 34px;
+    height: 36px;
+    max-height: 36px;
     font-size: var(--font-size-large);
     padding: var(--padding-6) var(--padding-12);
 }
@@ -471,20 +486,19 @@ if (import.meta.dev) {
     align-items: center;
     justify-content: center;
     height: 100%;
-    width: auto;
+    width: 100%;
+    aspect-ratio: 1/1;
 }
 :deep(.content-left svg), :deep(.content-right svg) {
     position: relative;
-    top: 0.3px;
-    width: 100%;
-    height: 100%;
+    width: 95%;
+    height: 95%;
 }
 
 :deep(.button-icon svg), :deep(.button-text svg) {
     position: relative;
-    top: 0.3px;
-    width: 100%;
-    height: 100%;
+    width: 95%;
+    height: 95%;
 }
 </style>
 
