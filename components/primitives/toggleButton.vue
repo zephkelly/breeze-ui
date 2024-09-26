@@ -38,6 +38,7 @@
   </template>
   
 <script setup lang="ts">
+import { type VNode } from 'vue';
 import { type ToggleButtonProps, type ToggleDefaultState } from '../../types/toggleButton';
 import Button from './button.vue';
   
@@ -65,7 +66,6 @@ const props = withDefaults(defineProps<ToggleButtonProps>(), {
     defaultState: 'off',
     onLabel: 'On',
     offLabel: 'Off',
-
 });
 
 const internalState = ref<boolean>(defaultStateToBoolean(props.defaultState));
