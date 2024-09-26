@@ -4,7 +4,6 @@
         :is="componentType"
         :to="to"
         :href="href"
-        ref="buttonRef"
         :class="buttonClasses"
         :style="[cursorStyle, getButtonColors]"
         v-bind="mergedAttrs"
@@ -18,10 +17,10 @@
         @keyup="handleKeyUp"
     >
         <div class="button-content" v-if="!loading">
-            <span v-if="$slots['leading']" class="breeze-button-icon left" aria-hidden="true"> 
+            <span v-if="$slots['leading']" class="content-left" aria-hidden="true"> 
                 <slot name="leading"></slot>
             </span>
-            <span class="content-main" ref="contentMainRef">
+            <span class="content-main">
                 <div class="button-icon" v-if="icon">
                     <slot name="default"></slot>
                 </div>
@@ -29,7 +28,7 @@
                     <slot name="default"></slot>
                 </div>
             </span>
-            <span v-if="$slots['trailing']" class="breeze-button-icon right" aria-hidden="true">
+            <span v-if="$slots['trailing']" class="content-right" aria-hidden="true">
                 <slot name="trailing"></slot>
             </span>
         </div>
@@ -47,9 +46,9 @@ import { useDevelopmentWarning } from '../../composables/useDevelopmentWarning';
 import { useButtonColor } from '../../composables/useButtonColor';
 import { debounce } from '../../utils/debounce';
 
+// Using provided property from breeze module's 'colorScheme' plugin
 const { $currentColorScheme } = useNuxtApp();
 
-const buttonRef = ref<HTMLElement | null>(null);
 const isActive = ref(false);
 const isActiveTimeout = ref<number | null>(null);
 const touchStartTime = ref<number>(0);
@@ -60,7 +59,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
     holdable: false,
 });
 
-// Computed values
+// Computed class list for the button
 const buttonClasses = computed(() => [
     { 'breeze-button': !props.unstyled },
     { [`breeze-button--${props.variant}`]: !props.unstyled },
@@ -79,9 +78,11 @@ const buttonClasses = computed(() => [
     { [`breeze-button--size-${props.size}`]: !props.unstyled && props.size }
 ])
 
+// Computed properties for button state
 const isDisabled = computed(() => props.disabled || props.loading);
 const cursorStyle = computed(() => ({ cursor: isDisabled.value ? 'not-allowed' : undefined }))
 
+// Compute aria-label based on props and state
 const ariaLabel = computed(() => {
     if (props.ariaLabel) {
         return props.ariaLabel;
@@ -90,6 +91,7 @@ const ariaLabel = computed(() => {
     return props.loading ? 'Loading' : undefined;
 });
 
+// Determine the component type based on props
 const componentType = computed(() => {
     if (props.to) return resolveComponent('NuxtLink');
     if (props.href) return 'a';
@@ -101,12 +103,13 @@ const componentType = computed(() => {
 // Attributes
 const attrs = useAttrs()
 
+// Accessibility attributes for a headless button
 const a11yAttrs = computed(() => ({
     role: 'button',
     tabindex: isDisabled.value ? -1 : 0,
-    disabled: isDisabled.value,
-    active: isActive.value,
-    loading: props.loading,
+    // disabled: isDisabled.value,
+    // active: isActive.value,
+    // loading: props.loading,
     'aria-disabled': isDisabled.value,
     'aria-busy': props.loading,
     'aria-label': ariaLabel.value,
@@ -121,6 +124,7 @@ const a11yAttrs = computed(() => ({
     onKeyup: handleKeyUp,
 }));
 
+// All attributes for a non-headless button
 const mergedAttrs = computed(() => ({
     ...attrs,
     ...a11yAttrs.value,
@@ -133,17 +137,19 @@ const mergedAttrs = computed(() => ({
 }))
 
 
-// Events
+// Define emitted events
 const emit = defineEmits<{
     (e: 'click', event: MouseEvent): void
     (e: 'pressstart'): void
     (e: 'pressend'): void
 }>();
 
+// Debounced click handler to prevent rapid successive clicks
 const click = debounce((event: MouseEvent) => {
     emit('click', event);
 }, 100);
 
+// Set button to active state briefly on click
 function setActiveFlash() {
     isActive.value = true;
     isActiveTimeout.value = window.setTimeout(() => {
@@ -151,6 +157,7 @@ function setActiveFlash() {
     }, 150);
 }
 
+// Mouse event handlers
 const handleDown = (event: MouseEvent) => {
     if (props.disabled || props.loading) return;
 
@@ -179,6 +186,16 @@ const handleUp = (event: MouseEvent) => {
     }
 };
 
+const handleLeave = () => {
+    if (props.disabled || props.loading) return;
+    
+    if (props.holdable && isActive.value) {
+        isActive.value = false;
+        emit('pressend');
+    }
+};
+
+// Keyboard event handling
 const isKeyDownEnterOrSpace = ref(false);
 const handleKeyDown = (event: KeyboardEvent) => {
     if (props.disabled || props.loading) return;
@@ -221,6 +238,7 @@ const handleKeyUp = (event: KeyboardEvent) => {
     }
 };
 
+// Touch event handlers
 const handleTouchStart = (event: TouchEvent) => {
     if (props.disabled || props.loading) return;
 
@@ -258,33 +276,25 @@ const handleTouchCancel = () => {
 };
 
 
-const handleLeave = () => {
-    if (props.disabled || props.loading) return;
-    
-    if (props.holdable && isActive.value) {
-        isActive.value = false;
-        emit('pressend');
-    }
-};
-
-
 
 // Color handling
 const { getButtonColors, setButtonColor } = useButtonColor();
 
+// Watch for color changes and update button color
 watch(() => props.color, (newColor) => {
     if (newColor) {
         setButtonColor(props.color);
     }
 }, { immediate: true })
 
+// Watch for color scheme changes and update button color: >>> LEGACY will remove in future
 watch($currentColorScheme, () => {
     setButtonColor(props.color);
 }, { immediate: true })
 
 
 
-// Dev Checks
+// If 'devWarning: true' in the breeze module, show warnings for invalid props
 const { devWarning } = useDevelopmentWarning();
 
 if (import.meta.dev) {
@@ -352,7 +362,7 @@ if (import.meta.dev) {
 }
 </script>
 
-<!-- Default Values -->
+<!-- Default Button Styles -->
 <style scoped>
 .breeze-button {
     padding: var(--padding-6) var(--padding-12);
@@ -396,47 +406,32 @@ if (import.meta.dev) {
     border-radius: 0;
 }
 
-.breeze-button--icon-only {
-    aspect-ratio: 1;
-    padding: var(--padding-6);
-}
-
 .breeze-button--size-tiny {
     height: 26px;
     max-height: 26px;
     font-size: var(--font-size-tiny);
 }
-.breeze-button--size-tiny.breeze-button--icon-only {
-    padding: var(--padding-4);
-}
-
 .breeze-button--size-small {
     height: 28px;
     max-height: 28px;
     font-size: var(--font-size-small);
     padding: var(--padding-6) var(--padding-12);
 }
-.breeze-button--size-small.breeze-button--icon-only {
-    padding: var(--padding-4);
-}
-
 .breeze-button--size-medium {
     height: 32px;
     max-height: 32px;
     font-size: var(--font-size-medium);
 }
-.breeze-button--size-medium.breeze-button--icon-only {
-    padding: var(--padding-4);
-}
-
 .breeze-button--size-large {
     height: 34px;
     max-height: 34px;
     font-size: var(--font-size-large);
     padding: var(--padding-6) var(--padding-12);
 }
-.breeze-button--size-large.breeze-button--icon-only {
-    padding: var(--padding-4);
+
+.breeze-button--icon-only {
+    aspect-ratio: 1/1;
+    padding: 0;
 }
 
 .button-content {
@@ -453,11 +448,11 @@ if (import.meta.dev) {
     align-items: center;
     justify-content: center;
     height: 100%;
+    width: 100%;
     white-space: nowrap;
     letter-spacing: 0.2px;
     font-weight: 500;
 }
-
 .button-icon,
 .button-text {
     position: relative;
@@ -470,21 +465,22 @@ if (import.meta.dev) {
     font-weight: 600;
 }
 
-.breeze-button-icon {
+.content-left,
+.content-right {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     height: 100%;
-}
-
-:deep(.breeze-button-icon svg) {
-    height: 100%;
     width: auto;
-    aspect-ratio: 1;
+}
+:deep(.content-left svg), :deep(.content-right svg) {
     position: relative;
+    top: 0.3px;
+    width: 100%;
+    height: 100%;
 }
 
-:deep(.button-icon svg) {
+:deep(.button-icon svg), :deep(.button-text svg) {
     position: relative;
     top: 0.3px;
     width: 100%;
@@ -492,8 +488,10 @@ if (import.meta.dev) {
 }
 </style>
 
-<!-- Variant values -->
+<!-- Stylings for other button variants -->
 <style scoped>
+/* Solid Variant Styles */
+/* Resting State */
 .breeze-button--solid,
 .breeze-button--solid-ghost,
 .breeze-button--solid-flat {
@@ -510,7 +508,7 @@ if (import.meta.dev) {
     color: var(--text-background);
 }
 
-/* Solid Hover/Focus */
+/* Hover/Focus State */
 .breeze-button--solid:hover,
 .breeze-button--ghost-solid:hover,
 .breeze-button--flat-solid:hover,
@@ -532,7 +530,7 @@ if (import.meta.dev) {
     color: var(--text-background);
 }
 
-/* Solid Active */
+/* Active State */
 .breeze-button--solid.breeze-button--active,
 .breeze-button--ghost-solid.breeze-button--active,
 .breeze-button--flat-solid.breeze-button--active {
@@ -546,7 +544,7 @@ if (import.meta.dev) {
     border-color: var(--color-500);
 }
 
-/* Solid Disabled */
+/* Disabled State */
 .breeze-button--solid.breeze-button--disabled,
 .breeze-button--ghost-solid.breeze-button--disabled,
 .breeze-button--flat-solid.breeze-button--disabled,
@@ -558,6 +556,9 @@ if (import.meta.dev) {
     border-color: var(--disabled-foreground-hover);
 }
 
+
+
+/* Ghost Variant Styles */
 .breeze-button--ghost,
 .breeze-button--ghost-solid,
 .breeze-button--ghost-flat {
@@ -574,6 +575,7 @@ if (import.meta.dev) {
     color: var(--color-500);
 }
 
+/* Hover/Focus State */
 .breeze-button--ghost:hover,
 .breeze-button--solid-ghost:hover,
 .breeze-button--flat-ghost:hover,
@@ -595,6 +597,7 @@ if (import.meta.dev) {
     border-color: var(--color-500);
 }
 
+/* Active State */
 .breeze-button--ghost.breeze-button--active,
 .breeze-button--solid-ghost.breeze-button--active,
 .breeze-button--flat-ghost.breeze-button--active {
@@ -606,6 +609,7 @@ if (import.meta.dev) {
     background-color: var(--color-300);
 }
 
+/* Disabled State */
 .breeze-button--ghost.breeze-button--disabled,
 .breeze-button--solid-ghost.breeze-button--disabled,
 .breeze-button--flat-ghost.breeze-button--disabled,
@@ -618,6 +622,8 @@ if (import.meta.dev) {
 }
 
 
+
+/* Flat Variant Styles */
 .breeze-button--flat,
 .breeze-button--flat-static,
 .breeze-button--flat-solid,
@@ -627,16 +633,20 @@ if (import.meta.dev) {
     background-color: transparent;
     transition: color 0.1s ease, background-color 0.1s ease, border-color 0.1s ease;
 }
-.breeze-button--flat.breeze-button--colorway,
-.breeze-button--flat-solid.breeze-button--colorway,
-.breeze-button--flat-ghost.breeze-button--colorway {
-    color: var(--color-500);
-}
-
 .breeze-button--flat-static .button-content {
     border-bottom: 1px solid var(--foreground);
 }
+.breeze-button--flat.breeze-button--colorway,
+.breeze-button--flat-solid.breeze-button--colorway,
+.breeze-button--flat-ghost.breeze-button--colorway,
+.breeze-button--flat-static.breeze-button--colorway {
+    color: var(--color-500);
+}
+.breeze-button--flat-static .button-content {
+    border-color: var(--color-500);
+}
 
+/* Hover/Focus State */
 .breeze-button--flat:hover,
 .breeze-button--solid-flat:hover,
 .breeze-button--ghost-flat:hover,
@@ -658,6 +668,7 @@ if (import.meta.dev) {
     border-color: transparent;
 }
 
+/* Hover/Focus State for inner button content (content underline) */
 .breeze-button--flat:hover .button-content,
 .breeze-button--solid-flat:hover .button-content,
 .breeze-button--ghost-flat:hover .button-content,
@@ -667,6 +678,7 @@ if (import.meta.dev) {
     border-color: var(--foreground);
 }
 
+/* Active State */
 .breeze-button--flat.breeze-button--active,
 .breeze-button--solid-flat.breeze-button--active,
 .breeze-button--ghost-flat.breeze-button--active {
@@ -677,8 +689,10 @@ if (import.meta.dev) {
 .breeze-button--solid-flat.breeze-button--colorway.breeze-button--active,
 .breeze-button--ghost-flat.breeze-button--colorway.breeze-button--active {
     background-color: var(--color-300);
+    border-color: var(--color-300);
 }
 
+/* Disabled State */
 .breeze-button--flat.breeze-button--disabled,
 .breeze-button--flat-static.breeze-button--disabled,
 .breeze-button--solid-flat.breeze-button--disabled,
@@ -695,6 +709,7 @@ if (import.meta.dev) {
     border-color: transparent;
 }
 
+/* Disabled State for inner button content */
 .breeze-button--flat-static.breeze-button--disabled .button-content {
     border-color: var(--disabled-foreground-text);
 }
