@@ -38,7 +38,6 @@
         </span>
     </component>
     <slot v-else :attributes="a11yAttrs" name="default">
-
     </slot>
 </template>
 

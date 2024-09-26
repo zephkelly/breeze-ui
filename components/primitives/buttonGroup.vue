@@ -68,7 +68,7 @@ const getExtraProps = (button: any, index: number) => ({
     z-index: calc(var(--total-buttons) - var(--button-index, 0));
 }
 .breeze-button-group :deep(.breeze-button.breeze-button--ghost) {
-    margin-right: -var(--button-border-width);
+    margin-right: calc(var(--button-border-width) * -1);
 }
 .breeze-button-group :deep(.breeze-button[class="breeze-button--colorway"]) {
     margin-right: 0;
