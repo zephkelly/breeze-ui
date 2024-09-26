@@ -12,9 +12,9 @@ export default defineNuxtConfig({
         theme: 'default',
         devWarnings: false,
     },
-    // typescript: {
-    //     typeCheck: true,
-    // },
+    typescript: {
+        typeCheck: true,
+    },
     css: ['./assets/css/base.css'],
     build: {
         transpile: ['breeze']
@@ -86,5 +86,5 @@ export default defineNuxtConfig({
             ],
         },
     },     
-    ssr: true,
+    ssr: false,
 })

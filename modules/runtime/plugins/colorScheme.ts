@@ -62,11 +62,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     if (import.meta.client) {
         watch(currentColorScheme, (newScheme) => {
             if (currentUserColorScheme().value === null) {
-                console.log('Applying color scheme', newScheme, 'from system')
                 applyColorScheme(newScheme, 'system')
             }
             else {
-                console.log('Applying color scheme', newScheme, 'from user')
                 applyColorScheme(newScheme, 'user')
             }
         })
