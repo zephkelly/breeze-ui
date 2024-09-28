@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     ],
     breeze: {
         theme: 'default',
-        devWarnings: false,
+        devWarnings: true,
     },
     typescript: {
         typeCheck: true,
@@ -21,9 +21,9 @@ export default defineNuxtConfig({
     },
     components: [
         {
-          path: join(currentDir, './components'),
-          pathPrefix: false,
-          prefix: 'B'
+            path: join(currentDir, './components'),
+            pathPrefix: false,
+            prefix: 'B'
         },
         {
             path: join(currentDir, './components/primitives'),
@@ -47,8 +47,8 @@ export default defineNuxtConfig({
     app: {
         head: {
             script: [
-              {
-                innerHTML: `
+                {
+                    innerHTML: `
                     (function() {
                         function getInitialColorScheme() {
                             const cookie = document.cookie.split('; ').find(row => row.startsWith('color-scheme='));
@@ -81,10 +81,10 @@ export default defineNuxtConfig({
                         document.documentElement.setAttribute('data-color-scheme', scheme);
                     })();
                 `,
-                type: 'text/javascript',
-              },
+                    type: 'text/javascript',
+                },
             ],
         },
-    },     
+    },
     ssr: false,
 })

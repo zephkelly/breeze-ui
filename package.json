@@ -4,10 +4,11 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --no-fork --host 127.0.0.1",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test": "vitest"
   },
   "dependencies": {
     "nuxt": "^3.13.0",
@@ -16,7 +17,11 @@
     "vue-router": "latest"
   },
   "devDependencies": {
+    "@nuxt/test-utils": "^3.14.2",
+    "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^15.7.4",
     "typescript": "^5.6.2",
+    "vitest": "^2.1.1",
     "vue-tsc": "^2.1.6"
   }
 }

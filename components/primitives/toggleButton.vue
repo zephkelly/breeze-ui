@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { type VNode } from 'vue';
 import { type ToggleButtonProps, type ToggleDefaultState } from '../../types/toggleButton';
-import Button from './button.vue';
+import Button from './button/button.vue';
   
 const props = withDefaults(defineProps<ToggleButtonProps>(), {
     // Standard Button Props

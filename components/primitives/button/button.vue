@@ -41,10 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import { type ButtonProps, ButtonVariants, ButtonSizes, ButtonWidths } from '../../types/button';
-import { useDevelopmentWarning } from '../../composables/useDevelopmentWarning';
-import { useButtonColor } from '../../composables/useButtonColor';
-import { debounce } from '../../utils/debounce';
+import { type ButtonProps, ButtonVariants, ButtonSizes, ButtonWidths } from '../../../types/button';
+import { useDevelopmentWarning } from '../../../composables/useDevelopmentWarning';
+import { useButtonColor } from '../../../composables/useButtonColor';
+import { debounce } from '../../../utils/debounce';
 
 // Using provided property from breeze module's 'colorScheme' plugin
 const { $currentColorScheme } = useNuxtApp();
@@ -65,6 +65,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
     round: false,
     sharp: false,
     icon: false,
+    debounce: 0,
     width: 'auto',
     unstyled: false,
     ariaLabel: undefined,
@@ -157,10 +158,16 @@ const emit = defineEmits<{
     (e: 'pressend'): void
 }>();
 
-// Debounced click handler to prevent rapid successive clicks
-const click = debounce((event: MouseEvent) => {
-    emit('click', event);
-}, 100);
+// Optionally debounced click handler to prevent rapid successive clicks
+const click = (event: MouseEvent) => {
+    if (props.debounce >= 1) {
+        debounce(() => {
+            emit('click', event);
+        }, props.debounce);
+    } else {
+        emit('click', event);
+    }
+}
 
 // Set button to active state briefly on click
 function setActiveFlash() {
@@ -271,10 +278,10 @@ const handleTouchEnd = (event: TouchEvent) => {
     if (props.disabled || props.loading) return;
 
     if (props.holdable) {
-        click(event);
-        isActive.value = false;
+        click(event as unknown as MouseEvent);
     }
 
+    isActive.value = false;
     emit('pressend');
 };
 
@@ -405,6 +412,7 @@ if (import.meta.dev) {
 .breeze-button--full {
     width: 100%;
 }
+
 
 .breeze-button--rounded {
     border-radius: var(--border-radius-16);
