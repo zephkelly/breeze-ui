@@ -5,7 +5,7 @@ export const ButtonVariants = [
 ] as const;
 
 export const ButtonColors = [
-    'red', 'orange', 'green',
+    'red', 'orange', 'green', 'none'
 ] as const;
 
 export const ButtonWidths = [
@@ -16,28 +16,34 @@ export const ButtonSizes = [
     'tiny', 'small', 'medium', 'large'
 ] as const;
 
+export const ButtonShapes = [
+    'rounded', 'round', 'sharp', 'default'
+] as const;
+
 export type ButtonVariant = typeof ButtonVariants[number];
 export type ButtonColor = typeof ButtonColors[number];
 export type ButtonWidth = typeof ButtonWidths[number];
 export type ButtonSize = typeof ButtonSizes[number];
+export type ButtonShape = typeof ButtonShapes[number];
 
-export interface ButtonProps {
-    variant?: ButtonVariant;
-    color?: ButtonColor;
+export interface ButtonBaseProps { 
     disabled?: boolean;
     loading?: boolean;
-    unstyled?: boolean;
     ariaLabel?: string;
     href?: string;
     to?: string;
-    width?: ButtonWidth,
-    size?: ButtonSize,
     holdable?: boolean;
     headless?: boolean;
-    bounce?: boolean;
-    rounded?: boolean;
-    round?: boolean;
-    sharp?: boolean;
-    icon?: boolean;
     debounce?: number;
+}
+
+export interface ButtonProps extends ButtonBaseProps {
+    variant?: ButtonVariant,
+    color?: ButtonColor,
+    width?: ButtonWidth,
+    shape?: ButtonShape,
+    size?: ButtonSize,
+    unstyled?: boolean,
+    bounce?: boolean,
+    icon?: boolean,
 }

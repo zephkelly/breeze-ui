@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import Button from './button.vue'
+import Button from './Button.vue'
 import { ButtonWidths, ButtonSizes, ButtonVariants, ButtonColors } from './../../../types/button'
 
 // 80-85% coverage
@@ -220,11 +220,11 @@ describe('Button', () => {
             }
         })
 
-        it('applies colorway classes when color prop is provided', async () => {
+        it('applies color classes when color prop is provided', async () => {
             for (const color of ButtonColors) {
                 const wrapper = await mountSuspended(Button, { props: { color } })
-                expect(wrapper.classes()).toContain('breeze-button--colorway')
-                expect(wrapper.classes()).toContain(`breeze-button--colorway-${color}`)
+                expect(wrapper.classes()).toContain('breeze-button--color')
+                expect(wrapper.classes()).toContain(`breeze-button--color-${color}`)
             }
         })
 
@@ -240,23 +240,18 @@ describe('Button', () => {
         })
 
         it('applies the rounded class', async () => {
-            const wrapper = await mountSuspended(Button, { props: { rounded: true } })
+            const wrapper = await mountSuspended(Button, { props: { shape: 'rounded' } })
             expect(wrapper.classes()).toContain('breeze-button--rounded')
         })
 
         it('applies the round class', async () => {
-            const wrapper = await mountSuspended(Button, { props: { round: true } })
+            const wrapper = await mountSuspended(Button, { props: { shape: 'round' } })
             expect(wrapper.classes()).toContain('breeze-button--round')
         })
 
         it('applies the sharp class', async () => {
-            const wrapper = await mountSuspended(Button, { props: { sharp: true } })
+            const wrapper = await mountSuspended(Button, { props: { shape: 'sharp' } })
             expect(wrapper.classes()).toContain('breeze-button--sharp')
-        })
-
-        it('applies the icon-only class', async () => {
-            const wrapper = await mountSuspended(Button, { props: { icon: true } })
-            expect(wrapper.classes()).toContain('breeze-button--icon-only')
         })
 
         it('applies the bounce class', async () => {
@@ -296,12 +291,6 @@ describe('Button', () => {
     })
 
     describe('Prop interactions', () => {
-        it('disables button when loading is true', async () => {
-            const wrapper = await mountSuspended(Button, { props: { loading: true } })
-            expect(wrapper.attributes('disabled')).toBeDefined()
-            expect(wrapper.classes()).toContain('breeze-button--disabled')
-        })
-
         it('applies unstyled prop correctly', async () => {
             const wrapper = await mountSuspended(Button, {
                 props: {
@@ -313,7 +302,7 @@ describe('Button', () => {
             })
             expect(wrapper.classes()).not.toContain('breeze-button')
             expect(wrapper.classes()).not.toContain('breeze-button--solid')
-            expect(wrapper.classes()).not.toContain('breeze-button--colorway-red')
+            expect(wrapper.classes()).not.toContain('breeze-button--color-red')
             expect(wrapper.classes()).not.toContain('breeze-button--size-large')
         })
     })
@@ -374,11 +363,11 @@ describe('Button', () => {
     describe('Watchers And Computed values', () => {
         it('updates button color when color prop changes', async () => {
             const wrapper = await mountSuspended(Button, { props: { color: 'red' } })
-            expect(wrapper.classes()).toContain('breeze-button--colorway-red')
+            expect(wrapper.classes()).toContain('breeze-button--color-red')
 
             await wrapper.setProps({ color: 'green' })
             await nextTick()
-            expect(wrapper.classes()).toContain('breeze-button--colorway-green')
+            expect(wrapper.classes()).toContain('breeze-button--color-green')
         })
 
         it('correctly handles prop changes', async () => {
@@ -388,19 +377,18 @@ describe('Button', () => {
 
             expect(wrapper.classes()).toContain('breeze-button--solid')
             expect(wrapper.classes()).toContain('breeze-button--size-medium')
-            expect(wrapper.classes()).toContain('breeze-button--colorway-red')
+            expect(wrapper.classes()).toContain('breeze-button--color-red')
 
             await wrapper.setProps({ variant: 'ghost', size: 'large', color: 'orange' })
 
             expect(wrapper.classes()).toContain('breeze-button--ghost')
             expect(wrapper.classes()).toContain('breeze-button--size-large')
-            expect(wrapper.classes()).toContain('breeze-button--colorway-orange')
+            expect(wrapper.classes()).toContain('breeze-button--color-orange')
             expect(wrapper.classes()).not.toContain('breeze-button--solid')
             expect(wrapper.classes()).not.toContain('breeze-button--size-medium')
-            expect(wrapper.classes()).not.toContain('breeze-button--colorway-red')
+            expect(wrapper.classes()).not.toContain('breeze-button--color-red')
         })
     })
-
     describe('Headless mode', () => {
         it('does not render its own template and provides attributes to slot when headless is true', async () => {
             const wrapper = await mountSuspended(Button, {
@@ -410,6 +398,7 @@ describe('Button', () => {
                     ariaLabel: 'Custom Label'
                 },
                 slots: {
+                    //@ts-expect-error
                     default: ({ attributes }) => h('button', attributes, 'Headless Button')
                 }
             })

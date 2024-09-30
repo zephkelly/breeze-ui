@@ -101,6 +101,9 @@ const getExtraProps = (button: any, index: number) => ({
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+.breeze-button-group :deep(.breeze-button:only-child) {
+    border-radius: var(--border-radius-6);
+}
 .breeze-button-group :deep(.breeze-button:focus-visible) {
     z-index: calc(var(--total-buttons) + 1);
 }

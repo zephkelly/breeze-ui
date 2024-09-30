@@ -11,9 +11,6 @@
         :aria-pressed="isActive"
         :holdable="holdable"
         :bounce="bounce"
-        :rounded="rounded"
-        :round="round"
-        :sharp="sharp"
         :icon="icon"
         :to="to"
         :href="href"
@@ -40,7 +37,7 @@
 <script setup lang="ts">
 import { type VNode } from 'vue';
 import { type ToggleButtonProps, type ToggleDefaultState } from '../../types/toggleButton';
-import Button from './button/button.vue';
+import Button from './button/Button.vue';
   
 const props = withDefaults(defineProps<ToggleButtonProps>(), {
     // Standard Button Props
@@ -54,9 +51,6 @@ const props = withDefaults(defineProps<ToggleButtonProps>(), {
     ariaLabel: undefined,
     holdable: false,
     bounce: false,
-    rounded: false,
-    round: false,
-    sharp: false,
     icon: false,
     to: undefined,
     href: undefined,
