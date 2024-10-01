@@ -50,6 +50,7 @@ function setupThemes(options: ModuleOptions, nuxt: any, userThemesDir: string, r
 
     if (options.theme !== 'none') {
         loadThemeCss(options, nuxt, userThemesDir, resolve)
+        loadThemeColors(options, nuxt, userThemesDir, resolve)
     }
 }
 
@@ -79,17 +80,15 @@ function copyDefaultTheme(userThemesDir: string, resolve: Function) {
 
 function loadThemeCss(options: ModuleOptions, nuxt: any, userThemesDir: string, resolve: Function) {
     const loadTheme = (themeName: string) => {
-        const userThemeCssPath = pathResolve(userThemesDir, `${themeName}.css`)
-        const moduleThemeCssPath = resolve(`../assets/css/themes/${themeName}.css`)
+        const userThemeCSSPath = pathResolve(userThemesDir, `${themeName}.css`)
+        const moduleThemeCSSPath = resolve(`../assets/css/themes/${themeName}.css`)
 
-        if (existsSync(userThemeCssPath)) {
-            // console.log(`Using user's theme CSS file: ${userThemeCssPath}`)
-            nuxt.options.css.push(userThemeCssPath)
+        if (existsSync(userThemeCSSPath)) {
+            nuxt.options.css.push(userThemeCSSPath)
             return true
         }
-        else if (existsSync(moduleThemeCssPath)) {
-            // console.log(`Using module's theme CSS file: ${moduleThemeCssPath}`)
-            nuxt.options.css.push(moduleThemeCssPath)
+        else if (existsSync(moduleThemeCSSPath)) {
+            nuxt.options.css.push(moduleThemeCSSPath)
             return true
         }
 
@@ -104,6 +103,35 @@ function loadThemeCss(options: ModuleOptions, nuxt: any, userThemesDir: string, 
 
         if (!loadTheme('default')) {
             console.error('Could not load default theme. Please ensure default.css exists.')
+        }
+    }
+}
+
+function loadThemeColors(options: ModuleOptions, nuxt: any, userThemesDir: string, resolve: Function) {
+    const loadThemeColors = (themeName: string) => {
+        const userThemeColorsCSSPath = pathResolve(userThemesDir, `${themeName}-colors.css`)
+        const moduleThemeColorsCSSPath = resolve(`../assets/css/themes/${themeName}-colors.css`)
+
+        if (existsSync(userThemeColorsCSSPath)) {
+            nuxt.options.css.push(userThemeColorsCSSPath)
+            return true
+        }
+        else if (existsSync(moduleThemeColorsCSSPath)) {
+            nuxt.options.css.push(moduleThemeColorsCSSPath)
+            return true
+        }
+
+        return false
+    }
+
+    if (!loadThemeColors(options.theme)) {
+        console.warn(`Could not find theme colors CSS file for theme: ${options.theme}`)
+        console.log('Falling back to default theme colors')
+
+        options.theme = 'default'
+
+        if (!loadThemeColors('default')) {
+            console.error('Could not load default theme colors. Please ensure default-colors.css exists.')
         }
     }
 }

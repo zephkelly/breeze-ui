@@ -1,6 +1,28 @@
 @import url(reset.css);
 
-:root {
+
+:root[data-color-scheme="dark"] {
+    --foreground: var(--foreground-dark);
+    --foreground-hover: var(--foreground-hover-dark);
+    --foreground-active: var(--foreground-active-dark);
+
+    --background: var(--background-dark);
+    --background-hover: var(--background-hover-dark);
+    --background-active: var(--background-active-dark);
+
+    --text-foreground: var(--text-foreground-dark);
+    --text-background: var(--text-background-dark);
+
+    --accent: var(--accent-dark);
+
+    --disabled-foreground: var(--disabled-foreground-dark);
+    --disabled-background: var(--disabled-background-dark);
+    --disabled-foreground-hover: var(--disabled-foreground-hover-dark);
+    --disabled-foreground-text: var(--disabled-foreground-text-dark);
+}
+
+:root,
+:root[data-color-scheme="light"] {
     --foreground: var(--foreground-light);
     --foreground-hover: var(--foreground-hover-light);
     --foreground-active: var(--foreground-active-light);
@@ -40,46 +62,6 @@
         --disabled-foreground-hover: var(--disabled-foreground-hover-dark);
         --disabled-foreground-text: var(--disabled-foreground-text-dark);
     }
-}
-
-:root[data-color-scheme="dark"] {
-    --foreground: var(--foreground-dark);
-    --foreground-hover: var(--foreground-hover-dark);
-    --foreground-active: var(--foreground-active-dark);
-
-    --background: var(--background-dark);
-    --background-hover: var(--background-hover-dark);
-    --background-active: var(--background-active-dark);
-
-    --text-foreground: var(--text-foreground-dark);
-    --text-background: var(--text-background-dark);
-
-    --accent: var(--accent-dark);
-
-    --disabled-foreground: var(--disabled-foreground-dark);
-    --disabled-background: var(--disabled-background-dark);
-    --disabled-foreground-hover: var(--disabled-foreground-hover-dark);
-    --disabled-foreground-text: var(--disabled-foreground-text-dark);
-}
-
-:root[data-color-scheme="light"] {
-    --foreground: var(--foreground-light);
-    --foreground-hover: var(--foreground-hover-light);
-    --foreground-active: var(--foreground-active-light);
-
-    --background: var(--background-light);
-    --background-hover: var(--background-hover-light);
-    --background-active: var(--background-active-light);
-
-    --text-foreground: var(--text-foreground-light);
-    --text-background: var(--text-background-light);
-
-    --accent: var(--accent-light);
-
-    --disabled-foreground: var(--disabled-foreground-light);
-    --disabled-background: var(--disabled-background-light);
-    --disabled-foreground-hover: var(--disabled-foreground-hover-light);
-    --disabled-foreground-text: var(--disabled-foreground-text-light);
 }
 
 body {

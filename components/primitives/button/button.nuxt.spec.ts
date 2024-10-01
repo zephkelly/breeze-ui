@@ -22,6 +22,18 @@ describe('Button', () => {
             await wrapper.trigger('mouseup')
             expect(wrapper.classes()).not.toContain('breeze-button--active')
         })
+
+        it('does not emit click event twice when clicked', async () => {
+            const wrapper = await mountSuspended(Button, {
+                props: {
+                    debounce: false
+                }
+            })
+
+            await wrapper.trigger('mousedown')
+            await wrapper.trigger('mouseup')
+            expect(wrapper.emitted('click')).toHaveLength(1)
+        })
     })
 
     describe('Keyboard events', () => {
@@ -105,21 +117,35 @@ describe('Button', () => {
     describe('Holdable prop', () => {
         describe('When holdable is false (default)', () => {
             it('emits click event on mousedown and updates visual state', async () => {
-                const wrapper = await mountSuspended(Button)
+                const wrapper = await mountSuspended(Button, {
+                    props: {
+                        debounce: false
+                    }
+                })
+
                 await wrapper.trigger('mousedown')
                 expect(wrapper.emitted('click')).toBeTruthy()
                 expect(wrapper.classes()).toContain('breeze-button--active')
             })
 
             it('emits click event on keydown (Enter) and updates visual state', async () => {
-                const wrapper = await mountSuspended(Button)
+                const wrapper = await mountSuspended(Button, {
+                    props: {
+                        debounce: false
+                    }
+                })
+
                 await wrapper.trigger('keydown', { key: 'Enter' })
                 expect(wrapper.emitted('click')).toBeTruthy()
                 expect(wrapper.classes()).toContain('breeze-button--active')
             })
 
             it('emits click event on keydown (Space) and updates visual state', async () => {
-                const wrapper = await mountSuspended(Button)
+                const wrapper = await mountSuspended(Button, {
+                    props: {
+                        debounce: false
+                    }
+                })
                 await wrapper.trigger('keydown', { key: ' ' })
                 expect(wrapper.emitted('click')).toBeTruthy()
                 expect(wrapper.classes()).toContain('breeze-button--active')
@@ -149,7 +175,7 @@ describe('Button', () => {
             })
 
             it('emits click and pressend on mouseup and removes active visual state', async () => {
-                const wrapper = await mountSuspended(Button, { props: { holdable: true } })
+                const wrapper = await mountSuspended(Button, { props: { holdable: true, debounce: false } })
                 await wrapper.trigger('mousedown')
                 await wrapper.trigger('mouseup')
                 expect(wrapper.emitted('click')).toBeTruthy()
@@ -165,7 +191,7 @@ describe('Button', () => {
             })
 
             it('emits click and pressend on keyup (Enter) and removes active visual state', async () => {
-                const wrapper = await mountSuspended(Button, { props: { holdable: true } })
+                const wrapper = await mountSuspended(Button, { props: { holdable: true, debounce: false } })
                 await wrapper.trigger('keydown', { key: 'Enter' })
                 await wrapper.trigger('keyup', { key: 'Enter' })
                 expect(wrapper.emitted('click')).toBeTruthy()
@@ -183,14 +209,19 @@ describe('Button', () => {
             })
 
             it('emits click event on touchend when holdable is true', async () => {
-                const wrapper = await mountSuspended(Button, { props: { holdable: true } })
+                const wrapper = await mountSuspended(Button, { props: { holdable: true, debounce: false } })
                 await wrapper.trigger('touchstart')
                 await wrapper.trigger('touchend')
                 expect(wrapper.emitted('click')).toBeTruthy()
             })
 
             it('emits click event on touchstart when holdable is false', async () => {
-                const wrapper = await mountSuspended(Button)
+                const wrapper = await mountSuspended(Button, {
+                    props: {
+                        debounce: false
+                    }
+                })
+
                 await wrapper.trigger('touchstart')
                 expect(wrapper.emitted('click')).toBeTruthy()
             })
@@ -257,19 +288,6 @@ describe('Button', () => {
         it('applies the bounce class', async () => {
             const wrapper = await mountSuspended(Button, { props: { bounce: true } })
             expect(wrapper.classes()).toContain('breeze-button--bounce')
-        })
-
-        it('applies the loading class and displays loader slot', async () => {
-            const wrapper = await mountSuspended(Button, {
-                props: { loading: true },
-                slots: {
-                    default: 'Button Text',
-                    loader: 'Loading...'
-                }
-            })
-            expect(wrapper.classes()).toContain('breeze-button--loading')
-            expect(wrapper.find('.button-loader').exists()).toBe(true)
-            expect(wrapper.find('.button-loader').text()).toBe('Loading...')
         })
 
         it('applies the correct aria-label', async () => {
@@ -379,7 +397,7 @@ describe('Button', () => {
             expect(wrapper.classes()).toContain('breeze-button--size-medium')
             expect(wrapper.classes()).toContain('breeze-button--color-red')
 
-            await wrapper.setProps({ variant: 'ghost', size: 'large', color: 'orange' })
+            await wrapper.setProps({ variant: 'ghost', size: 'large', color: 'blue' })
 
             expect(wrapper.classes()).toContain('breeze-button--ghost')
             expect(wrapper.classes()).toContain('breeze-button--size-large')

@@ -1,18 +1,25 @@
 <template>
     <div class="main">
-        <BButton holdable @click="handleClick" variant="solid" ariaLabel="Toggle page color scheme" size="small">
-            Toggle color scheme
+        <BButton holdable @click="handleClick" color="blue" variant="solid" ariaLabel="Toggle page color scheme" size="small">
+            Large
         </BButton>
-        <BButton headless v-slot="slotProps" @click="handleClick" variant="ghost" ariaLabel="Toggle page color scheme" size="small" shape=sharp>
-            <button v-bind="slotProps" >
-                Toggle color scheme
-            </button>
+        <BButton holdable @click="handleClick" color="green" variant="solid" ariaLabel="Toggle page color scheme" size="small">
+            Large
         </BButton>
-        <BButton @click="handleClick" variant="flat-solid" ariaLabel="Toggle page color scheme" size="small">
-            Toggle color scheme
+        <BButton holdable @click="handleClick" color="blue" variant="ghost" ariaLabel="Toggle page color scheme" size="small">
+            Large
         </BButton>
-        <BButton @click="handleClick"  variant="solid" ariaLabel="Toggle page color scheme" size="small">
-            Toggle color scheme
+        <BButton holdable @click="handleClick" color="blue" variant="flat" ariaLabel="Toggle page color scheme" size="small">
+            Large
+        </BButton>
+        <BButton holdable @click="handleClick" color="red" variant="solid" ariaLabel="Toggle page color scheme" size="small">
+            Large
+        </BButton>
+        <BButton holdable @click="handleClick" color="red" variant="ghost" ariaLabel="Toggle page color scheme" size="small">
+            Large
+        </BButton>
+        <BButton holdable @click="handleClick" color="red" variant="flat" ariaLabel="Toggle page color scheme" size="small">
+            Large
         </BButton>
     </div>
 </template>
@@ -34,5 +41,7 @@ function handleClick2() {
 <style scoped>
 .main {
     padding: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
 }
 </style>

@@ -16,6 +16,11 @@ export function useButtonColor() {
             '--color-300': `var(--${currentColor.value}-300)`,
             '--color-400': `var(--${currentColor.value}-400)`,
             '--color-500': `var(--${currentColor.value}-500)`,
+            '--color-600': `var(--${currentColor.value}-600)`,
+            '--color-700': `var(--${currentColor.value}-700)`,
+            '--color-800': `var(--${currentColor.value}-800)`,
+            '--color-900': `var(--${currentColor.value}-900)`,
+            '--color-1000': `var(--${currentColor.value}-1000)`,
         }
     })
   

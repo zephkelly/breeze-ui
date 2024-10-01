@@ -16,13 +16,14 @@
 </template>
 
 <script setup lang="ts">
+import { debounce } from './../../../../utils/debounce';
 import { type ButtonBaseProps } from './../../../../types/button';
 
 const props = withDefaults(defineProps<ButtonBaseProps>(), {
     holdable: false,
     disabled: false,
     loading: false,
-    debounce: 0,
+    debounce: true,
     width: 'auto',
 })
 
@@ -72,10 +73,11 @@ const emit = defineEmits<{
 
 // Optionally debounced click handler to prevent rapid successive clicks
 const click = (event: MouseEvent) => {
-    if (props.debounce >= 1) {
-        debounce(() => {
+    if (props.debounce) {
+        (debounce(() => {
+            console.log('click debounce');
             emit('click', event);
-        }, props.debounce);
+        }, 100))();
     } else {
         emit('click', event);
     }

@@ -37,6 +37,7 @@ import { type ButtonProps, type ButtonVariant, type ButtonSize, type ButtonShape
 
 const props = withDefaults(defineProps<ButtonProps>(), {
     holdable: false,
+    debounce: true,
 })
 
 const buttonClasses = computed(() => [
@@ -209,8 +210,8 @@ watch(() => props.color, (newColor) => {
 .breeze-button--solid.breeze-button--color,
 .breeze-button--solid-ghost.breeze-button--color,
 .breeze-button--solid-flat.breeze-button--color {
-    background-color: var(--color-500);
-    border-color: var(--color-500);
+    background-color: var(--color-900);
+    border-color: var(--color-900);
     color: var(--text-background);
 }
 
@@ -231,8 +232,8 @@ watch(() => props.color, (newColor) => {
 .breeze-button--solid.breeze-button--color:focus-visible,
 .breeze-button--ghost-solid.breeze-button--color:focus-visible,
 .breeze-button--flat-solid.breeze-button--color:focus-visible {
-    background-color: var(--color-400);
-    border-color: var(--color-400);
+    background-color: var(--color-700);
+    border-color: var(--color-700);
     color: var(--text-background);
 }
 
@@ -277,8 +278,8 @@ watch(() => props.color, (newColor) => {
 .breeze-button--ghost-solid.breeze-button--color,
 .breeze-button--ghost-flat.breeze-button--color {
     background-color: var(--color-100);
-    border-color: var(--color-500);
-    color: var(--color-500);
+    border-color: var(--color-900);
+    color: var(--color-900);
 }
 
 /* Hover/Focus State */
@@ -299,8 +300,8 @@ watch(() => props.color, (newColor) => {
 .breeze-button--solid-ghost.breeze-button--color:focus-visible,
 .breeze-button--flat-ghost.breeze-button--color:focus-visible {
     background-color: var(--color-200);
-    color: var(--color-500);
-    border-color: var(--color-500);
+    color: var(--color-900);
+    border-color: var(--color-900);
 }
 
 /* Active State */
@@ -345,10 +346,10 @@ watch(() => props.color, (newColor) => {
 .breeze-button--flat-solid.breeze-button--color,
 .breeze-button--flat-ghost.breeze-button--color,
 .breeze-button--flat-static.breeze-button--color {
-    color: var(--color-500);
+    color: var(--color-900);
 }
 .breeze-button--flat-static .button-content {
-    border-color: var(--color-500);
+    border-color: var(--color-900);
 }
 
 /* Hover/Focus State */
@@ -368,7 +369,7 @@ watch(() => props.color, (newColor) => {
 .breeze-button--flat.breeze-button--color:focus-visible,
 .breeze-button--solid-flat.breeze-button--color:focus-visible,
 .breeze-button--ghost-flat.breeze-button--color:focus-visible {
-    color: var(--color-500);
+    color: var(--color-900);
     background-color: var(--color-200);
     border-color: transparent;
 }

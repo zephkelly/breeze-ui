@@ -5,7 +5,7 @@ export const ButtonVariants = [
 ] as const;
 
 export const ButtonColors = [
-    'red', 'orange', 'green', 'none'
+    'red', 'green', 'blue', 'none'
 ] as const;
 
 export const ButtonWidths = [
@@ -34,7 +34,7 @@ export interface ButtonBaseProps {
     to?: string;
     holdable?: boolean;
     headless?: boolean;
-    debounce?: number;
+    debounce?: boolean;
 }
 
 export interface ButtonProps extends ButtonBaseProps {
