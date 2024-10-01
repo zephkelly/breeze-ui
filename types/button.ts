@@ -26,7 +26,7 @@ export type ButtonWidth = typeof ButtonWidths[number];
 export type ButtonSize = typeof ButtonSizes[number];
 export type ButtonShape = typeof ButtonShapes[number];
 
-export interface ButtonBaseProps { 
+export interface ButtonBaseProps {
     disabled?: boolean;
     loading?: boolean;
     ariaLabel?: string;
@@ -43,6 +43,7 @@ export interface ButtonProps extends ButtonBaseProps {
     width?: ButtonWidth,
     shape?: ButtonShape,
     size?: ButtonSize,
+    compact?: boolean,
     unstyled?: boolean,
     bounce?: boolean,
     icon?: boolean,

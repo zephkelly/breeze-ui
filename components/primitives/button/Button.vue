@@ -47,6 +47,7 @@ const buttonClasses = computed(() => [
     { [`breeze-button--color-${props.color}`]: !props.unstyled && props.color},
     { 'breeze-button--holdable': props.holdable },
     { 'breeze-button--bounce': !props.unstyled && props.bounce },
+    { 'breeze-button--compact': !props.unstyled && props.compact },
     { [`breeze-button--${props.shape}`]: !props.unstyled && props.shape },
     { [`breeze-button--size-${props.size}`]: !props.unstyled && props.size }
 ])
@@ -71,7 +72,6 @@ watch(() => props.color, (newColor) => {
 <style scoped>
 .breeze-button {
     padding: var(--padding-6) var(--padding-12);
-    border: none;
     border-radius: var(--border-radius-6);
     font-size: var(--font-size-small);
     color: var(--text-background);
@@ -84,6 +84,8 @@ watch(() => props.color, (newColor) => {
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     text-decoration: none;
+    height: auto;
+    max-width: max-content;
 }
 
 .breeze-button:focus-visible {
@@ -112,28 +114,29 @@ watch(() => props.color, (newColor) => {
 }
 
 .breeze-button--size-tiny {
-    height: 26px;
-    max-height: 26px;
-    font-size: var(--font-size-tiny);
-    padding: var(--padding-5) var(--padding-8);
-}
-.breeze-button--size-small {
-    height: 28px;
-    max-height: 28px;
-    font-size: var(--font-size-small);
-    padding: var(--padding-5) var(--padding-12);
-}
-.breeze-button--size-medium {
     height: 32px;
     max-height: 32px;
+    font-size: var(--font-size-tiny);
+    padding: var(--padding-6) var(--padding-12);
+}
+.breeze-button--size-small {
+    height: 38px;
+    max-height: 38px;
+    font-size: var(--font-size-small);
+    padding: var(--padding-8) var(--padding-16);
+}
+.breeze-button--size-medium,
+ .breeze-button--size-large.breeze-button--compact{
+    height: 44px;
+    max-height: 44px;
     font-size: var(--font-size-medium);
-    padding: var(--padding-5) var(--padding-12);
+    padding: var(--padding-12) var(--padding-20);
 }
 .breeze-button--size-large {
-    height: 36px;
-    max-height: 36px;
+    height: 50px;
+    max-height: 50px;
     font-size: var(--font-size-large);
-    padding: var(--padding-6) var(--padding-12);
+    padding: var(--padding-16) var(--padding-24);
 }
 
 .breeze-button--icon-only {
@@ -168,9 +171,6 @@ watch(() => props.color, (newColor) => {
     align-items: center;
     height: 100%;
     width: 100%;
-}
-.button-text {
-    font-weight: 600;
 }
 
 .content-left,
