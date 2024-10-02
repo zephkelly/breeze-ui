@@ -39,6 +39,7 @@ import { type ButtonProps, type ButtonVariant, type ButtonSize, type ButtonShape
 const props = withDefaults(defineProps<ButtonProps>(), {
     variant: 'solid' as ButtonVariant,
     color: 'primary' as ButtonColor,
+    width: 'auto',
     holdable: false,
     debounce: true,
     size: 'small',
@@ -48,22 +49,17 @@ const buttonClasses = computed(() => [
     { 'breeze-button': !props.unstyled },
     { [`breeze-button--${props.variant}`]: !props.unstyled && props.variant },
     { 'breeze-button--bounce': !props.unstyled && props.bounce },
-//     { 'breeze-button--full': !props.unstyled && props.width === 'full' },
-    // { 'breeze-button--color': !props.unstyled && props.color },
-//     { [`breeze-button--color-${props.color}`]: !props.unstyled && props.color},
-//     { 'breeze-button--holdable': props.holdable },
-//     { 'breeze-button--compact': !props.unstyled && props.compact },
-//     { 'breeze-button--invert': !props.unstyled && props.invert },
-//     { [`breeze-button--${props.shape}`]: !props.unstyled && props.shape },
-//     { [`breeze-button--size-${props.size}`]: !props.unstyled && props.size }
+    { [`breeze-button--size-${props.size}`]: !props.unstyled && props.size },
+    { 'breeze-button--compact': !props.unstyled && props.compact },
+    { [`breeze-button--${props.shape}`]: !props.unstyled && props.shape },
 ])
 
 const buttonHeight = computed(() => {
     switch (props.size) {
-        case 'tiny': return '28px';
-        case 'small': return '32px';
+        case 'tiny': return '30px';
+        case 'small': return '34px';
         case 'medium': return '38px';
-        case 'large': return '44px';
+        case 'large': return '42px';
         default: return '38px';
     }
 });
@@ -78,6 +74,14 @@ const buttonPadding = computed(() => {
     }
 });
 
+const buttonWidth = computed(() => {
+    switch (props.width) {
+        case 'full': return '100%';
+        case 'auto': return 'auto';
+        default: return 'auto';
+    }
+});
+
 const fontSize = computed(() => {
     switch (props.size) {
         case 'tiny': return '0.75rem';
@@ -87,6 +91,18 @@ const fontSize = computed(() => {
         default: return '1rem';
     }
 });
+
+const compactHeight = computed(() => {
+    if (!props.compact) return;
+
+    switch (props.size) {
+        case 'tiny': return '28px';
+        case 'small': return '30px';
+        case 'medium': return '34px';
+        case 'large': return '38px';
+        default: return '38px';
+    }
+})
 
 const { buttonColors } = useButtonColors(props);
 
@@ -100,6 +116,7 @@ const emit = defineEmits<{
 <style scoped>
 .breeze-button {
     height: v-bind(buttonHeight);
+    width: v-bind(buttonWidth);
     padding: v-bind(buttonPadding);
     font-size: v-bind(fontSize);
     border-radius: 0.25rem;
@@ -114,20 +131,23 @@ const emit = defineEmits<{
     border: 1px solid v-bind('buttonColors.border');
 }
 
+.breeze-button--compact {
+    height: v-bind(compactHeight);
+}
+
 .breeze-button:hover,
 .breeze-button:focus-visible {
     background-color: v-bind('buttonColors.hover');
     color: v-bind('buttonColors.text');
 }
+.breeze-button:focus-visible {
+    outline: 2px solid var(--foreground);
+    box-shadow: 0 0 0 5px var(--background);    
+}
 
 .breeze-button.breeze-button--active {
     background-color: v-bind('buttonColors.active');
     color: v-bind('buttonColors.text');
-}
-
-.breeze-button:focus-visible {
-    outline: 2px solid var(--foreground);
-    box-shadow: 0 0 0 5px var(--background);    
 }
 
 .breeze-button--flat-static .button-content {
@@ -136,5 +156,17 @@ const emit = defineEmits<{
 
 .breeze-button--bounce.breeze-button--active {
     transform: translateY(1px);
+}
+
+/* Shape prop */
+.breeze-button--rounded {
+    border-radius: var(--border-radius-16);
+}
+.breeze-button--round {
+    border-radius: var(--border-radius-full);
+    padding: var(--padding-6);
+}
+.breeze-button--sharp {
+    border-radius: 0;
 }
 </style>
