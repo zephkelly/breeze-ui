@@ -1,46 +1,104 @@
-import { type ColorSchemeNuxtAppContext, type ColorScheme } from './../types/colorScheme'
+import { computed } from 'vue';
+import type { ButtonProps, ButtonVariant, ButtonColor } from './../types/button';
 
-interface ColorwayVariables {
-    [key: string]: string
-}
+export const useButtonColors = (props: ButtonProps) => {
+    const getColorVar = (color: ButtonColor, shade: number) => `var(--${color}-${shade})`;
 
-export function useButtonColor() {
-    const nuxtApp = useNuxtApp()
-  
-    const currentColor = ref<ColorScheme | null>(null)
+    const getVariantColors = (color: ButtonColor, variant: ButtonVariant) => {
+        const baseColors = {
+            background: getColorVar(color, 900),
+            text: 'var(--text-background)',
+            hover: getColorVar(color, 800),
+            active: getColorVar(color, 900),
+            border: getColorVar(color, 900),
+            contentBorder: 'transparent',
+        };
 
-    const colorProperties = computed(() => {
-        return {
-            '--color-100': `var(--${currentColor.value}-100)`,
-            '--color-200': `var(--${currentColor.value}-200)`,
-            '--color-300': `var(--${currentColor.value}-300)`,
-            '--color-400': `var(--${currentColor.value}-400)`,
-            '--color-500': `var(--${currentColor.value}-500)`,
-            '--color-600': `var(--${currentColor.value}-600)`,
-            '--color-700': `var(--${currentColor.value}-700)`,
-            '--color-800': `var(--${currentColor.value}-800)`,
-            '--color-900': `var(--${currentColor.value}-900)`,
-            '--color-1000': `var(--${currentColor.value}-1000)`,
-            '--color-100-invert': `var(--${currentColor.value}-100-invert)`,
-            '--color-200-invert': `var(--${currentColor.value}-200-invert)`,
-            '--color-300-invert': `var(--${currentColor.value}-300-invert)`,
-            '--color-400-invert': `var(--${currentColor.value}-400-invert)`,
-            '--color-500-invert': `var(--${currentColor.value}-500-invert)`,
-            '--color-600-invert': `var(--${currentColor.value}-600-invert)`,
-            '--color-700-invert': `var(--${currentColor.value}-700-invert)`,
-            '--color-800-invert': `var(--${currentColor.value}-800-invert)`,
-            '--color-900-invert': `var(--${currentColor.value}-900-invert)`,
-            '--color-1000-invert': `var(--${currentColor.value}-1000-invert)`,
+        const ghostColors = {
+            background: 'transparent',
+            text: 'var(--text-foreground)',
+            hover: 'var(--background-hover)',
+            active: 'var(--background-active)',
+            border: 'var(--foreground)',
+            contentBorder: 'transparent',
+        };
+
+        const flatColors = {
+            background: 'transparent',
+            text: 'var(--text-foreground)',
+            hover: 'var(--background-hover)',
+            active: 'var(--background-active)',
+            border: 'transparent',
+            contentBorder: 'var(--foreground)',
+        };
+
+        const variantColorMap: Record<ButtonVariant, typeof baseColors> = {
+            'solid': baseColors,
+            'ghost': ghostColors,
+            'flat': flatColors,
+            'solid-ghost': {
+                ...baseColors,
+                background: 'transparent',
+                text: 'var(--text-foreground)',
+                hover: 'var(--foreground-hover)',
+            },
+            'solid-flat': {
+                ...baseColors,
+                background: 'transparent',
+                border: 'transparent',
+            },
+            'flat-ghost': {
+                ...ghostColors,
+                border: 'transparent',
+            },
+            'flat-solid': {
+                ...baseColors,
+                background: 'transparent',
+                text: 'var(--text-foreground)',
+            },
+            'flat-static': {
+                ...flatColors,
+                hover: 'transparent',
+                active: 'transparent',
+                contentBorder: 'var(--text-foreground)',
+            },
+            'ghost-solid': {
+                ...ghostColors,
+                hover: baseColors.hover,
+                active: baseColors.active,
+            },
+            'ghost-flat': {
+                ...ghostColors,
+                border: 'transparent',
+            },
+        };
+
+        // Adjust colors for specific color prop
+        if (color !== 'primary' && color !== 'secondary') {
+            variantColorMap['ghost'].background = getColorVar(color, 100);
+            variantColorMap['ghost'].text = getColorVar(color, 900);
+            variantColorMap['ghost'].hover = getColorVar(color, 200);
+            variantColorMap['ghost'].active = getColorVar(color, 300);
+            variantColorMap['ghost'].border = getColorVar(color, 900);
+
+            variantColorMap['flat'].text = getColorVar(color, 900);
+            variantColorMap['flat'].hover = getColorVar(color, 100);
+            variantColorMap['flat'].active = getColorVar(color, 200);
+
+            variantColorMap['flat-static'].text = getColorVar(color, 900);
+            variantColorMap['flat-static'].contentBorder = getColorVar(color, 900);
         }
-    })
-  
-    const setButtonColor = (color: string | undefined) => {
-        if (!color) return
-        currentColor.value = color as ColorScheme
-    }
+
+        return variantColorMap[variant];
+    };
+
+    const buttonColors = computed(() => {
+        const color = props.color || 'primary';
+        const variant = props.variant || 'solid';
+        return getVariantColors(color as ButtonColor, variant as ButtonVariant);
+    });
 
     return {
-        getButtonColors: colorProperties,
-        setButtonColor
-    }
-}
+        buttonColors
+    };
+};
