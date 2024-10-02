@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import { debounce } from './../../../../utils/debounce';
 import { type ButtonBaseProps } from './../../../../types/button';
+import { a } from 'vitest/dist/chunks/suite.CcK46U-P.js';
 
 const props = withDefaults(defineProps<ButtonBaseProps>(), {
     holdable: false,
@@ -36,6 +37,8 @@ const ariaLabel = computed(() => {
     return props.loading ? 'Loading' : undefined;
 });
 
+const attrs = useAttrs();
+
 const attributes = computed(() => ({
     role: 'button',
     tabindex: isDisabled.value ? -1 : 0,
@@ -44,6 +47,7 @@ const attributes = computed(() => ({
     'aria-disabled': isDisabled.value,
     'aria-busy': props.loading,
     'aria-label': ariaLabel.value,
+    ...attrs,
     onMousedown: handleDown,
     onMouseup: handleUp,
     onMouseleave: handleLeave,
@@ -75,7 +79,6 @@ const emit = defineEmits<{
 const click = (event: MouseEvent) => {
     if (props.debounce) {
         (debounce(() => {
-            console.log('click debounce');
             emit('click', event);
         }, 100))();
     } else {

@@ -4,8 +4,9 @@ import { resolve as pathResolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 export interface ModuleOptions {
-  theme: string
-  devWarnings: boolean
+    theme: string
+    colors: string
+    devWarnings: boolean
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -15,20 +16,20 @@ export default defineNuxtModule<ModuleOptions>({
     },
     defaults: {
         theme: 'default',
+        colors: 'default',
         devWarnings: false
     },
     setup(options, nuxt) {
         const { resolve } = createResolver(import.meta.url)
         const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
-        const userThemesDir = pathResolve(nuxt.options.rootDir, 'assets/css/themes')
-        // const userComponentsDir = pathResolve(nuxt.options.rootDir, 'components/ui')
+        const userThemesDir = pathResolve(nuxt.options.rootDir, 'breeze/css/themes')
+        const userColorsDir = pathResolve(nuxt.options.rootDir, 'breeze/css/colors')
 
-        // Add base styles
         nuxt.hook('components:dirs', (dirs) => {
-            // nuxt.options.css.push(resolve('../assets/css/base.css'))
-            //   copyComponents(userComponentsDir, resolve('../components'))
             copyDefaultTheme(userThemesDir, resolve)
+            copySpecifiedColors(options.colors, userColorsDir, resolve)
             setupThemes(options, nuxt, userThemesDir, resolve)
+            setupColors(options, nuxt, userColorsDir, resolve)
         })
 
         // Make theme available in the app
@@ -38,21 +39,8 @@ export default defineNuxtModule<ModuleOptions>({
         // Add plugins
         addPlugin(resolve(runtimeDir, 'plugins', 'theme'))
         addPlugin(resolve(runtimeDir, 'plugins', 'colorScheme'))
-        addPlugin(resolve(runtimeDir, 'plugins', 'colorSchemeHeader'))
     }
 })
-
-function setupThemes(options: ModuleOptions, nuxt: any, userThemesDir: string, resolve: Function) {
-    if (!existsSync(userThemesDir)) {
-        mkdirSync(userThemesDir, { recursive: true })
-        console.log(`Created directory: ${userThemesDir}`)
-    }
-
-    if (options.theme !== 'none') {
-        loadThemeCss(options, nuxt, userThemesDir, resolve)
-        loadThemeColors(options, nuxt, userThemesDir, resolve)
-    }
-}
 
 function copyDefaultTheme(userThemesDir: string, resolve: Function) {
     if (!existsSync(userThemesDir)) {
@@ -60,12 +48,12 @@ function copyDefaultTheme(userThemesDir: string, resolve: Function) {
         console.log(`Created directory: ${userThemesDir}`)
     }
 
-    const userDefaultCssPath = pathResolve(userThemesDir, 'default.css')
-    if (!existsSync(userDefaultCssPath)) {
+    const userDefaultThemePath = pathResolve(userThemesDir, 'default.css')
+    if (!existsSync(userDefaultThemePath)) {
         const layerDefaultCssPath = resolve('../assets/css/themes/default.css')
 
         if (existsSync(layerDefaultCssPath)) {
-            copyFileSync(layerDefaultCssPath, userDefaultCssPath)
+            copyFileSync(layerDefaultCssPath, userDefaultThemePath)
             // console.log(`Copied default.css to: ${userDefaultCssPath}`)
         }
         else {
@@ -75,6 +63,56 @@ function copyDefaultTheme(userThemesDir: string, resolve: Function) {
     else {
         // console.log(`Default theme already exists: ${userDefaultCssPath}`)
         // console.log('Skipping default theme copy to avoid overwriting existing file.')
+    }
+}
+
+function copySpecifiedColors(specifiedColor: string, userColorsDir: string, resolve: Function) {
+    if (!existsSync(userColorsDir)) {
+        mkdirSync(userColorsDir, { recursive: true })
+        console.log(`Created directory: ${userColorsDir}`)
+    }
+
+    const validColors = ['default', 'accessible']
+    const colorToCopy = validColors.includes(specifiedColor) ? specifiedColor : 'default'
+
+    const userColorPath = pathResolve(userColorsDir, `${colorToCopy}.css`)
+    
+    if (!existsSync(userColorPath)) {
+        const layerColorCssPath = resolve(`../assets/css/colors/${colorToCopy}.css`)
+
+        if (existsSync(layerColorCssPath)) {
+            copyFileSync(layerColorCssPath, userColorPath)
+            console.log(`Copied ${colorToCopy}.css to: ${userColorPath}`)
+        }
+        else {
+            console.warn(`Could not find ${colorToCopy}.css in the layer to copy.`)
+        }
+    }
+    else {
+        console.log(`${colorToCopy} color file already exists: ${userColorPath}`)
+        console.log('Skipping color file copy to avoid overwriting existing file.')
+    }
+}
+
+function setupThemes(options: ModuleOptions, nuxt: any, userThemesDir: string, resolve: Function) {
+    if (!existsSync(userThemesDir)) {
+        mkdirSync(userThemesDir, { recursive: true })
+        console.log(`Created directory: ${userThemesDir}`)
+    }
+
+    if (options.theme !== 'none') {
+        loadThemeCss(options, nuxt, userThemesDir, resolve)
+    }
+}
+
+function setupColors(options: ModuleOptions, nuxt: any, userColorsDir: string, resolve: Function) {
+    if (!existsSync(userColorsDir)) {
+        mkdirSync(userColorsDir, { recursive: true })
+        console.log(`Created directory: ${userColorsDir}`)
+    }
+
+    if (options.theme !== 'none') {
+        loadThemeColors(options, nuxt, userColorsDir, resolve)
     }
 }
 
@@ -107,10 +145,10 @@ function loadThemeCss(options: ModuleOptions, nuxt: any, userThemesDir: string, 
     }
 }
 
-function loadThemeColors(options: ModuleOptions, nuxt: any, userThemesDir: string, resolve: Function) {
-    const loadThemeColors = (themeName: string) => {
-        const userThemeColorsCSSPath = pathResolve(userThemesDir, `${themeName}-colors.css`)
-        const moduleThemeColorsCSSPath = resolve(`../assets/css/themes/${themeName}-colors.css`)
+function loadThemeColors(options: ModuleOptions, nuxt: any, userColorsDir: string, resolve: Function) {
+    const loadThemeColors = (colorsName: string) => {
+        const userThemeColorsCSSPath = pathResolve(userColorsDir, `${colorsName}.css`)
+        const moduleThemeColorsCSSPath = resolve(`../assets/css/colors/${colorsName}.css`)
 
         if (existsSync(userThemeColorsCSSPath)) {
             nuxt.options.css.push(userThemeColorsCSSPath)
@@ -124,11 +162,11 @@ function loadThemeColors(options: ModuleOptions, nuxt: any, userThemesDir: strin
         return false
     }
 
-    if (!loadThemeColors(options.theme)) {
-        console.warn(`Could not find theme colors CSS file for theme: ${options.theme}`)
+    if (!loadThemeColors(options.colors)) {
+        console.warn(`Could not find theme colors CSS file for theme: ${options.colors}`)
         console.log('Falling back to default theme colors')
 
-        options.theme = 'default'
+        options.colors = 'default'
 
         if (!loadThemeColors('default')) {
             console.error('Could not load default theme colors. Please ensure default-colors.css exists.')
@@ -146,18 +184,18 @@ function loadThemeColors(options: ModuleOptions, nuxt: any, userThemesDir: strin
 //     }
 // }
 
-function copyDir(src: string, dest: string) {
-    mkdirSync(dest, { recursive: true })
-    const entries = readdirSync(src, { withFileTypes: true })
+// function copyDir(src: string, dest: string) {
+//     mkdirSync(dest, { recursive: true })
+//     const entries = readdirSync(src, { withFileTypes: true })
 
-    for (const entry of entries) {
-        const srcPath = pathResolve(src, entry.name)
-        const destPath = pathResolve(dest, entry.name)
+//     for (const entry of entries) {
+//         const srcPath = pathResolve(src, entry.name)
+//         const destPath = pathResolve(dest, entry.name)
 
-        if (entry.isDirectory()) {
-        copyDir(srcPath, destPath)
-        } else {
-        copyFileSync(srcPath, destPath)
-        }
-    }
-}
+//         if (entry.isDirectory()) {
+//         copyDir(srcPath, destPath)
+//         } else {
+//         copyFileSync(srcPath, destPath)
+//         }
+//     }
+// }

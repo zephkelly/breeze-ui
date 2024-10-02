@@ -27,6 +27,7 @@
         </div>
         <span v-else class="button-loader" aria-hidden="true">
             <slot name="loader">Loading...</slot>
+            <slot name="default"/>
         </span>
     </BaseButton>
 </template>
@@ -38,6 +39,7 @@ import { type ButtonProps, type ButtonVariant, type ButtonSize, type ButtonShape
 const props = withDefaults(defineProps<ButtonProps>(), {
     holdable: false,
     debounce: true,
+    size: 'small',
 })
 
 const buttonClasses = computed(() => [
@@ -49,6 +51,7 @@ const buttonClasses = computed(() => [
     { 'breeze-button--holdable': props.holdable },
     { 'breeze-button--bounce': !props.unstyled && props.bounce },
     { 'breeze-button--compact': !props.unstyled && props.compact },
+    { 'breeze-button--invert': !props.unstyled && props.invert },
     { [`breeze-button--${props.shape}`]: !props.unstyled && props.shape },
     { [`breeze-button--size-${props.size}`]: !props.unstyled && props.size }
 ])
@@ -90,7 +93,10 @@ watch(() => props.color, (newColor) => {
 }
 
 .breeze-button:focus-visible {
-    outline: none;
+    outline: 2px solid var(--foreground);
+    /* outline-offset: 3px; */
+    /* inset that is the background color */
+    box-shadow: 0 0 0 5px var(--background);    
 }
 
 .breeze-button--bounce.breeze-button--active {
@@ -115,29 +121,45 @@ watch(() => props.color, (newColor) => {
 }
 
 .breeze-button--size-tiny {
-    height: 32px;
-    max-height: 32px;
     font-size: var(--font-size-tiny);
     padding: var(--padding-6) var(--padding-12);
 }
+.breeze-button--size-tiny.breeze-button--compact {
+    height: 28px;
+    max-height: 28px;
+}
+
+.breeze-button--size-tiny,
+.breeze-button--size-small.breeze-button--compact {
+    height: 30px;
+    max-height: 30px;
+}
+
 .breeze-button--size-small {
-    height: 38px;
-    max-height: 38px;
     font-size: var(--font-size-small);
     padding: var(--padding-8) var(--padding-16);
 }
-.breeze-button--size-medium,
- .breeze-button--size-large.breeze-button--compact{
-    height: 44px;
-    max-height: 44px;
+.breeze-button--size-small,
+.breeze-button--size-medium.breeze-button--compact {
+    height: 34px;
+    max-height: 34px;
+}
+
+.breeze-button--size-medium {
     font-size: var(--font-size-medium);
     padding: var(--padding-12) var(--padding-20);
 }
+.breeze-button--size-medium,
+.breeze-button--size-large.breeze-button--compact{
+    height: 38px;
+    max-height: 38px;
+}
+
 .breeze-button--size-large {
-    height: 50px;
-    max-height: 50px;
+    height: 42px;
+    max-height: 42px;
     font-size: var(--font-size-large);
-    padding: var(--padding-16) var(--padding-24);
+    padding: var(--padding-16) var(--padding-20);
 }
 
 .breeze-button--icon-only {
@@ -162,7 +184,7 @@ watch(() => props.color, (newColor) => {
     width: 100%;
     white-space: nowrap;
     letter-spacing: 0.2px;
-    font-weight: 500;
+    font-weight: 600;
 }
 .button-icon,
 .button-text {
@@ -214,6 +236,13 @@ watch(() => props.color, (newColor) => {
     border-color: var(--color-900);
     color: var(--text-background);
 }
+.breeze-button--solid.breeze-button--color.breeze-button--invert,
+.breeze-button--solid-ghost.breeze-button--color.breeze-button--invert,
+.breeze-button--solid-flat.breeze-button--color.breeze-button--invert {
+    background-color: var(--color-900-invert);
+    border-color: var(--color-900-invert);
+    color: var(--text-foreground);
+}
 
 /* Hover/Focus State */
 .breeze-button--solid:hover,
@@ -232,8 +261,8 @@ watch(() => props.color, (newColor) => {
 .breeze-button--solid.breeze-button--color:focus-visible,
 .breeze-button--ghost-solid.breeze-button--color:focus-visible,
 .breeze-button--flat-solid.breeze-button--color:focus-visible {
-    background-color: var(--color-700);
-    border-color: var(--color-700);
+    background-color: var(--color-800);
+    border-color: var(--color-800);
     color: var(--text-background);
 }
 
@@ -247,8 +276,8 @@ watch(() => props.color, (newColor) => {
 .breeze-button--solid.breeze-button--color.breeze-button--active,
 .breeze-button--ghost-solid.breeze-button--color.breeze-button--active,
 .breeze-button--flat-solid.breeze-button--color.breeze-button--active {
-    background-color: var(--color-500);
-    border-color: var(--color-500);
+    background-color: var(--color-900);
+    border-color: var(--color-900);
 }
 
 /* Disabled State */

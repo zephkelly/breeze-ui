@@ -47,4 +47,5 @@ export interface ButtonProps extends ButtonBaseProps {
     unstyled?: boolean,
     bounce?: boolean,
     icon?: boolean,
+    invert?: boolean,
 }
