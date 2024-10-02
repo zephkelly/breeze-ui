@@ -5,7 +5,7 @@ export const ButtonVariants = [
 ] as const;
 
 export const ButtonColors = [
-    'red', 'green', 'blue', 'none'
+    'primary', 'secondary', 'red', 'green', 'blue'
 ] as const;
 
 export const ButtonWidths = [

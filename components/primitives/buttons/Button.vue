@@ -2,7 +2,6 @@
     <BaseButton 
         v-bind="props"
         :class="buttonClasses"
-        :style="getButtonColors"
         @click="$emit('click', $event)"
         @pressstart="$emit('pressstart')"
         @pressend="$emit('pressend')"
@@ -45,34 +44,130 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 const buttonClasses = computed(() => [
     { 'breeze-button': !props.unstyled },
     { [`breeze-button--${props.variant}`]: !props.unstyled && props.variant },
-    { 'breeze-button--full': !props.unstyled && props.width === 'full' },
-    { 'breeze-button--color': !props.unstyled && props.color },
-    { [`breeze-button--color-${props.color}`]: !props.unstyled && props.color},
-    { 'breeze-button--holdable': props.holdable },
-    { 'breeze-button--bounce': !props.unstyled && props.bounce },
-    { 'breeze-button--compact': !props.unstyled && props.compact },
-    { 'breeze-button--invert': !props.unstyled && props.invert },
-    { [`breeze-button--${props.shape}`]: !props.unstyled && props.shape },
-    { [`breeze-button--size-${props.size}`]: !props.unstyled && props.size }
+//     { 'breeze-button--full': !props.unstyled && props.width === 'full' },
+//     { 'breeze-button--color': !props.unstyled && props.color },
+//     { [`breeze-button--color-${props.color}`]: !props.unstyled && props.color},
+//     { 'breeze-button--holdable': props.holdable },
+//     { 'breeze-button--bounce': !props.unstyled && props.bounce },
+//     { 'breeze-button--compact': !props.unstyled && props.compact },
+//     { 'breeze-button--invert': !props.unstyled && props.invert },
+//     { [`breeze-button--${props.shape}`]: !props.unstyled && props.shape },
+//     { [`breeze-button--size-${props.size}`]: !props.unstyled && props.size }
 ])
+
+const buttonHeight = computed(() => {
+    switch (props.size) {
+        case 'tiny': return '28px';
+        case 'small': return '32px';
+        case 'medium': return '38px';
+        case 'large': return '44px';
+        default: return '38px';
+    }
+});
+
+const buttonPadding = computed(() => {
+    switch (props.size) {
+        case 'tiny': return '0.25rem 0.5rem';
+        case 'small': return '0.375rem 0.75rem';
+        case 'medium': return '0.5rem 1rem';
+        case 'large': return '0.625rem 1.25rem';
+        default: return '0.5rem 1rem';
+    }
+});
+
+const fontSize = computed(() => {
+    switch (props.size) {
+        case 'tiny': return '0.75rem';
+        case 'small': return '0.875rem';
+        case 'medium': return '1rem';
+        case 'large': return '1.125rem';
+        default: return '1rem';
+    }
+});
+
+const colors = computed(() => {
+    const colorMap = {
+        primary: { background: '#3490dc', text: '#ffffff', hover: '#2779bd', active: '#1c6da8' },
+        secondary: { background: '#f6993f', text: '#ffffff', hover: '#f4810f' },
+        red: { 
+            background: '#e3342f',
+            text: 'var(--red-100)',
+            hover: '#cc1f1a'
+        },
+        green: { background: '#38c172', text: '#ffffff', hover: '#2f9e62' },
+        blue: { background: '#3490dc', text: '#ffffff', hover: '#2779bd' },
+    };
+
+    const propColor = props.color || 'primary';
+    return colorMap[propColor] || colorMap.primary;
+    
+});
 
 const emit = defineEmits<{
     (e: 'click', event: MouseEvent): void
     (e: 'pressstart'): void
     (e: 'pressend'): void
 }>();
-
-// Color handling
-const { getButtonColors, setButtonColor } = useButtonColor();
-
-// Watch for color changes and update button color
-watch(() => props.color, (newColor) => {
-    if (newColor) {
-        setButtonColor(props.color);
-    }
-}, { immediate: true })
 </script>
 
+<style scoped>
+.breeze-button {
+    height: v-bind(buttonHeight);
+    padding: v-bind(buttonPadding);
+    font-size: v-bind(fontSize);
+    border-radius: 0.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.1s, color 0.1s, border-color 0.1s;
+}
+
+.breeze-button--solid {
+    background-color: v-bind('colors.background');
+    color: v-bind('colors.text');
+    border: none;
+}
+
+.breeze-button--solid:hover:not(:disabled) {
+    background-color: v-bind('colors.hover');
+}
+
+.breeze-button--ghost {
+    background-color: transparent;
+    color: v-bind('colors.background');
+    border: 1px solid v-bind('colors.background');
+}
+
+.breeze-button--ghost:hover:not(:disabled) {
+    background-color: v-bind('colors.background');
+    color: v-bind('colors.text');
+}
+
+.breeze-button--flat {
+    background-color: transparent;
+    color: v-bind('colors.background');
+    border: none;
+}
+
+.breeze-button--flat:hover:not(:disabled) {
+    background-color: v-bind('colors.background');
+    color: v-bind('colors.text');
+}
+
+.breeze-button--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.breeze-button--loading {
+    opacity: 0.8;
+    cursor: wait;
+}
+</style>
+
+<!-- 
 <style scoped>
 .breeze-button {
     padding: var(--padding-6) var(--padding-12);
@@ -447,4 +542,4 @@ watch(() => props.color, (newColor) => {
 .breeze-button--flat-static.breeze-button--disabled .button-content {
     border-color: var(--disabled-foreground-text);
 }
-</style>
+</style> -->
