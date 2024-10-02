@@ -18,7 +18,6 @@
 <script setup lang="ts">
 import { debounce } from './../../../../utils/debounce';
 import { type ButtonBaseProps } from './../../../../types/button';
-import { a } from 'vitest/dist/chunks/suite.CcK46U-P.js';
 
 const props = withDefaults(defineProps<ButtonBaseProps>(), {
     holdable: false,
