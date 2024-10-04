@@ -1,7 +1,5 @@
 export const ButtonVariants = [
-    'solid', 'solid-ghost', 'solid-flat',
-    'flat', 'flat-ghost', 'flat-solid', 'flat-static',
-    'ghost', 'ghost-solid', 'ghost-flat'
+    'solid', 'flat', 'ghost',
 ] as const;
 
 export const ButtonColors = [

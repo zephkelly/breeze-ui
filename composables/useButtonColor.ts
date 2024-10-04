@@ -7,75 +7,45 @@ export const useButtonColors = (props: ButtonProps) => {
 
     const getVariantColors = (color: ButtonColor, variant: ButtonVariant, invert: boolean) => {
         const baseColors = {
-            background: getColorVar(color, 900, invert),
+            background: invert ? 'var(--background)' : 'var(--foreground)',
             text: invert ? 'var(--text-foreground)' : 'var(--text-background)',
-            hover: getColorVar(color, 800, invert),
-            active: getColorVar(color, 900, invert),
-            border: getColorVar(color, 900, invert),
+            hover: invert ? 'var(--background-hover)' : 'var(--foreground-hover)',
+            active: invert ? 'var(--background-active)' : 'var(--foreground-active)',
+            border: invert ? 'var(--background)' : 'var(--foreground)',
             contentBorder: 'transparent',
         };
 
         const ghostColors = {
             background: 'transparent',
             text: invert ? 'var(--text-background)' : 'var(--text-foreground)',
-            hover: invert ? getColorVar(color, 800, true) : 'var(--background-hover)',
-            active: invert ? getColorVar(color, 900, true) : 'var(--background-active)',
-            border: invert ? getColorVar(color, 100, true) : 'var(--foreground)',
+            hover: invert ? 'var(--foreground-hover' : 'var(--background-hover)',
+            active: invert ? 'var(--foreground-active)' : 'var(--background-active)',
+            border: invert ? 'var(--background)' : 'var(--foreground)',
             contentBorder: 'transparent',
         };
 
         const flatColors = {
             background: 'transparent',
             text: invert ? 'var(--text-background)' : 'var(--text-foreground)',
-            hover: invert ? getColorVar(color, 800, true) : 'var(--background-hover)',
-            active: invert ? getColorVar(color, 900, true) : 'var(--background-active)',
+            hover: invert ? 'var(--foreground-hover)' : 'var(--background-hover)',
+            active: invert ? 'var(--foreground-active)' : 'var(--background-active)',
             border: 'transparent',
-            contentBorder: invert ? getColorVar(color, 100, true) : 'var(--foreground)',
+            contentBorder: invert ? 'var(--background)' : 'var(--foreground)',
         };
 
         const variantColorMap: Record<ButtonVariant, typeof baseColors> = {
             'solid': baseColors,
             'ghost': ghostColors,
-            'flat': flatColors,
-            'solid-ghost': {
-                ...baseColors,
-                background: 'transparent',
-                text: invert ? 'var(--text-background)' : 'var(--text-foreground)',
-                hover: invert ? getColorVar(color, 800, true) : 'var(--foreground-hover)',
-            },
-            'solid-flat': {
-                ...baseColors,
-                background: 'transparent',
-                border: 'transparent',
-            },
-            'flat-ghost': {
-                ...ghostColors,
-                border: 'transparent',
-            },
-            'flat-solid': {
-                ...baseColors,
-                background: 'transparent',
-                text: invert ? 'var(--text-background)' : 'var(--text-foreground)',
-            },
-            'flat-static': {
-                ...flatColors,
-                hover: 'transparent',
-                active: 'transparent',
-                contentBorder: invert ? getColorVar(color, 100, true) : 'var(--text-foreground)',
-            },
-            'ghost-solid': {
-                ...ghostColors,
-                hover: baseColors.hover,
-                active: baseColors.active,
-            },
-            'ghost-flat': {
-                ...ghostColors,
-                border: 'transparent',
-            },
+            'flat': flatColors
         };
 
         // Adjust colors for specific color prop
         if (color !== 'primary' && color !== 'secondary') {
+            variantColorMap['solid'].text = 'var(--text-foreground-dark)';
+            variantColorMap['solid'].border = getColorVar(color, 900, invert);
+            variantColorMap['solid'].background = getColorVar(color, 900, invert);
+            variantColorMap['solid'].hover = getColorVar(color, 800, invert);
+            variantColorMap['solid'].active = getColorVar(color, 700, invert);
             variantColorMap['ghost'].text = getColorVar(color, 900, invert);
             variantColorMap['ghost'].border = getColorVar(color, 900, invert);
             variantColorMap['ghost'].background = getColorVar(color, 100, invert);
@@ -84,8 +54,6 @@ export const useButtonColors = (props: ButtonProps) => {
             variantColorMap['flat'].text = getColorVar(color, 900, invert);
             variantColorMap['flat'].hover = getColorVar(color, 100, invert);
             variantColorMap['flat'].active = getColorVar(color, 200, invert);
-            variantColorMap['flat-static'].text = getColorVar(color, 900, invert);
-            variantColorMap['flat-static'].contentBorder = getColorVar(color, 900, invert);
         }
 
         return variantColorMap[variant];

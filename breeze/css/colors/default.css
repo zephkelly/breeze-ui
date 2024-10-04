@@ -104,6 +104,16 @@
     --blue-800: var(--blue-800-light);
     --blue-900: var(--blue-900-light);
     --blue-1000: var(--blue-1000-light);
+    --blue-100-invert: var(--blue-100-dark);
+    --blue-200-invert: var(--blue-200-dark);
+    --blue-300-invert: var(--blue-300-dark);
+    --blue-400-invert: var(--blue-400-dark);
+    --blue-500-invert: var(--blue-500-dark);
+    --blue-600-invert: var(--blue-600-dark);
+    --blue-700-invert: var(--blue-700-dark);
+    --blue-800-invert: var(--blue-800-dark);
+    --blue-900-invert: var(--blue-900-dark);
+    --blue-1000-invert: var(--blue-1000-dark);
 
     --green-100: var(--green-100-light);
     --green-200: var(--green-200-light);
@@ -115,6 +125,16 @@
     --green-800: var(--green-800-light);
     --green-900: var(--green-900-light);
     --green-1000: var(--green-1000-light);
+    --green-100-invert: var(--green-100-dark);
+    --green-200-invert: var(--green-200-dark);
+    --green-300-invert: var(--green-300-dark);
+    --green-400-invert: var(--green-400-dark);
+    --green-500-invert: var(--green-500-dark);
+    --green-600-invert: var(--green-600-dark);
+    --green-700-invert: var(--green-700-dark);
+    --green-800-invert: var(--green-800-dark);
+    --green-900-invert: var(--green-900-dark);
+    --green-1000-invert: var(--green-1000-dark);
 }
 
 /* Dark Scheme */
@@ -150,6 +170,16 @@
     --blue-800: var(--blue-800-dark);
     --blue-900: var(--blue-900-dark);
     --blue-1000: var(--blue-1000-dark);
+    --blue-100-invert: var(--blue-100-light);
+    --blue-200-invert: var(--blue-200-light);
+    --blue-300-invert: var(--blue-300-light);
+    --blue-400-invert: var(--blue-400-light);
+    --blue-500-invert: var(--blue-500-light);
+    --blue-600-invert: var(--blue-600-light);
+    --blue-700-invert: var(--blue-700-light);
+    --blue-800-invert: var(--blue-800-light);
+    --blue-900-invert: var(--blue-900-light);
+    --blue-1000-invert: var(--blue-1000-light);
 
     --green-100: var(--green-100-dark);
     --green-200: var(--green-200-dark);
@@ -161,6 +191,16 @@
     --green-800: var(--green-800-dark);
     --green-900: var(--green-900-dark);
     --green-1000: var(--green-1000-dark);
+    --green-100-invert: var(--green-100-light);
+    --green-200-invert: var(--green-200-light);
+    --green-300-invert: var(--green-300-light);
+    --green-400-invert: var(--green-400-light);
+    --green-500-invert: var(--green-500-light);
+    --green-600-invert: var(--green-600-light);
+    --green-700-invert: var(--green-700-light);
+    --green-800-invert: var(--green-800-light);
+    --green-900-invert: var(--green-900-light);
+    --green-1000-invert: var(--green-1000-light);
 }
 
 /* Dark Scheme Fallback */
@@ -176,6 +216,16 @@
         --red-800: var(--red-800-dark);
         --red-900: var(--red-900-dark);
         --red-1000: var(--red-1000-dark);
+        --red-100-invert: var(--red-100-light);
+        --red-200-invert: var(--red-200-light);
+        --red-300-invert: var(--red-300-light);
+        --red-400-invert: var(--red-400-light);
+        --red-500-invert: var(--red-500-light);
+        --red-600-invert: var(--red-600-light);
+        --red-700-invert: var(--red-700-light);
+        --red-800-invert: var(--red-800-light);
+        --red-900-invert: var(--red-900-light);
+        --red-1000-invert: var(--red-1000-light);
 
         --blue-100: var(--blue-100-dark);
         --blue-200: var(--blue-200-dark);
@@ -187,6 +237,16 @@
         --blue-800: var(--blue-800-dark);
         --blue-900: var(--blue-900-dark);
         --blue-1000: var(--blue-1000-dark);
+        --blue-100-invert: var(--blue-100-light);
+        --blue-200-invert: var(--blue-200-light);
+        --blue-300-invert: var(--blue-300-light);
+        --blue-400-invert: var(--blue-400-light);
+        --blue-500-invert: var(--blue-500-light);
+        --blue-600-invert: var(--blue-600-light);
+        --blue-700-invert: var(--blue-700-light);
+        --blue-800-invert: var(--blue-800-light);
+        --blue-900-invert: var(--blue-900-light);
+        --blue-1000-invert: var(--blue-1000-light);
 
         --green-100: var(--green-100-dark);
         --green-200: var(--green-200-dark);
@@ -198,5 +258,15 @@
         --green-800: var(--green-800-dark);
         --green-900: var(--green-900-dark);
         --green-1000: var(--green-1000-dark);
+        --green-100-invert: var(--green-100-light);
+        --green-200-invert: var(--green-200-light);
+        --green-300-invert: var(--green-300-light);
+        --green-400-invert: var(--green-400-light);
+        --green-500-invert: var(--green-500-light);
+        --green-600-invert: var(--green-600-light);
+        --green-700-invert: var(--green-700-light);
+        --green-800-invert: var(--green-800-light);
+        --green-900-invert: var(--green-900-light);
+        --green-1000-invert: var(--green-1000-light);
     }
 }

@@ -128,7 +128,7 @@ const emit = defineEmits<{
     transition: background-color 0.1s, color 0.1s, border-color 0.1s;
     background-color: v-bind('buttonColors.background');
     color: v-bind('buttonColors.text');
-    border: 1px solid v-bind('buttonColors.border');
+    border: var(--button-border-width) solid v-bind('buttonColors.border');
 }
 
 .breeze-button--compact {
