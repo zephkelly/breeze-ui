@@ -139,15 +139,17 @@ const emit = defineEmits<{
 .breeze-button:focus-visible {
     background-color: v-bind('buttonColors.hover');
     color: v-bind('buttonColors.text');
+    border-color: v-bind('buttonColors.borderHover');
 }
 .breeze-button:focus-visible {
     outline: 2px solid var(--foreground);
-    box-shadow: 0 0 0 5px var(--background);    
+    box-shadow: 0 0 0 5px var(--background);   
 }
 
 .breeze-button.breeze-button--active {
     background-color: v-bind('buttonColors.active');
     color: v-bind('buttonColors.text');
+    border-color: v-bind('buttonColors.borderActive');
 }
 
 .breeze-button--flat-static .button-content {
