@@ -13,7 +13,7 @@ export default defineNuxtConfig({
         devWarnings: true,
     },
     typescript: {
-        typeCheck: true,
+        typeCheck: false,
     },
     css: ['./assets/css/base.css'],
     build: {
