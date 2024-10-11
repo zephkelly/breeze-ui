@@ -79,7 +79,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             return;
         }
 
-        // applyColorScheme(currentColorScheme.value, 'system')
+        applyColorScheme(currentColorScheme.value, 'system')
     })
 
     nuxtApp.hook('app:mounted', () => {
