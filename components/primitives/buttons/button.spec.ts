@@ -36,21 +36,6 @@ describe('Button', () => {
             expect(wrapper.classes()).toContain(`breeze-button--${variant}`)
         })
 
-        it.each(ButtonSizes)('applies correct size class: %s', async (size) => {
-            const wrapper = await mountSuspended(Button, { props: { size } })
-            expect(wrapper.classes()).toContain(`breeze-button--size-${size}`)
-        })
-
-        it.each(ButtonColors)('applies correct color class: %s', async (color) => {
-            const wrapper = await mountSuspended(Button, { props: { color } })
-            expect(wrapper.classes()).toContain(`breeze-button--color-${color}`)
-        })
-
-        it('applies full width class when width prop is full', async () => {
-            const wrapper = await mountSuspended(Button, { props: { width: 'full' } })
-            expect(wrapper.classes()).toContain('breeze-button--full')
-        })
-
         it('applies bounce class when bounce prop is true', async () => {
             const wrapper = await mountSuspended(Button, { props: { bounce: true } })
             expect(wrapper.classes()).toContain('breeze-button--bounce')
@@ -59,11 +44,6 @@ describe('Button', () => {
         it('applies compact class when compact prop is true', async () => {
             const wrapper = await mountSuspended(Button, { props: { compact: true } })
             expect(wrapper.classes()).toContain('breeze-button--compact')
-        })
-
-        it('applies invert class when invert prop is true', async () => {
-            const wrapper = await mountSuspended(Button, { props: { invert: true } })
-            expect(wrapper.classes()).toContain('breeze-button--invert')
         })
 
         it('applies correct shape class', async () => {

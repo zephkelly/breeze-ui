@@ -1,11 +1,9 @@
 export const ButtonVariants = [
-    'solid', 'solid-ghost', 'solid-flat',
-    'flat', 'flat-ghost', 'flat-solid', 'flat-static',
-    'ghost', 'ghost-solid', 'ghost-flat'
+    'solid', 'flat', 'ghost',
 ] as const;
 
 export const ButtonColors = [
-    'red', 'green', 'blue', 'none'
+    'primary', 'secondary', 'red', 'green', 'blue'
 ] as const;
 
 export const ButtonWidths = [
@@ -47,5 +45,5 @@ export interface ButtonProps extends ButtonBaseProps {
     unstyled?: boolean,
     bounce?: boolean,
     icon?: boolean,
-    invert?: boolean,
+    inverted?: boolean,
 }
