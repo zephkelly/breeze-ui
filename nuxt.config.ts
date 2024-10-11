@@ -68,7 +68,7 @@ export default defineNuxtConfig({
                             document.documentElement.style.backgroundColor = '#fafafa;';
                         }
                         else {
-                            document.documentElement.style.backgroundColor = '#09090b';
+                            document.documentElement.style.backgroundColor = '#1c1c20';
                         }
 
                         window.addEventListener('load', () => {
